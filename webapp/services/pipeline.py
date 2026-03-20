@@ -137,16 +137,23 @@ def run_part_a(run_id: str, progress: RunProgress, summary: dict):
             name = student["full_name"]
             penalty_pct = penalties.get(roll, {}).get("penalty_percentage", 0)
 
+            step_msg = f"Evaluating {roll} ({name}) [{i+1}/{len(valid_students)}]"
             progress.update(
                 current_index=i + 1,
                 current_roll=roll,
                 current_name=name,
-                current_step=f"Evaluating {roll} ({name})"
+                current_step=step_msg
             )
+            run_manager.update_meta(run_id,
+                                   current_step=step_msg,
+                                   current_index=i + 1,
+                                   total_students=len(valid_students),
+                                   evaluated_part_a=i)
 
             try:
                 result = pa_eval.evaluate_student_part_a(student, penalty_pct)
                 all_results.append(result)
+                progress.log(f"  {roll}: score={result.get('final_total', '?')}/50")
             except Exception as e:
                 progress.log(f"ERROR evaluating {roll}: {e}")
                 all_results.append({
@@ -424,39 +431,62 @@ def run_full_pipeline(run_id: str, progress: RunProgress):
         progress.update(phase="error", error="Another evaluation is already running")
         return
 
+    def _log_and_persist(msg, **meta_kwargs):
+        """Log to progress AND persist to meta.json so polling always works."""
+        progress.log(msg)
+        if meta_kwargs:
+            run_manager.update_meta(run_id, **meta_kwargs)
+
     try:
+        _log_and_persist("Pipeline starting...",
+                        status="running", phase="starting",
+                        current_step="Initializing pipeline...")
         progress.update(phase="starting", started_at=datetime.now(),
                        current_step="Initializing pipeline...")
-        progress.log("Pipeline starting...")
-        run_manager.update_meta(run_id, status="running")
 
         with _redirect_output(progress):
             # Phase 0
-            progress.log("=== PHASE 0: Data Cleanup ===")
+            _log_and_persist("=== PHASE 0: Data Cleanup ===",
+                           phase="phase0", current_step="Running Phase 0: Data Cleanup...")
+            progress.update(phase="phase0", current_step="Running Phase 0: Data Cleanup...")
             summary = run_phase0(run_id, progress)
-            progress.log(f"Phase 0 done: {summary['stats']['total_valid_part_a']} valid students")
+            valid_count = summary['stats']['total_valid_part_a']
+            _log_and_persist(f"Phase 0 done: {valid_count} valid students",
+                           phase="phase0_done", current_step=f"Phase 0 complete: {valid_count} students")
 
             # Part A
-            progress.log("=== PART A: Evaluation ===")
+            _log_and_persist("=== PART A: Evaluation ===",
+                           phase="part_a", current_step="Starting Part A evaluation...")
+            progress.update(phase="part_a", current_step="Starting Part A evaluation...")
             run_part_a(run_id, progress, summary)
-            progress.log("Part A evaluation complete")
+            _log_and_persist("Part A evaluation complete",
+                           phase="part_a_done", current_step="Part A complete")
 
             # Part B
             if summary["stats"]["total_part_b_submissions"] > 0:
-                progress.log("=== PART B: Evaluation ===")
+                _log_and_persist("=== PART B: Evaluation ===",
+                               phase="part_b", current_step="Starting Part B evaluation...")
+                progress.update(phase="part_b", current_step="Starting Part B evaluation...")
                 run_part_b(run_id, progress, summary)
-                progress.log("Part B evaluation complete")
+                _log_and_persist("Part B evaluation complete",
+                               phase="part_b_done", current_step="Part B complete")
             else:
-                progress.log("No Part B submissions to evaluate")
+                _log_and_persist("No Part B submissions to evaluate",
+                               phase="part_b_done", current_step="No Part B submissions")
 
             # Aggregation
-            progress.log("=== AGGREGATION ===")
+            _log_and_persist("=== AGGREGATION ===",
+                           phase="aggregate", current_step="Aggregating scores...")
+            progress.update(phase="aggregate", current_step="Aggregating scores...")
             run_aggregation(run_id, progress)
-            progress.log("Aggregation complete")
+            _log_and_persist("Aggregation complete")
 
         progress.update(phase="complete", completed_at=datetime.now(),
                        current_step="Evaluation complete!")
-        progress.log("=== ALL DONE ===")
+        _log_and_persist("=== ALL DONE ===",
+                        status="complete", phase="complete",
+                        current_step="Evaluation complete!",
+                        completed_at=datetime.now().isoformat())
 
     except Exception as e:
         import traceback
@@ -464,6 +494,7 @@ def run_full_pipeline(run_id: str, progress: RunProgress):
         progress.update(phase="error", error=str(e),
                        current_step=f"ERROR: {str(e)[:100]}")
         progress.log(f"FATAL ERROR: {tb}")
-        run_manager.update_meta(run_id, status="error", error=str(e))
+        run_manager.update_meta(run_id, status="error", phase="error",
+                               error=str(e), traceback=tb[-500:])
     finally:
         _eval_lock.release()

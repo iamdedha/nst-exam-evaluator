@@ -122,13 +122,42 @@ function connectSSE(runId) {
     };
 }
 
+let lastStep = '';
 function pollStatus(runId) {
     fetch(`/eval/${runId}/status`).then(r => r.json()).then(data => {
-        appendLog('[Poll] Phase: ' + (data.phase || data.status) + ', Step: ' + (data.current_step || 'n/a'));
+        const step = data.current_step || 'n/a';
+        const phase = data.phase || data.status || 'unknown';
+        // Only log if step changed to avoid spam
+        if (step !== lastStep) {
+            appendLog('[' + phase.toUpperCase() + '] ' + step);
+            lastStep = step;
+        }
         if (data.phase === 'complete' || data.status === 'complete') showComplete();
-        else if (data.phase === 'error' || data.status === 'error') showError(data.error || 'Failed');
-        else { updateProgress(data); setTimeout(() => pollStatus(runId), 2000); }
-    }).catch(err => { appendLog('[Poll] Error: ' + err.message); setTimeout(() => pollStatus(runId), 5000); });
+        else if (data.phase === 'error' || data.status === 'error') {
+            showError(data.error || data.traceback || 'Failed');
+            if (data.traceback) appendLog('TRACEBACK: ' + data.traceback);
+        }
+        else {
+            // Build progress data from meta fields if needed
+            if (!data.type) data.type = 'progress';
+            if (data.current_index && data.total_students) {
+                const pct = Math.round((data.current_index / data.total_students) * 100);
+                document.getElementById('progressBar').style.width = pct + '%';
+                document.getElementById('progressCount').textContent = data.current_index + '/' + data.total_students;
+            }
+            document.getElementById('progressLabel').textContent = step;
+            if (data.current_roll) document.getElementById('currentStudent').textContent = 'Current: ' + data.current_roll;
+            // Update phase cards from meta
+            if (phase.startsWith('part_a')) setPhaseState('phase0', 'done');
+            if (phase.startsWith('part_b')) { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); }
+            if (phase === 'aggregate') { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); setPhaseState('part_b', 'done'); }
+            if (phase === 'phase0' || phase === 'starting') setPhaseState('phase0', 'active');
+            else if (phase === 'part_a') setPhaseState('part_a', 'active');
+            else if (phase === 'part_b') setPhaseState('part_b', 'active');
+            else if (phase === 'aggregate') setPhaseState('aggregate', 'active');
+            setTimeout(() => pollStatus(runId), 2000);
+        }
+    }).catch(err => { appendLog('[Poll] Connection error, retrying...'); setTimeout(() => pollStatus(runId), 5000); });
 }
 
 function updateProgress(data) {
@@ -163,9 +192,13 @@ function showComplete() {
 function showError(msg) { document.getElementById('errorSection').classList.remove('hidden'); document.getElementById('errorMessage').textContent = msg; }
 
 {% if meta.status == 'running' %}
-document.addEventListener('DOMContentLoaded', () => connectSSE(runId));
-{% elif meta.status in ['uploaded', 'phase0_complete', 'created'] %}
-document.addEventListener('DOMContentLoaded', () => startEvaluation(runId));
+// Resume polling for an already-running evaluation
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('startSection').style.display = 'none';
+    appendLog('[UI] Evaluation in progress, connecting...');
+    connectSSE(runId);
+    setTimeout(() => pollStatus(runId), 3000);
+});
 {% endif %}
 </script>
 {% endblock %}

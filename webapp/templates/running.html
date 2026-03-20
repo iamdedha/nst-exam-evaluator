@@ -59,9 +59,9 @@
 </div>
 
 <!-- Log -->
-<details class="mt-6">
+<details class="mt-6" open>
     <summary class="text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700">Live Log</summary>
-    <pre id="logOutput" class="log-output mt-2"></pre>
+    <pre id="logOutput" class="log-output mt-2" style="max-height:400px; overflow-y:auto; background:#1a1a2e; color:#e0e0e0; padding:16px; border-radius:8px; font-size:13px; line-height:1.6;"></pre>
 </details>
 {% endblock %}
 
@@ -86,18 +86,25 @@ function setPhaseState(id, state, detail) {
 
 function startEvaluation(runId) {
     const btn = document.getElementById('startBtn');
-    btn.disabled = true; btn.textContent = 'Starting...'; btn.classList.add('opacity-60');
+    if (btn) { btn.disabled = true; btn.textContent = 'Starting...'; btn.classList.add('opacity-60'); }
+    appendLog('[UI] Starting evaluation...');
+    document.getElementById('progressLabel').textContent = 'Starting evaluation...';
     fetch(`/eval/${runId}/start`, { method: 'POST' })
         .then(r => r.json())
         .then(data => {
             if (data.error) { showError(data.error); return; }
             document.getElementById('startSection').style.display = 'none';
+            appendLog('[UI] Evaluation started, connecting to live stream...');
             connectSSE(runId);
-        }).catch(err => showError(err.message));
+            // Also start polling as backup
+            setTimeout(() => pollStatus(runId), 5000);
+        }).catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
 }
 
 function connectSSE(runId) {
+    appendLog('[UI] Connecting to SSE stream...');
     evtSource = new EventSource(`/eval/${runId}/progress`);
+    evtSource.onopen = () => appendLog('[UI] SSE connected successfully');
     evtSource.onmessage = function(event) {
         const data = JSON.parse(event.data);
         if (data.error) { showError(data.error); evtSource.close(); return; }
@@ -108,15 +115,20 @@ function connectSSE(runId) {
             else if (data.phase === 'error') { evtSource.close(); showError(data.error || 'Unknown error'); }
         }
     };
-    evtSource.onerror = () => { evtSource.close(); setTimeout(() => pollStatus(runId), 3000); };
+    evtSource.onerror = () => {
+        appendLog('[UI] SSE disconnected, falling back to polling...');
+        evtSource.close();
+        setTimeout(() => pollStatus(runId), 2000);
+    };
 }
 
 function pollStatus(runId) {
     fetch(`/eval/${runId}/status`).then(r => r.json()).then(data => {
+        appendLog('[Poll] Phase: ' + (data.phase || data.status) + ', Step: ' + (data.current_step || 'n/a'));
         if (data.phase === 'complete' || data.status === 'complete') showComplete();
         else if (data.phase === 'error' || data.status === 'error') showError(data.error || 'Failed');
-        else { updateProgress(data); setTimeout(() => pollStatus(runId), 3000); }
-    }).catch(() => setTimeout(() => pollStatus(runId), 5000));
+        else { updateProgress(data); setTimeout(() => pollStatus(runId), 2000); }
+    }).catch(err => { appendLog('[Poll] Error: ' + err.message); setTimeout(() => pollStatus(runId), 5000); });
 }
 
 function updateProgress(data) {

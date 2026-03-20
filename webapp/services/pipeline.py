@@ -425,32 +425,45 @@ def run_full_pipeline(run_id: str, progress: RunProgress):
         return
 
     try:
-        progress.update(phase="starting", started_at=datetime.now())
+        progress.update(phase="starting", started_at=datetime.now(),
+                       current_step="Initializing pipeline...")
+        progress.log("Pipeline starting...")
         run_manager.update_meta(run_id, status="running")
 
         with _redirect_output(progress):
             # Phase 0
+            progress.log("=== PHASE 0: Data Cleanup ===")
             summary = run_phase0(run_id, progress)
+            progress.log(f"Phase 0 done: {summary['stats']['total_valid_part_a']} valid students")
 
             # Part A
+            progress.log("=== PART A: Evaluation ===")
             run_part_a(run_id, progress, summary)
+            progress.log("Part A evaluation complete")
 
             # Part B
             if summary["stats"]["total_part_b_submissions"] > 0:
+                progress.log("=== PART B: Evaluation ===")
                 run_part_b(run_id, progress, summary)
+                progress.log("Part B evaluation complete")
             else:
                 progress.log("No Part B submissions to evaluate")
 
             # Aggregation
+            progress.log("=== AGGREGATION ===")
             run_aggregation(run_id, progress)
+            progress.log("Aggregation complete")
 
         progress.update(phase="complete", completed_at=datetime.now(),
                        current_step="Evaluation complete!")
+        progress.log("=== ALL DONE ===")
 
     except Exception as e:
         import traceback
-        progress.update(phase="error", error=str(e))
-        progress.log(f"FATAL ERROR: {traceback.format_exc()}")
+        tb = traceback.format_exc()
+        progress.update(phase="error", error=str(e),
+                       current_step=f"ERROR: {str(e)[:100]}")
+        progress.log(f"FATAL ERROR: {tb}")
         run_manager.update_meta(run_id, status="error", error=str(e))
     finally:
         _eval_lock.release()

@@ -1,4 +1,5 @@
 """Dashboard route with chart data."""
+import os
 from flask import Blueprint, render_template, jsonify
 from webapp.services import run_manager
 
@@ -84,3 +85,36 @@ def index():
             chart_data = _build_chart_data(scores, phase0_students)
 
     return render_template("index.html", runs=runs, stats=stats, chart_data=chart_data)
+
+
+@main_bp.route("/health")
+def health():
+    """Debug endpoint to check environment and imports."""
+    checks = {}
+    # Check env vars
+    checks["GEMINI_API_KEY"] = "set" if os.environ.get("GEMINI_API_KEY") else "NOT SET"
+    checks["GITHUB_TOKEN"] = "set" if os.environ.get("GITHUB_TOKEN") else "NOT SET"
+    checks["LLM_PROVIDER"] = os.environ.get("LLM_PROVIDER", "not set (default)")
+
+    # Check imports
+    for mod in ["flask", "requests", "openpyxl", "numpy", "bs4", "google.generativeai", "pypdf"]:
+        try:
+            __import__(mod)
+            checks[f"import_{mod}"] = "OK"
+        except ImportError as e:
+            checks[f"import_{mod}"] = f"FAILED: {e}"
+
+    # Check evaluator imports
+    import sys
+    from pathlib import Path
+    eval_dir = str(Path(__file__).parent.parent.parent)
+    if eval_dir not in sys.path:
+        sys.path.insert(0, eval_dir)
+    for mod in ["phase0_data_cleanup", "agents.llm_client", "agents.part_a_evaluator", "agents.github_checker"]:
+        try:
+            __import__(mod)
+            checks[f"import_{mod}"] = "OK"
+        except Exception as e:
+            checks[f"import_{mod}"] = f"FAILED: {e}"
+
+    return jsonify(checks)

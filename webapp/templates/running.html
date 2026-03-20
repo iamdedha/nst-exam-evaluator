@@ -152,6 +152,8 @@ function showError(msg) { document.getElementById('errorSection').classList.remo
 
 {% if meta.status == 'running' %}
 document.addEventListener('DOMContentLoaded', () => connectSSE(runId));
+{% elif meta.status in ['uploaded', 'phase0_complete', 'created'] %}
+document.addEventListener('DOMContentLoaded', () => startEvaluation(runId));
 {% endif %}
 </script>
 {% endblock %}

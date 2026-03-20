@@ -1,6 +1,0 @@
-Roll Number,Name,Paper,Q1 Total/25,Q2 Total/40,Q3 Total/35,Q4 Total/30,Q4.1 Report/15,Q4.2 LLM JSON/15,Structure Penalty,Raw Total/130,Final Total/130,Scaled/30,Flags
-230066,Pugazhendhi J,Efficient variable selection in support vector machines via ,12,17,10,23.5,8.5,15.0,0,62.5,62.5,14.42,
-230091,Samyak Mittal,Sparse Inverse Covariance Estimation with the Lasso,19,18,11,20.0,15,5.0,0,68.0,68.0,15.69,
-230132,Mann Vaswani,The Constrained Weight Space SVM: Learning with Ranked Featu,21,22,12,7.5,0,7.5,0,62.5,62.5,14.42,REPORT_TEXT_EXTRACTION_FAILED
-230136,Kalash kumari thakur,Time Series Shapelets: A New Primitive for Data Mining,0,0,0,27.0,15,12.0,0,27.0,27.0,6.23,MISSING_OR_EMPTY: task_1_1; MISSING_OR_EMPTY: task_1_2; MISSING_OR_EMPTY: task_1_3; MISSING_OR_EMPTY: task_2_1; MISSING_OR_EMPTY: task_2_2; MISSING_OR_EMPTY: task_2_3; MISSING_OR_EMPTY: task_3_1; MISSING_OR_EMPTY: task_3_2
-230143,Dally R,Training and Testing Low-degree Polynomial Data Mappings via,23,26,21,30.0,15,15.0,0,100.0,100.0,23.08,

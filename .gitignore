@@ -11,3 +11,5 @@ build/
 papers/
 agents/evaluator/papers/
 .claude/
+webapp/runs/
+output/

@@ -1,0 +1,107 @@
+{
+  "paper_title": "Adaptive Regularization of Weight Vectors",
+  "venue": "NeurIPS",
+  "venue_abbreviation": "NeurIPS",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "AROW (Adaptive Regularization of Weights) is an online learning algorithm that maintains a Gaussian distribution over weight vectors and adaptively regularizes updates using an unconstrained objective that combines KL divergence, squared-hinge loss, and confidence regularization. Unlike confidence-weighted learning, AROW can handle non-separable data by softening the aggressive update constraints into regularization terms.",
+  "algorithm_steps": [
+    "Step 1: Initialize mean parameters \u03bc\u2080=0 and covariance matrix \u03a3\u2080=I",
+    "Step 2: For each training example x\u209c, compute margin m\u209c=\u03bc\u209c\u208b\u2081\u00b7x\u209c and confidence v\u209c=x\u209c\u1d40\u03a3\u209c\u208b\u2081x\u209c",
+    "Step 3: Receive true label y\u209c and check if update is needed (m\u209cy\u209c < 1)",
+    "Step 4: If update needed, compute \u03b1\u209c = max(0, 1-y\u209cx\u209c\u1d40\u03bc\u209c\u208b\u2081)/\u03b2\u209c where \u03b2\u209c = 1/(x\u209c\u1d40\u03a3\u209c\u208b\u2081x\u209c + r)",
+    "Step 5: Update mean: \u03bc\u209c = \u03bc\u209c\u208b\u2081 + \u03b1\u209c\u03a3\u209c\u208b\u2081y\u209cx\u209c",
+    "Step 6: Update covariance: \u03a3\u209c = \u03a3\u209c\u208b\u2081 - \u03b2\u209c\u03a3\u209c\u208b\u2081x\u209cx\u209c\u1d40\u03a3\u209c\u208b\u2081"
+  ],
+  "key_equations": [
+    "Eq (1): Unconstrained objective C(\u03bc,\u03a3) combining KL divergence, squared-hinge loss, and confidence regularization",
+    "Eq (7): Mean parameter update rule \u03bc\u209c = \u03bc\u209c\u208b\u2081 + max(0,1-y\u209cx\u209c\u1d40\u03bc\u209c\u208b\u2081)/(x\u209c\u1d40\u03a3\u209c\u208b\u2081x\u209c+r) \u03a3\u209c\u208b\u2081y\u209cx\u209c",
+    "Eq (9): Covariance update using Woodbury identity \u03a3\u209c = \u03a3\u209c\u208b\u2081 - \u03a3\u209c\u03a3\u209c\u208b\u2081x\u209cx\u209c\u1d40\u03a3\u209c\u208b\u2081/(r+x\u209c\u1d40\u03a3\u209c\u208b\u2081x\u209c)",
+    "Theorem 2: Mistake bound M \u2264 \u221a(r||u||\u00b2 + u\u1d40X\u2090u)\u221alog(det(I + X\u2090/r)) + U + \u03a3g\u209c - U"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Linear separability is not required (unlike confidence-weighted learning)",
+      "why_needed": "Allows the algorithm to handle noisy labels and non-separable data",
+      "violation_scenario": "This is actually a relaxation - the method works even when data is not linearly separable"
+    },
+    {
+      "assumption": "Gaussian distribution over weight vectors is appropriate",
+      "why_needed": "Enables confidence weighting and principled parameter updates using KL divergence",
+      "violation_scenario": "When the true weight distribution is highly non-Gaussian or multimodal"
+    },
+    {
+      "assumption": "Squared-hinge loss is suitable for the classification task",
+      "why_needed": "Provides differentiability for optimization and conservative updates",
+      "violation_scenario": "When other loss functions (e.g., logistic, exponential) would be more appropriate for the specific problem"
+    }
+  ],
+  "baselines_compared": [
+    "Confidence Weighted (CW) learning",
+    "Perceptron",
+    "Passive-Aggressive"
+  ],
+  "baseline_limitations_identified": "Confidence-weighted learning is too aggressive and overfits on noisy data, assumes linear separability, and forces probability constraints that can cause drastic parameter changes on mislabeled examples",
+  "proposed_improvement": "AROW softens the hard constraints of CW learning into regularization terms in an unconstrained objective, allowing adaptive regularization that is more robust to label noise while maintaining confidence weighting benefits",
+  "condition_where_baseline_wins": "On perfectly clean, linearly separable data where aggressive updates are beneficial, confidence-weighted learning might converge faster since AROW's conservative updates could be unnecessarily cautious",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian blobs with label noise",
+    "Linearly separable synthetic data with added noise",
+    "Binary classification on Iris dataset with artificial label flips"
+  ],
+  "toy_dataset_justification": "These datasets would test AROW's key claimed advantage of robustness to label noise while allowing comparison with confidence-weighted learning on both separable and non-separable scenarios",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Algorithm is clearly specified with explicit update equations, but hyperparameter r selection strategy and experimental setup details are not fully provided in the visible text",
+  "key_components_for_ablation": [
+    {
+      "component": "Confidence regularization term (\u03bb\u2082x\u209c\u1d40\u03a3x\u209c)",
+      "role_in_method": "Encourages confidence to grow with more examples while preventing overconfidence",
+      "expected_effect_of_removal": "Would lose the confidence weighting aspect and potentially become less adaptive to feature importance"
+    },
+    {
+      "component": "Squared-hinge loss vs. standard hinge loss",
+      "role_in_method": "Provides differentiability and smoother updates compared to standard hinge loss",
+      "expected_effect_of_removal": "Using standard hinge loss would make optimization more difficult and updates less smooth"
+    },
+    {
+      "component": "Conservative update rule (only update when margin < 1)",
+      "role_in_method": "Prevents unnecessary updates when prediction is already confident and correct",
+      "expected_effect_of_removal": "Would update on every example, potentially leading to overfitting and computational waste"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Very high-dimensional sparse data with limited training examples",
+      "reason": "Covariance matrix becomes difficult to maintain and update efficiently",
+      "related_assumption": "Gaussian distribution over weight vectors is appropriate"
+    },
+    {
+      "scenario": "When optimal decision boundary is highly non-linear",
+      "reason": "Linear classifier limitation cannot be overcome by adaptive regularization alone",
+      "related_assumption": "Linear separability assumption (though relaxed, still assumes linear decision boundary is reasonable)"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://papers.nips.cc/paper_files/paper/2009/file/8ebda540cbcc4d7336496819a46a1b68-Paper.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

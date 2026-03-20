@@ -1,0 +1,108 @@
+{
+  "paper_title": "A Study of Information Retrieval Weighting Schemes for Sentiment Analysis",
+  "venue": "Association for Computational Linguistics",
+  "venue_abbreviation": "ACL",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper adapts Information Retrieval tf.idf weighting schemes to sentiment analysis classification, proposing variants of the classic tf.idf formula including Delta tf.idf and SMART notation schemes. The method uses sublinear term frequency functions and document frequency smoothing to improve SVM classification accuracy for sentiment analysis.",
+  "algorithm_steps": [
+    "Step 1: Represent documents as bag-of-words feature vectors with vocabulary size |V|",
+    "Step 2: Apply tf.idf weighting variants including Delta tf.idf that localizes idf estimation to individual classes",
+    "Step 3: Use SMART notation schemes with different term frequency factors (natural, logarithmic, augmented, boolean)",
+    "Step 4: Apply inverse document frequency variants including smoothed versions to handle zero occurrences",
+    "Step 5: Train SVM classifier using the weighted feature representations",
+    "Step 6: Apply normalization schemes (cosine, pivoted unique) to the final feature vectors"
+  ],
+  "key_equations": [
+    "Equation 1: Classic tf.idf formula wi = tfi \u00b7 log(N/dfi)",
+    "Equation 2: Delta tf.idf formula wi = tfi \u00b7 log2(N1\u00b7dfi,2 / dfi,1\u00b7N2)",
+    "Table 1: SMART term frequency variants including logarithmic 1+log(tf) and augmented 0.5+0.5\u00b7tf/maxt(tf)",
+    "Table 2: Delta idf variants including smoothed versions with +0.5 terms to handle zero document frequencies"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Term frequency contribution to sentiment classification is sublinear rather than linear",
+      "why_needed": "Linear term frequency (raw tf) typically decreases accuracy in sentiment analysis unlike topic classification",
+      "violation_scenario": "When sentiment is expressed through repetitive use of the same sentiment words where frequency matters linearly"
+    },
+    {
+      "assumption": "Class-specific inverse document frequency provides better discrimination than global idf",
+      "why_needed": "Standard idf doesn't provide class preference information, only general term distribution",
+      "violation_scenario": "When sentiment-bearing terms are equally distributed across positive and negative classes"
+    },
+    {
+      "assumption": "Document frequency smoothing prevents division by zero and improves robustness",
+      "why_needed": "Terms may occur in only one class leading to dfi,j = 0 in Delta tf.idf calculations",
+      "violation_scenario": "When working with very large balanced datasets where all terms appear in both classes"
+    }
+  ],
+  "baselines_compared": [
+    "Binary unigram SVM",
+    "Raw term frequency SVM",
+    "Naive Bayes",
+    "Maximum Entropy"
+  ],
+  "baseline_limitations_identified": "Binary unigram weighting ignores term frequency information while raw tf typically decreases accuracy in sentiment analysis, and standard tf.idf doesn't account for class-specific term distributions",
+  "proposed_improvement": "Adapts IR weighting schemes with sublinear tf functions, class-localized idf estimation through Delta tf.idf, and document frequency smoothing to better capture sentiment-specific term importance",
+  "condition_where_baseline_wins": "When sentiment is expressed through simple presence/absence of sentiment words rather than their frequency or intensity, making binary weighting more appropriate than sophisticated tf.idf variants",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Movie review dataset",
+    "Product review dataset",
+    "Small sentiment-labeled text collection"
+  ],
+  "toy_dataset_justification": "These datasets contain positive/negative sentiment labels needed for the Delta tf.idf class-specific calculations and are suitable for testing different weighting schemes with SVM classification",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires implementing multiple tf.idf variants and SMART notation schemes, plus careful handling of smoothing parameters and normalization schemes",
+  "key_components_for_ablation": [
+    {
+      "component": "Sublinear term frequency function",
+      "role_in_method": "Applies logarithmic or other sublinear transformations to raw term frequencies",
+      "expected_effect_of_removal": "Would revert to linear tf which typically decreases sentiment classification accuracy"
+    },
+    {
+      "component": "Delta idf class localization",
+      "role_in_method": "Estimates idf separately for each class and takes the difference to capture class preference",
+      "expected_effect_of_removal": "Would lose class-specific term discrimination, reverting to standard global idf"
+    },
+    {
+      "component": "Document frequency smoothing",
+      "role_in_method": "Adds small constants to prevent division by zero in idf calculations",
+      "expected_effect_of_removal": "Could cause numerical instability when terms appear in only one class"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When sentiment terms are equally distributed across classes",
+      "reason": "Delta idf becomes close to zero, losing discriminative power",
+      "related_assumption": "Class-specific inverse document frequency provides better discrimination than global idf"
+    },
+    {
+      "scenario": "When sentiment is expressed through term absence rather than presence",
+      "reason": "tf.idf variants focus on present terms and may miss important negative evidence",
+      "related_assumption": "Term frequency contribution to sentiment classification is sublinear rather than linear"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://aclanthology.org/P10-1141/",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

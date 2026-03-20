@@ -1,0 +1,107 @@
+{
+  "roll_number": "230146",
+  "full_name": "Ankush",
+  "paper_title": "Collaborative Filtering with Temporal Dynamics",
+  "venue": "KDD",
+  "year": 2009,
+  "method": "ARIMA / Time Series",
+  "github_url": "https://github.com/Ankushyadav1712/230146-midsem",
+  "repo_checks": {
+    "github_url": "https://github.com/Ankushyadav1712/230146-midsem",
+    "owner": "Ankushyadav1712",
+    "repo": "230146-midsem",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": true,
+      "repo_public": true,
+      "naming_correct": true,
+      "llm_json_exists": false
+    },
+    "score_adjustments": {},
+    "flags": [
+      "LLM_JSON_MISSING"
+    ]
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 0,
+      "llm_disclosure_completeness": 0,
+      "llm_disclosure_verification": 0
+    },
+    "flags": [
+      "LLM_JSON_MISSING"
+    ],
+    "details": {
+      "year": "Year 2009 is valid (2009-2012)",
+      "venue": "Venue 'KDD' is CORE A*",
+      "json_validity": "llm_usage_partA.json not found in repo",
+      "completeness": "JSON not available for completeness check",
+      "verification": "JSON not available"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 4,
+      "paper_validity_paper_type": 2,
+      "reproducibility_dataset_availability": 3,
+      "reproducibility_compute_feasibility": 3,
+      "reproducibility_experimental_scope": 3,
+      "top5_prompts_analytical_depth": 0,
+      "top5_prompts_relevance": 0
+    },
+    "flags": [
+      "DATASET_AVAILABILITY_UNCERTAIN",
+      "COMPUTE_UNCERTAIN"
+    ],
+    "details": {
+      "method_alignment": "Method 'TIME_SERIES' aligns with ARIMA/GMM/SVM",
+      "paper_type": "Valid methodological paper",
+      "dataset": "Dataset availability uncertain",
+      "compute": "Compute requirements uncertain",
+      "scope": "Reproducibility uncertain",
+      "prompts": "LLM JSON not available for prompt evaluation"
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 0,
+    "llm_disclosure_completeness": 0,
+    "llm_disclosure_verification": 0,
+    "paper_validity_method_alignment": 4,
+    "paper_validity_paper_type": 2,
+    "reproducibility_dataset_availability": 3,
+    "reproducibility_compute_feasibility": 3,
+    "reproducibility_experimental_scope": 3,
+    "top5_prompts_analytical_depth": 0,
+    "top5_prompts_relevance": 0
+  },
+  "raw_total": 24,
+  "penalty": 5,
+  "penalty_reason": [
+    "20% resubmission penalty"
+  ],
+  "final_total": 19,
+  "out_of": 50,
+  "scaled_score": 1.9,
+  "flags": [
+    "RESUBMISSION_PENALTY: 20% = -5 marks"
+  ],
+  "details": {
+    "year": "Year 2009 is valid (2009-2012)",
+    "venue": "Venue 'KDD' is CORE A*",
+    "json_validity": "llm_usage_partA.json not found in repo",
+    "completeness": "JSON not available for completeness check",
+    "verification": "JSON not available",
+    "method_alignment": "Method 'TIME_SERIES' aligns with ARIMA/GMM/SVM",
+    "paper_type": "Valid methodological paper",
+    "dataset": "Dataset availability uncertain",
+    "compute": "Compute requirements uncertain",
+    "scope": "Reproducibility uncertain",
+    "prompts": "LLM JSON not available for prompt evaluation"
+  },
+  "needs_human_review": true
+}

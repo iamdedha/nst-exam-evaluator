@@ -1,0 +1,110 @@
+{
+  "paper_title": "Copula Mixture Model for Dependency-seeking Clustering",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2012,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "GMM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper introduces a copula mixture model for dependency-seeking clustering that uses Gaussian copulas to extend mixtures of Canonical Correlation Analysis to multivariate data with arbitrary continuous marginal densities. The model formulates dependency-seeking clustering as a non-parametric Bayesian mixture while preserving the key property that views become independent when conditioned on cluster structure.",
+  "algorithm_steps": [
+    "Step 1: Model each view's marginal distributions as arbitrary continuous distributions with densities",
+    "Step 2: Specify dependence structure using Gaussian copula with block diagonal correlation matrix",
+    "Step 3: Construct meta-Gaussian distributions combining arbitrary margins with Gaussian dependence structure",
+    "Step 4: Apply Dirichlet Process Mixture framework for clustering",
+    "Step 5: Use MCMC sampling with overparameterized latent variables for inference",
+    "Step 6: Update cluster assignments using modified Metropolis-Hastings and partial Gibbs sampling"
+  ],
+  "key_equations": [
+    "Eq (5): Sklar's theorem relating copulas to multivariate distributions",
+    "Eq (8): Meta-Gaussian density formula combining copula density with marginal densities",
+    "Eq (9): Joint distribution specification using Gaussian copula with block diagonal structure"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Views become independent when conditioned on cluster assignments",
+      "why_needed": "This is the core property that allows cluster structure to capture all inter-view dependencies",
+      "violation_scenario": "When there are residual dependencies between views even after accounting for cluster structure"
+    },
+    {
+      "assumption": "Marginal distributions have continuous densities",
+      "why_needed": "Required for the copula density formula to be well-defined",
+      "violation_scenario": "When dealing with discrete or mixed discrete-continuous data"
+    },
+    {
+      "assumption": "Gaussian copula adequately captures dependence structure within clusters",
+      "why_needed": "Enables tractable inference while maintaining flexibility in dependence modeling",
+      "violation_scenario": "When true dependence structure has tail dependencies or other non-Gaussian characteristics"
+    }
+  ],
+  "baselines_compared": [
+    "Gaussian mixture for dependency-seeking clustering (Klami & Kaski 2007)",
+    "Exponential family dependency-seeking method (Klami et al. 2010)",
+    "Mixture of local CCA (Fern et al. 2005)"
+  ],
+  "baseline_limitations_identified": "Gaussian mixture models suffer from model mismatch when data are non-normally distributed, requiring additional clusters to approximate non-Gaussian distributions and losing interpretability of clusters in terms of dependencies",
+  "proposed_improvement": "Uses copula framework to separate marginal distributions from dependence structure, allowing arbitrary continuous marginal densities while maintaining Gaussian dependence structure for tractable inference",
+  "condition_where_baseline_wins": "When data within clusters are actually Gaussian distributed, the simpler Gaussian mixture model would be more efficient and equally effective",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Bivariate data with beta-distributed margins and known correlation structure",
+    "Multi-view data with exponential and uniform marginal distributions"
+  ],
+  "toy_dataset_justification": "These datasets would demonstrate the method's ability to handle non-Gaussian marginal distributions while capturing dependence structure, which is the core contribution",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "MCMC implementation details for non-conjugate priors and the overparameterized sampling scheme would require careful implementation",
+  "key_components_for_ablation": [
+    {
+      "component": "Gaussian copula dependence structure",
+      "role_in_method": "Captures inter-view dependencies while maintaining block diagonal structure",
+      "expected_effect_of_removal": "Would lose ability to model complex dependence patterns, reverting to independence assumption"
+    },
+    {
+      "component": "Arbitrary marginal distributions",
+      "role_in_method": "Allows flexible modeling of individual view distributions",
+      "expected_effect_of_removal": "Would force Gaussian assumption on marginals, reducing to standard Gaussian mixture"
+    },
+    {
+      "component": "Block diagonal correlation matrix structure",
+      "role_in_method": "Enforces conditional independence between views given cluster assignment",
+      "expected_effect_of_removal": "Would lose the dependency-seeking property and become standard multi-view clustering"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When marginal distributions are discrete or have discontinuities",
+      "reason": "Copula density formula requires continuous marginal densities",
+      "related_assumption": "Marginal distributions have continuous densities"
+    },
+    {
+      "scenario": "When true dependence structure has strong tail dependencies",
+      "reason": "Gaussian copulas cannot capture tail dependencies effectively",
+      "related_assumption": "Gaussian copula adequately captures dependence structure within clusters"
+    },
+    {
+      "scenario": "When views have complex residual dependencies after clustering",
+      "reason": "Block diagonal structure enforces complete conditional independence",
+      "related_assumption": "Views become independent when conditioned on cluster assignments"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/2012/papers/486.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "paper_title": "SVM Classifier Estimation from Group Probabilities",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes an 'Inverse Calibration' method that learns SVM classifiers from group probabilities by inverting the classifier calibration process. Instead of first training a classifier and then calibrating it to estimate probabilities, the method starts with given group probability estimates, applies inverse scaling, and trains an SVM to predict the inverse-scaled values using support vector regression.",
+  "algorithm_steps": [
+    "Step 1: Given groups of unlabeled observations with known class frequency distributions, apply inverse sigmoid scaling to convert group probabilities p_i to target values y_i = -log(1/p_i - 1)",
+    "Step 2: Set precision parameters \u03b5_i = \u03b5/(p_i(1-p_i)) for each group based on Taylor expansion to account for probability-space error requirements",
+    "Step 3: Formulate as support vector regression problem minimizing ||w||\u00b2 + C\u2211(\u03be_i + \u03be_i*) subject to constraints that average predictions over each group approximate the target y_i within tolerance \u03b5_i",
+    "Step 4: Solve the dual quadratic optimization problem with kernel matrix entries averaged over group pairs",
+    "Step 5: Use resulting SVM decision function f(x) = wx + b for classification via sign(f(x))"
+  ],
+  "key_equations": [
+    "Inverse scaling: y = \u03c3^(-1)(p) = -log(1/p - 1) where p is group probability",
+    "Group constraint: (1/|S_i|)\u2211_{j\u2208S_i}(wx_j + b) \u2248 y_i for each group S_i",
+    "Adaptive precision: \u03b5_i = \u03b5/(p_i(1-p_i)) derived from Taylor expansion",
+    "Dual objective: minimize (1/2)\u2211_{i,j}(\u03b1_i-\u03b1_i*)(\u03b1_j-\u03b1_j*)(1/|S_i||S_j|)\u2211_{i'\u2208S_i,j'\u2208S_j}K(x_i',x_j') + \u2211_i(\u03b1_i(\u03b5_i-y_i) + \u03b1_i*(\u03b5_i+y_i))"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The sigmoid scaling function \u03c3(y) = 1/(1+exp(-y)) with A=1, B=0 is appropriate for relating decision function values to probabilities",
+      "why_needed": "The inverse calibration approach requires a fixed scaling function to invert, and this choice enables analytical inversion",
+      "violation_scenario": "When the true relationship between decision function and probabilities is not sigmoid-like or requires different A,B parameters"
+    },
+    {
+      "assumption": "Group probabilities are accurate estimates of the true class frequencies within each group",
+      "why_needed": "The method relies on these probabilities as ground truth targets for the regression problem",
+      "violation_scenario": "When group probabilities are noisy, biased, or based on very small sample sizes"
+    },
+    {
+      "assumption": "The optimal individual class probabilities within a group vary around the group average in a way that allows good classification",
+      "why_needed": "The method only enforces average predictions over groups, not individual predictions",
+      "violation_scenario": "When groups contain highly heterogeneous examples where the group average is not representative of individual optimal probabilities"
+    }
+  ],
+  "baselines_compared": [
+    "Mean Map method"
+  ],
+  "baseline_limitations_identified": "The Mean Map method is based on conditional exponential models and requires solving a more complex convex optimization problem, while other existing methods like kernel density estimation, discriminative sorting, and generative MCMC approaches were shown to underperform Mean Map",
+  "proposed_improvement": "The Inverse Calibration method provides a simpler and more direct approach by leveraging the well-established SVM regression framework and inverting the calibration process, avoiding the need for complex exponential model parameter estimation",
+  "condition_where_baseline_wins": "When the true conditional probability model follows an exponential family distribution that aligns well with the Mean Map assumptions, or when groups are very small and the averaging assumption of Inverse Calibration becomes problematic",
+  "datasets_used": [
+    "heart-c",
+    "primary-tumor",
+    "ionosphere",
+    "colic",
+    "vote",
+    "soybean",
+    "credit-a",
+    "breast-w",
+    "diabetes",
+    "vehicle",
+    "anneal",
+    "credit-g"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian mixture with known cluster assignments",
+    "Synthetic linearly separable data with predefined groups"
+  ],
+  "toy_dataset_justification": "These datasets allow controlled testing of the group probability learning setting while providing ground truth for validation, and can easily generate groups with known class frequencies",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The method requires implementing the dual SVM regression formulation with group-averaged kernel matrices and adaptive precision parameters. Parameter tuning details for C and kernel parameters are mentioned but not fully specified.",
+  "key_components_for_ablation": [
+    {
+      "component": "Adaptive precision parameters \u03b5_i = \u03b5/(p_i(1-p_i))",
+      "role_in_method": "Accounts for the nonlinear relationship between probability-space and decision-function-space errors",
+      "expected_effect_of_removal": "Using constant \u03b5 would lead to suboptimal handling of groups with extreme probabilities (near 0 or 1)"
+    },
+    {
+      "component": "Fixed sigmoid scaling with A=1, B=0",
+      "role_in_method": "Provides the inverse transformation from probabilities to decision function targets",
+      "expected_effect_of_removal": "Using different scaling parameters or functions would change the target values and potentially improve or degrade performance"
+    },
+    {
+      "component": "Group averaging constraint",
+      "role_in_method": "Enforces that predictions average to target values over each group rather than individual point constraints",
+      "expected_effect_of_removal": "Individual point constraints would be impossible since individual labels are unknown"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Groups with extreme probabilities very close to 0 or 1",
+      "reason": "The inverse sigmoid transformation becomes numerically unstable and the adaptive precision becomes very large",
+      "related_assumption": "The sigmoid scaling function assumption and the clipping to [\u03b5, 1-\u03b5] interval"
+    },
+    {
+      "scenario": "Very small groups or groups with highly heterogeneous examples",
+      "reason": "The group averaging assumption becomes poor and individual optimal probabilities may vary significantly from group average",
+      "related_assumption": "The assumption that group averages are representative of individual optimal probabilities"
+    },
+    {
+      "scenario": "When true probability-decision function relationship is not sigmoid-like",
+      "reason": "The fixed sigmoid scaling with A=1, B=0 may be inappropriate for the data",
+      "related_assumption": "The sigmoid scaling function assumption"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/Conferences/2010/papers/223.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

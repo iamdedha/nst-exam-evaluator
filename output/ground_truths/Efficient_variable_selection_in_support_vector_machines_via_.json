@@ -1,0 +1,117 @@
+{
+  "paper_title": "Efficient variable selection in support vector machines via the alternating direction method of multipliers",
+  "venue": "AISTATS",
+  "venue_abbreviation": "AISTATS",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper develops an efficient ADMM-based algorithm to solve the doubly regularized SVM (DrSVM) optimization problem, which combines hinge loss with elastic net penalty (L1 + L2 regularization). The method reformulates the non-differentiable optimization problem using auxiliary variables and applies alternating direction method of multipliers to solve it efficiently for large-scale problems.",
+  "algorithm_steps": [
+    "Step 1: Reformulate the elastic net SVM problem (3) into constrained form (6) by introducing auxiliary variables a and c",
+    "Step 2: Form the augmented Lagrangian function (8) with dual variables u and v and penalty parameters \u03bc1 and \u03bc2",
+    "Step 3: Update (\u03b2, \u03b20) by solving quadratic minimization problem with closed-form solution using matrix inversion",
+    "Step 4: Update auxiliary variable a using soft thresholding operator for hinge loss",
+    "Step 5: Update auxiliary variable c using soft thresholding operator for L1 penalty",
+    "Step 6: Update dual variables u and v using gradient ascent steps",
+    "Step 7: Repeat steps 3-6 until convergence"
+  ],
+  "key_equations": [
+    "Eq (3): Elastic net SVM objective function with hinge loss + L1 + L2 penalties",
+    "Eq (6): Constrained reformulation with auxiliary variables a and c",
+    "Eq (8): Augmented Lagrangian function with penalty terms",
+    "Eq (14): ADMM iteration scheme for updating all variables",
+    "Eq (15): Closed-form solution for (\u03b2, \u03b20) update via matrix inversion",
+    "Eq (16): Soft thresholding update for auxiliary variable a",
+    "Eq (17): Soft thresholding update for auxiliary variable c"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The optimization problem is convex and the augmented Lagrangian has a unique minimizer at each iteration",
+      "why_needed": "Required for ADMM convergence guarantees and closed-form solutions",
+      "violation_scenario": "Non-convex modifications to the loss function or regularization terms"
+    },
+    {
+      "assumption": "The matrix (\u03bb2I + \u03bc2I + \u03bc1X^T Y^T Y X) is invertible",
+      "why_needed": "Needed for the closed-form solution in equation (15) for updating (\u03b2, \u03b20)",
+      "violation_scenario": "When the data matrix X has rank deficiency or regularization parameters are zero"
+    },
+    {
+      "assumption": "The penalty parameters \u03bc1 and \u03bc2 are positive",
+      "why_needed": "Ensures strict convexity of the augmented Lagrangian and convergence of ADMM",
+      "violation_scenario": "Setting penalty parameters to zero would make the method equivalent to standard method of multipliers"
+    }
+  ],
+  "baselines_compared": [
+    "HHSVM",
+    "Standard SVM",
+    "L1-SVM"
+  ],
+  "baseline_limitations_identified": "HHSVM uses huberized hinge loss approximation and requires expensive path algorithm that tracks variable disappearance, making it computationally expensive for large-scale problems. Standard SVM cannot perform variable selection, and L1-SVM has limitations in high-dimensional settings.",
+  "proposed_improvement": "Direct solution of the exact DrSVM problem without approximation using ADMM, which decomposes the non-differentiable optimization into simpler subproblems with closed-form solutions, making it efficient for large-scale problems.",
+  "condition_where_baseline_wins": "When the dataset is small and low-dimensional, the computational overhead of ADMM iterations might make simpler methods like standard SVM more efficient, or when only L2 regularization is needed without variable selection.",
+  "datasets_used": [
+    "Simulated data",
+    "Real-world data"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian mixture data",
+    "Sparse linear separable data",
+    "High-dimensional microarray-like data"
+  ],
+  "toy_dataset_justification": "These datasets would test the key features of the method: variable selection capability, handling of high-dimensional data, and performance with correlated features that benefit from elastic net penalty.",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The algorithm is clearly specified with explicit update equations, but implementation details like convergence criteria, initialization, and parameter selection strategies are not fully detailed. Matrix inversion operations may require careful numerical implementation.",
+  "key_components_for_ablation": [
+    {
+      "component": "L1 regularization term (\u03bb1 penalty)",
+      "role_in_method": "Provides variable selection capability through sparsity-inducing penalty",
+      "expected_effect_of_removal": "Method would reduce to standard L2-regularized SVM without variable selection"
+    },
+    {
+      "component": "L2 regularization term (\u03bb2 penalty)",
+      "role_in_method": "Provides grouping effect for correlated variables and numerical stability",
+      "expected_effect_of_removal": "Method would become L1-SVM with potential instability and loss of grouping effect"
+    },
+    {
+      "component": "Auxiliary variable decomposition",
+      "role_in_method": "Separates non-differentiable terms to enable ADMM application",
+      "expected_effect_of_removal": "Would require different optimization approach as ADMM framework would not apply"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When the data matrix X has very high condition number or is rank deficient",
+      "reason": "Matrix inversion in equation (15) becomes numerically unstable or impossible",
+      "related_assumption": "Matrix invertibility assumption"
+    },
+    {
+      "scenario": "When penalty parameters \u03bc1, \u03bc2 are set too large",
+      "reason": "Can lead to slow convergence or numerical instability in the ADMM iterations",
+      "related_assumption": "Positive penalty parameter assumption"
+    },
+    {
+      "scenario": "When regularization parameters \u03bb1, \u03bb2 are both very small",
+      "reason": "Problem becomes ill-conditioned and may not achieve desired sparsity or grouping effects",
+      "related_assumption": "Convexity and regularization assumptions"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://proceedings.mlr.press/v15/ye11a/ye11a.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "paper_title": "Poisoning Attacks against Support Vector Machines",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2012,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "A gradient ascent-based poisoning attack method that crafts malicious training points to maximize SVM test error. The method uses properties of the SVM's optimal solution to predict how adding attack points changes the decision function, and can be kernelized to work in input space even for non-linear kernels.",
+  "algorithm_steps": [
+    "Step 1: Initialize attack point by cloning a point from attacked class and flipping its label",
+    "Step 2: Train SVM on training data plus current attack point using incremental SVM",
+    "Step 3: Compute gradient of validation loss with respect to attack point direction using Eq. (10)",
+    "Step 4: Set attack direction u to unit vector aligned with gradient",
+    "Step 5: Update attack point: x_c^(p) = x_c^(p-1) + t*u with fixed step size t",
+    "Step 6: Repeat until validation error change falls below threshold"
+  ],
+  "key_equations": [
+    "Eq. (1): Objective function maximizing hinge loss on validation set",
+    "Eq. (2): Margin conditions accounting for attack point influence",
+    "Eq. (7): Adiabatic update condition maintaining optimal SVM solution structure",
+    "Eq. (9): Gradients of dual variables and bias with respect to attack direction",
+    "Eq. (10): Final gradient expression for objective function optimization"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Attacker knows the learning algorithm (SVM) and training data",
+      "why_needed": "Required to compute gradients and predict SVM solution changes",
+      "violation_scenario": "When attacker has limited knowledge of training data or algorithm parameters"
+    },
+    {
+      "assumption": "SVM support vector sets (S, E, R) remain unchanged during attack point updates",
+      "why_needed": "Enables smooth gradient computation and adiabatic update conditions",
+      "violation_scenario": "When large step sizes cause support vector set structure to change"
+    },
+    {
+      "assumption": "Attack point can be drawn from same distribution as training data",
+      "why_needed": "Ensures attack points are realistic and not easily detectable",
+      "violation_scenario": "When attack points must satisfy strict domain constraints or detection mechanisms exist"
+    }
+  ],
+  "baselines_compared": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "baseline_limitations_identified": "Previous poisoning attacks were limited to simple anomaly detection methods and could not be constructed in input space for non-linear kernels",
+  "proposed_improvement": "Kernelizable gradient-based approach that works in input space even for non-linear kernels, using SVM optimal solution properties",
+  "condition_where_baseline_wins": "When the SVM uses very small training sets where support vector structure changes frequently, making gradient approximations unreliable",
+  "datasets_used": [
+    "Artificial two-dimensional dataset",
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Two-class linearly separable 2D Gaussian clusters",
+    "Iris dataset (binary classification)",
+    "Synthetic RBF kernel data"
+  ],
+  "toy_dataset_justification": "These datasets allow clear visualization of decision boundaries and attack point effects, have simple structure for debugging gradient computations, and work with different kernel types",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires implementing incremental SVM updates and careful handling of gradient computations with different kernels. Step size selection and convergence criteria need tuning.",
+  "key_components_for_ablation": [
+    {
+      "component": "Adiabatic update condition maintaining support vector structure",
+      "role_in_method": "Enables smooth gradient computation by assuming SVM solution structure remains constant",
+      "expected_effect_of_removal": "Would require recomputing full SVM solution at each step, making method computationally expensive"
+    },
+    {
+      "component": "Kernelization of gradient computation",
+      "role_in_method": "Allows attack construction in input space for non-linear kernels",
+      "expected_effect_of_removal": "Would limit method to linear kernels or require feature space construction"
+    },
+    {
+      "component": "Fixed step size strategy",
+      "role_in_method": "Simplifies optimization by avoiding expensive line search",
+      "expected_effect_of_removal": "Could improve convergence but increase computational cost significantly"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When attack point becomes a reserve point (alpha_i = 0)",
+      "reason": "Reserve points don't contribute to decision function, halting attack progress",
+      "related_assumption": "Attack point initialization must be sufficiently deep within attacking class margin"
+    },
+    {
+      "scenario": "When step size is too large causing support vector structure changes",
+      "reason": "Violates adiabatic update assumption, making gradient computations invalid",
+      "related_assumption": "SVM support vector sets remain unchanged during updates"
+    },
+    {
+      "scenario": "When validation and training data distributions differ significantly",
+      "reason": "Attack optimized on validation set may not transfer to actual test performance",
+      "related_assumption": "Validation set represents true test distribution"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": false,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://arxiv.org/pdf/1206.6389",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

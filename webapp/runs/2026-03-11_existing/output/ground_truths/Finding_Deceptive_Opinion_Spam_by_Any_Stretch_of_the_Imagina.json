@@ -1,0 +1,108 @@
+{
+  "paper_title": "Finding Deceptive Opinion Spam by Any Stretch of the Imagination",
+  "venue": "Association for Computational Linguistics",
+  "venue_abbreviation": "ACL",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": true,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper develops three complementary approaches to detect deceptive opinion spam: n-gram-based text categorization using SVM, psycholinguistic deception detection using psychological features, and genre identification treating deceptive/truthful writing as imaginative/informative genres. A combined classifier achieves nearly 90% accuracy on a novel gold-standard dataset of 800 hotel reviews.",
+  "algorithm_steps": [
+    "Step 1: Collect gold-standard dataset with 400 truthful reviews from TripAdvisor and 400 deceptive reviews via Amazon Mechanical Turk",
+    "Step 2: Extract three types of features: n-gram features (unigrams and bigrams), psycholinguistic features (LIWC categories), and genre identification features (POS tags and production rules)",
+    "Step 3: Train separate SVM classifiers for each feature type using cross-validation",
+    "Step 4: Combine features from different approaches into a unified SVM classifier",
+    "Step 5: Evaluate performance and analyze feature weights to understand deception patterns"
+  ],
+  "key_equations": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Deceptive reviews exhibit psychological patterns of lying such as increased negative emotion and psychological distancing",
+      "why_needed": "Forms the basis for the psycholinguistic deception detection approach using LIWC features",
+      "violation_scenario": "When deceptive reviewers are skilled writers who can consciously control psychological markers"
+    },
+    {
+      "assumption": "Deceptive writing resembles imaginative writing while truthful writing resembles informative writing",
+      "why_needed": "Justifies the genre identification approach using POS tags and syntactic features",
+      "violation_scenario": "When truthful reviewers write in highly creative or imaginative styles"
+    },
+    {
+      "assumption": "Crowdsourced deceptive reviews from Mechanical Turk are representative of real-world deceptive opinion spam",
+      "why_needed": "Enables creation of gold-standard training data for supervised learning",
+      "violation_scenario": "When real spammers have different motivations, skills, or constraints than paid crowdworkers"
+    }
+  ],
+  "baselines_compared": [
+    "Human judges",
+    "Random baseline",
+    "Individual feature type classifiers"
+  ],
+  "baseline_limitations_identified": "Human judges perform at chance level (around 50% accuracy) for detecting deceptive opinion spam, and individual feature approaches are less effective than combined approaches",
+  "proposed_improvement": "Combines multiple complementary feature types (n-grams, psycholinguistic, and genre features) in a unified SVM classifier to achieve higher accuracy than any single approach",
+  "condition_where_baseline_wins": "When deceptive reviews are written by professional writers who can effectively mimic authentic review styles and avoid psychological deception markers",
+  "datasets_used": [
+    "Custom hotel review dataset with 400 truthful TripAdvisor reviews and 400 deceptive AMT reviews"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Movie review datasets with positive/negative labels",
+    "Product review datasets from Amazon",
+    "Restaurant review datasets"
+  ],
+  "toy_dataset_justification": "These datasets contain authentic user-generated reviews with similar linguistic patterns and can be used to test the n-gram and genre identification features, though they lack the deceptive/truthful distinction",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires access to LIWC software for psycholinguistic features and Stanford parser for syntactic features. Dataset collection methodology is clearly described but recreating exact dataset may be challenging.",
+  "key_components_for_ablation": [
+    {
+      "component": "N-gram features (unigrams and bigrams)",
+      "role_in_method": "Captures lexical patterns and word usage differences between deceptive and truthful reviews",
+      "expected_effect_of_removal": "Significant performance drop as n-grams are the strongest individual feature type"
+    },
+    {
+      "component": "LIWC psycholinguistic features",
+      "role_in_method": "Captures psychological markers of deception such as emotion and cognitive processes",
+      "expected_effect_of_removal": "Moderate performance drop, particularly in detecting psychological distancing patterns"
+    },
+    {
+      "component": "Genre identification features (POS tags and production rules)",
+      "role_in_method": "Captures syntactic and structural differences between imaginative and informative writing styles",
+      "expected_effect_of_removal": "Small to moderate performance drop as these features are complementary to lexical features"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When deceptive reviewers are highly skilled writers who can mimic authentic review patterns",
+      "reason": "The method relies on detectable linguistic differences between deceptive and truthful writing",
+      "related_assumption": "Deceptive reviews exhibit psychological patterns of lying such as increased negative emotion and psychological distancing"
+    },
+    {
+      "scenario": "When truthful reviewers write in highly creative or unusual styles",
+      "reason": "Such reviews may be misclassified as deceptive due to their imaginative writing characteristics",
+      "related_assumption": "Deceptive writing resembles imaginative writing while truthful writing resembles informative writing"
+    },
+    {
+      "scenario": "When applied to domains very different from hotel reviews",
+      "reason": "Features learned from hotel reviews may not generalize to other product categories or review contexts",
+      "related_assumption": "Crowdsourced deceptive reviews from Mechanical Turk are representative of real-world deceptive opinion spam"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://aclanthology.org/P11-1032/",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

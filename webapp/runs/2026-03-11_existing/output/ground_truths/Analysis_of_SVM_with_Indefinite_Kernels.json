@@ -1,0 +1,101 @@
+{
+  "paper_title": "Analysis of SVM with Indefinite Kernels",
+  "venue": "NeurIPS",
+  "venue_abbreviation": "NeurIPS",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "This paper analyzes the theoretical properties of the indefinite SVM formulation by Luss and d'Aspremont, proving that the objective function is continuously differentiable with Lipschitz continuous gradient. Based on this analysis, they develop improved optimization algorithms including a simplified projected gradient method and Nesterov's smooth optimization approach with optimal convergence rates.",
+  "algorithm_steps": [
+    "Step 1: For fixed \u03b1, solve K(\u03b1) = (K\u2080 + Y\u03b1\u03b1^T Y/(4\u03c1))\u208a where (\u00b7)\u208a sets negative eigenvalues to zero",
+    "Step 2: Compute gradient \u2207f(\u03b1) = e - Y(K\u2080 + Y\u03b1\u03b1^T Y/(4\u03c1))\u208aY\u03b1",
+    "Step 3: Update \u03b1^(k+1) = P_Q\u2081(\u03b1^k + \u2207f(\u03b1^k)/\u03b3) where P_Q\u2081 is projection onto feasible set",
+    "Step 4: Repeat until convergence criterion is met"
+  ],
+  "key_equations": [
+    "Eq (1): min_K max_\u03b1 \u03b1^T e - (1/2)\u03b1^T YKY\u03b1 + \u03c1||K-K\u2080||\u00b2_F subject to constraints",
+    "Eq (3): f(\u03b1) = min_{K\u2ab00} L(\u03b1,K) defining the objective function",
+    "Eq (4): K(\u03b1) = (K\u2080 + Y\u03b1\u03b1^T Y/(4\u03c1))\u208a for optimal K given \u03b1",
+    "Eq (6): \u2207f(\u03b1) = e - Y(K\u2080 + Y\u03b1\u03b1^T Y/(4\u03c1))\u208aY\u03b1 for gradient computation"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The indefinite kernel matrix K\u2080 is symmetric",
+      "why_needed": "Required for the eigenvalue decomposition and projection operations to be well-defined",
+      "violation_scenario": "When dealing with asymmetric similarity measures that cannot be symmetrized"
+    },
+    {
+      "assumption": "The regularization parameter \u03c1 > 0",
+      "why_needed": "Ensures strong convexity of the penalty term ||K-K\u2080||\u00b2_F for theoretical guarantees",
+      "violation_scenario": "When \u03c1 = 0, the problem becomes non-convex and theoretical analysis breaks down"
+    },
+    {
+      "assumption": "Training labels y_i \u2208 {\u00b11}",
+      "why_needed": "Required for Y = diag(y) to be orthonormal matrix in the analysis",
+      "violation_scenario": "Multi-class problems or regression tasks where labels are not binary"
+    }
+  ],
+  "baselines_compared": [
+    "denoise method",
+    "flip method",
+    "shift method",
+    "diffusion method",
+    "quadratically smoothed version from Luss and d'Aspremont"
+  ],
+  "baseline_limitations_identified": "Spectral transformation methods lose useful information by being separated from classifier training process; previous indefinite SVM approach unnecessarily smoothed an already differentiable objective function",
+  "proposed_improvement": "Direct optimization of the original objective function using its proven differentiability and Lipschitz gradient properties, enabling faster convergence with optimal O(1/k\u00b2) rate",
+  "condition_where_baseline_wins": "When the indefinite kernel has very large negative eigenvalues and the regularization parameter \u03c1 is set too small, spectral methods might be more stable than the proposed approach",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "synthetic 2D classification with sigmoid kernel",
+    "small protein sequence similarity data"
+  ],
+  "toy_dataset_justification": "These datasets naturally produce indefinite kernels (sigmoid with certain parameters, biological similarity measures) and are small enough for educational implementation",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Main theoretical results are reproducible, but experimental section details are limited in the provided text. Implementation requires careful handling of eigenvalue decomposition and projection operations",
+  "key_components_for_ablation": [
+    {
+      "component": "Frobenius norm penalty term \u03c1||K-K\u2080||\u00b2_F",
+      "role_in_method": "Regularizes the distance between indefinite and proxy PSD kernel matrices",
+      "expected_effect_of_removal": "Loss of convexity and differentiability guarantees, making optimization much harder"
+    },
+    {
+      "component": "Positive semidefinite projection (\u00b7)\u208a",
+      "role_in_method": "Ensures the learned kernel matrix K is positive semidefinite",
+      "expected_effect_of_removal": "Would allow indefinite proxy kernels, potentially leading to non-convex SVM problems"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When regularization parameter \u03c1 is too small relative to negative eigenvalues of K\u2080",
+      "reason": "Insufficient regularization may not ensure numerical stability of the optimization",
+      "related_assumption": "\u03c1 > 0 assumption"
+    },
+    {
+      "scenario": "When the indefinite kernel matrix K\u2080 has rank deficiency or extreme eigenvalue ratios",
+      "reason": "Eigenvalue decomposition and projection operations become numerically unstable",
+      "related_assumption": "Well-conditioned symmetric matrix assumption"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://papers.nips.cc/paper_files/paper/2009/hash/7f1de29e6da19d22b51c68001e7e0e54-Abstract.html",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

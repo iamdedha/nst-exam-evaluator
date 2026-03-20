@@ -1,0 +1,112 @@
+{
+  "paper_title": "Exact Discovery of Time Series Motifs",
+  "venue": "KDD",
+  "venue_abbreviation": "KDD",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "TIME_SERIES",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper presents the Mueen-Keogh (MK) algorithm, the first tractable exact algorithm for discovering time series motifs. The algorithm uses a reference point ordering strategy combined with early abandoning to achieve up to three orders of magnitude speedup over brute-force search while maintaining exact results.",
+  "algorithm_steps": [
+    "Step 1: Choose a random reference point from the time series database",
+    "Step 2: Order all other objects by their distances to the reference point",
+    "Step 3: Record distances between adjacent pairs in the linear ordering as lower bounds",
+    "Step 4: Scan across the linear ordering and use early abandoning to prune distance computations",
+    "Step 5: Update best-so-far distance when closer pairs are found",
+    "Step 6: Return the pair with minimum distance as the motif"
+  ],
+  "key_equations": [
+    "Euclidean distance computation with early abandoning when cumulative squared sum exceeds current best-so-far squared distance"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "If two objects are close in the original space, they must also be close in the linear ordering based on reference point distances",
+      "why_needed": "This assumption enables the algorithm to use the linear ordering as a heuristic to guide the motif search and apply early abandoning effectively",
+      "violation_scenario": "When the reference point is poorly chosen or when the data has complex geometric structure that doesn't preserve proximity in the linear projection"
+    },
+    {
+      "assumption": "Early abandoning is particularly effective for motif discovery compared to general nearest neighbor search",
+      "why_needed": "The algorithm's efficiency gains depend on being able to abandon many distance computations early",
+      "violation_scenario": "When the data has very uniform distances or when the motifs are not significantly closer than other pairs"
+    },
+    {
+      "assumption": "All time series are of the same length and the database fits in main memory",
+      "why_needed": "Simplifies the algorithm design and ensures efficient memory access patterns",
+      "violation_scenario": "When dealing with variable-length time series or datasets too large for memory"
+    }
+  ],
+  "baselines_compared": [
+    "Brute-force search",
+    "FLAME algorithm",
+    "Various approximate motif discovery algorithms"
+  ],
+  "baseline_limitations_identified": "Existing exact algorithms are too slow (quadratic complexity), while approximate algorithms have large constant factors and don't guarantee exact results",
+  "proposed_improvement": "Uses reference point ordering and early abandoning to achieve exact results with up to three orders of magnitude speedup over brute-force while being faster than approximate methods",
+  "condition_where_baseline_wins": "When the dataset is very small (where the overhead of reference point ordering exceeds benefits) or when approximate results are sufficient and the approximate algorithms have been highly optimized for the specific data characteristics",
+  "datasets_used": [
+    "Steamgen dataset",
+    "Financial time series",
+    "Electroencephalograph data",
+    "Entomological telemetry data"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Synthetic sinusoidal time series with added noise",
+    "Random walk time series",
+    "Periodic patterns with variations"
+  ],
+  "toy_dataset_justification": "These datasets would allow testing the algorithm's ability to find exact motifs while having known ground truth patterns, and they can be generated at various scales to test performance characteristics",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The algorithm description is clear but some implementation details like the specific early abandoning thresholds and reference point selection strategy may require careful tuning",
+  "key_components_for_ablation": [
+    {
+      "component": "Reference point ordering",
+      "role_in_method": "Creates a linear ordering of time series objects to guide the search",
+      "expected_effect_of_removal": "Would reduce to brute-force search, losing the main efficiency gains"
+    },
+    {
+      "component": "Early abandoning",
+      "role_in_method": "Allows terminating distance computations when they exceed the current best-so-far",
+      "expected_effect_of_removal": "Would significantly slow down the algorithm as all distance computations would need to complete"
+    },
+    {
+      "component": "Adjacent pair distance recording",
+      "role_in_method": "Provides lower bound estimates for pruning",
+      "expected_effect_of_removal": "Would reduce pruning effectiveness and slow down the search"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When the reference point is an outlier or poorly represents the data distribution",
+      "reason": "The linear ordering becomes less informative for guiding the search",
+      "related_assumption": "If two objects are close in the original space, they must also be close in the linear ordering"
+    },
+    {
+      "scenario": "When all time series pairs have very similar distances",
+      "reason": "Early abandoning becomes ineffective as few computations can be terminated early",
+      "related_assumption": "Early abandoning is particularly effective for motif discovery"
+    },
+    {
+      "scenario": "When dealing with very high-dimensional time series",
+      "reason": "The curse of dimensionality makes the linear projection less meaningful",
+      "related_assumption": "The linear ordering preserves enough proximity information to be useful"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "http://www.cs.ucr.edu/~mueen/pdf/EM.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

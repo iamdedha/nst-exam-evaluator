@@ -1,0 +1,121 @@
+{
+  "paper_title": "Learning Sparse SVM for Feature Selection on Very High Dimensional Datasets",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes Feature Generating Machine (FGM), a cutting plane algorithm that converts l0-norm sparse SVM into a mixed integer programming problem, then solves its convex relaxation using multiple kernel learning. The method iteratively generates violated sparse feature subsets and combines them via efficient MKL to achieve feature selection on very high dimensional data.",
+  "algorithm_steps": [
+    "Step 1: Initialize dual variables \u03b1 to 1/n and find the most violated feature selection vector d\u0302, set working set C={d\u0302}",
+    "Step 2: Run Multiple Kernel Learning (SimpleMKL) on the subset of kernel matrices in C to obtain updated \u03b1 and \u03bc",
+    "Step 3: Find the most violated feature selection vector d\u0302 by solving max_d 1/2||\u2211\u03b1\u1d62y\u1d62(x\u1d62\u2299d)||\u00b2 subject to sparsity constraints",
+    "Step 4: Add d\u0302 to working set C and repeat steps 2-3 until convergence"
+  ],
+  "key_equations": [
+    "Eq (1): SSVM formulation with 0-1 control variables: min_d min_w 1/2||w||\u00b2 + C/2\u2211\u03be\u1d62\u00b2 - \u03c1",
+    "Eq (2): Dual formulation: min_d max_\u03b1 -1/2\u2211\u03b1\u1d62y\u1d62(x\u1d62\u2299d)\u00b2 - 1/2C \u03b1'\u03b1",
+    "Eq (5): MKL relaxation: min_\u03bc max_\u03b1 -1/2(\u03b1\u2299y)'(\u2211\u03bc\u209cX\u209cX\u209c' + 1/C I)(\u03b1\u2299y)"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The convex relaxation by interchanging min and max operators provides a good approximation to the original MIP problem",
+      "why_needed": "The original l0-norm sparse SVM is a non-convex mixed integer programming problem that is computationally intractable",
+      "violation_scenario": "When the relaxation gap is large, the solution may be far from the true sparse solution"
+    },
+    {
+      "assumption": "Only a small subset of all possible feature selection vectors are needed to achieve optimality",
+      "why_needed": "The cutting plane algorithm relies on iteratively adding only the most violated constraints rather than considering all 2^m possible feature subsets",
+      "violation_scenario": "When the optimal solution requires a large number of different feature subsets to be active simultaneously"
+    },
+    {
+      "assumption": "Square hinge loss is used instead of standard hinge loss for computational efficiency",
+      "why_needed": "Allows the positive constraint \u03be\u1d62\u22650 to be automatically satisfied and simplifies the optimization",
+      "violation_scenario": "When the square hinge loss is not appropriate for the specific classification task or leads to different sparsity patterns"
+    }
+  ],
+  "baselines_compared": [
+    "l1-norm SSVM",
+    "AROM",
+    "QCQP-SSVM",
+    "SDP-SSVM",
+    "SVM-RFE",
+    "NMMKL"
+  ],
+  "baseline_limitations_identified": "Existing methods suffer from computational intractability on high-dimensional data (QCQP-SSVM, SDP-SSVM, NMMKL), non-convex optimization with local minima (AROM), or monotonic feature selection that may eliminate informative features (SVM-RFE)",
+  "proposed_improvement": "FGM uses a cutting plane algorithm with MKL to efficiently solve the convex relaxation, enabling non-monotonic feature selection that scales to very high dimensional problems while maintaining global convergence guarantees",
+  "condition_where_baseline_wins": "When the dataset has low dimensionality (few hundred features) and the optimal feature subset is large, simpler methods like l1-norm SSVM or SVM-RFE may be more efficient and achieve similar performance without the overhead of the cutting plane algorithm",
+  "datasets_used": [
+    "WDBC",
+    "USPS",
+    "Breast Cancer",
+    "Leukemia",
+    "Real-sim",
+    "RCV1.binary",
+    "Arxiv astro-ph",
+    "News20.binary",
+    "URL0",
+    "URL1"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Synthetic high-dimensional data with known sparse structure",
+    "MNIST digit classification",
+    "20 Newsgroups text classification"
+  ],
+  "toy_dataset_justification": "These datasets provide controllable high-dimensional scenarios where ground truth sparsity can be known (synthetic), or represent classic high-dimensional problems (MNIST, 20 Newsgroups) that are computationally manageable for educational purposes",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The paper provides clear algorithmic steps and convergence proofs, but implementation details for the MKL solver and specific stopping criteria are not fully specified. The cutting plane algorithm is straightforward but requires careful implementation of the feature generation step.",
+  "key_components_for_ablation": [
+    {
+      "component": "Multiple Kernel Learning (MKL) solver",
+      "role_in_method": "Combines the generated feature subsets optimally by learning kernel weights \u03bc",
+      "expected_effect_of_removal": "Could use uniform weighting of feature subsets, likely reducing performance but simplifying computation"
+    },
+    {
+      "component": "Cutting plane constraint generation",
+      "role_in_method": "Iteratively finds the most violated feature selection vectors to add to the working set",
+      "expected_effect_of_removal": "Could use random or heuristic feature subset generation, likely reducing convergence speed and solution quality"
+    },
+    {
+      "component": "Square hinge loss",
+      "role_in_method": "Simplifies the optimization by automatically satisfying positivity constraints",
+      "expected_effect_of_removal": "Could use standard hinge loss, requiring additional constraints but potentially better classification performance"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When the relaxation gap between the MIP and its convex relaxation is large",
+      "reason": "The convex relaxation may not provide a good approximation to the original sparse problem",
+      "related_assumption": "The convex relaxation by interchanging min and max operators provides a good approximation"
+    },
+    {
+      "scenario": "When the optimal solution requires many different feature subsets to be simultaneously active",
+      "reason": "The cutting plane algorithm may require many iterations to converge or may not find the optimal combination",
+      "related_assumption": "Only a small subset of all possible feature selection vectors are needed to achieve optimality"
+    },
+    {
+      "scenario": "When features have very different scales or the square hinge loss is inappropriate for the task",
+      "reason": "The square hinge loss assumption may lead to suboptimal classification boundaries",
+      "related_assumption": "Square hinge loss is used instead of standard hinge loss for computational efficiency"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/Conferences/2010/papers/227.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

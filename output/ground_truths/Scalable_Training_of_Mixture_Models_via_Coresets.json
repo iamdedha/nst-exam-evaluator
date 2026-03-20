@@ -1,0 +1,112 @@
+{
+  "paper_title": "Scalable Training of Mixture Models via Coresets",
+  "venue": "NeurIPS",
+  "venue_abbreviation": "NeurIPS",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "GMM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes a coreset construction algorithm for Gaussian Mixture Models that creates a weighted subset of O(dk^3/\u03b5^2) data points that preserves the log-likelihood approximation quality. The method uses adaptive sampling based on distances to an initial rough clustering to construct coresets whose size is independent of the original dataset size.",
+  "algorithm_steps": [
+    "Step 1: Initialize empty set B and copy dataset D to D'",
+    "Step 2: While |D'| > 10dk ln(1/\u03b4), sample S of 10dk ln(1/\u03b4) points uniformly from D', remove closest |D'|/2 points to S from D', add S to B",
+    "Step 3: Add remaining points in D' to B to get final approximation set B",
+    "Step 4: Partition original dataset D into clusters based on closest points in B",
+    "Step 5: Compute sampling probabilities m(x) for each point based on distance to B and cluster membership",
+    "Step 6: Sample coreset C of size O(d\u00b2k|B|\u00b2 ln(1/\u03b4)/\u03b5\u00b2) points according to probabilities m(x)",
+    "Step 7: Assign weights \u03c9(x') to sampled points based on inverse sampling probabilities"
+  ],
+  "key_equations": [
+    "Theorem 3.1: Coreset approximation guarantee (1-\u03b5)\u03a6(D|\u03b8) \u2264 \u03a6(C|\u03b8) \u2264 \u03a6(D|\u03b8)(1+\u03b5)",
+    "Lemma 3.2: Reduction of log-likelihood to Euclidean distance computation ln P(x|\u03b8) = f(x)(\u03a8(\u03b8)) + Z(\u03b8)",
+    "Sampling probability: m(x) = l/(5|D_b|) + dist(x,B)\u00b2/\u03a3_{x'\u2208D} dist(x',B)\u00b2"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Covariance matrices have eigenvalues bounded in [\u03b5, 1/\u03b5] (\u03b5-semi-spherical Gaussians)",
+      "why_needed": "Prevents degenerate solutions and ensures well-conditioned covariance matrices for the geometric reduction to work",
+      "violation_scenario": "When data has very flat or very concentrated clusters with extreme aspect ratios"
+    },
+    {
+      "assumption": "Data is generated i.i.d. from the mixture model",
+      "why_needed": "Required for the log-likelihood decomposition and probabilistic guarantees to hold",
+      "violation_scenario": "When data has temporal dependencies or spatial correlations"
+    },
+    {
+      "assumption": "Number of mixture components k is known and fixed",
+      "why_needed": "The coreset size depends polynomially on k and the algorithm needs k for the initial clustering",
+      "violation_scenario": "When the true number of components is unknown or varies across different regions of the data"
+    }
+  ],
+  "baselines_compared": [
+    "Uniform sampling",
+    "Standard EM algorithm on full dataset"
+  ],
+  "baseline_limitations_identified": "Uniform sampling can perform arbitrarily poorly when mixture components have very different weights, potentially missing rare but important components entirely",
+  "proposed_improvement": "Adaptive sampling based on distances to an initial rough clustering ensures representative points from all clusters are included with appropriate probabilities",
+  "condition_where_baseline_wins": "When the dataset is small enough to fit in memory and computational resources are abundant, running EM on the full dataset would be more accurate than using a coreset approximation",
+  "datasets_used": [
+    "Synthetic Gaussian mixture data",
+    "Earthquake detection accelerometer data from mobile phones"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "2D synthetic Gaussian mixtures with varying weights",
+    "Iris dataset",
+    "Wine dataset"
+  ],
+  "toy_dataset_justification": "These datasets are small enough to verify coreset quality against full dataset results while having clear cluster structure that matches the Gaussian mixture assumption",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Algorithm is clearly specified but implementation details for the geometric reduction and handling of edge cases in the adaptive sampling are not fully detailed",
+  "key_components_for_ablation": [
+    {
+      "component": "Adaptive sampling vs uniform sampling",
+      "role_in_method": "Creates the initial rough clustering B that guides the final coreset sampling",
+      "expected_effect_of_removal": "Would likely require much larger coresets to achieve same approximation quality, especially for unbalanced mixtures"
+    },
+    {
+      "component": "Distance-based sampling probabilities",
+      "role_in_method": "Ensures points far from the initial clustering B are sampled with higher probability",
+      "expected_effect_of_removal": "Would reduce approximation quality as outliers and boundary points would be underrepresented"
+    },
+    {
+      "component": "Iterative point removal in initial clustering",
+      "role_in_method": "Progressively refines the approximation set B by removing points closest to already sampled points",
+      "expected_effect_of_removal": "Would result in less representative initial clustering, potentially missing important regions"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Mixture components with very different scales or highly elongated clusters",
+      "reason": "Violates the \u03b5-semi-spherical assumption about bounded eigenvalues",
+      "related_assumption": "Covariance matrices have eigenvalues bounded in [\u03b5, 1/\u03b5]"
+    },
+    {
+      "scenario": "Very high-dimensional data with sparse structure",
+      "reason": "Coreset size grows polynomially with dimension d, making it impractical",
+      "related_assumption": "Implicit assumption that dimension d is moderate"
+    },
+    {
+      "scenario": "Data with significant outliers or noise",
+      "reason": "Distance-based sampling may oversample outliers, and the i.i.d. assumption is violated",
+      "related_assumption": "Data is generated i.i.d. from the mixture model"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://papers.nips.cc/paper_files/paper/2011/file/2b6d65b9a9445c4271ab9076ead5605a-Paper.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

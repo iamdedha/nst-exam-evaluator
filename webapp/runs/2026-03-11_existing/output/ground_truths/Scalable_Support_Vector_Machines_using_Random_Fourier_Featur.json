@@ -1,0 +1,117 @@
+{
+  "paper_title": "Random Features for Large-Scale Kernel Machines",
+  "venue": "NeurIPS",
+  "venue_abbreviation": "NeurIPS",
+  "year": 2007,
+  "venue_is_core_a_star": true,
+  "year_in_range": false,
+  "method_category": "KERNEL",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes random feature mappings to approximate shift-invariant kernels, enabling the use of fast linear algorithms instead of expensive kernel methods. Two specific mappings are introduced: Random Fourier Features using sinusoids drawn from the kernel's Fourier transform, and Random Binning Features using randomly shifted grids.",
+  "algorithm_steps": [
+    "Step 1: For Random Fourier Features - compute the Fourier transform p(\u03c9) of the desired shift-invariant kernel k(x-y)",
+    "Step 2: Draw D random frequencies \u03c9\u2081,...,\u03c9D from distribution p(\u03c9) and D random phases b\u2081,...,bD from uniform[0,2\u03c0]",
+    "Step 3: Define feature map z(x) = \u221a(2/D)[cos(\u03c9\u2081\u1d40x+b\u2081),...,cos(\u03c9D\u1d40x+bD)]\u1d40",
+    "Step 4: Transform training data using z(x) and apply fast linear learning algorithms",
+    "Step 5: For Random Binning Features - sample grid pitch \u03b4 from distribution p(\u03b4) and random shift u from uniform[0,\u03b4]",
+    "Step 6: Assign points to bins and create binary indicator vectors for each point"
+  ],
+  "key_equations": [
+    "Equation (1): k(x,y) \u2248 z(x)\u1d40z(y) - core approximation property",
+    "Equation (2): k(x-y) = E_\u03c9[\u03b6_\u03c9(x)\u03b6_\u03c9(y)*] - Bochner's theorem application",
+    "Algorithm 1: z(x) = \u221a(2/D)[cos(\u03c9\u2081\u1d40x+b\u2081),...,cos(\u03c9D\u1d40x+bD)]\u1d40 - Random Fourier Features",
+    "Claim 1: Uniform convergence bound requiring D = \u03a9(d/\u03b5\u2081\u00b2 log(\u03c3\u209adiam(M)/\u03b5\u2081)) dimensions"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The kernel k(x,y) is shift-invariant, i.e., k(x,y) = k(x-y)",
+      "why_needed": "Required for Bochner's theorem to apply and for the Fourier transform approach to work",
+      "violation_scenario": "When using kernels that depend on absolute positions rather than differences, like polynomial kernels k(x,y) = (x\u1d40y + c)\u1d48"
+    },
+    {
+      "assumption": "The kernel is positive definite and properly scaled so its Fourier transform is a probability distribution",
+      "why_needed": "Ensures that frequencies can be sampled from p(\u03c9) as a valid probability distribution",
+      "violation_scenario": "When the kernel is not positive definite or when scaling is incorrect"
+    },
+    {
+      "assumption": "The input space is compact with finite diameter for theoretical guarantees",
+      "why_needed": "Required for uniform convergence bounds in Claim 1",
+      "violation_scenario": "When dealing with unbounded input spaces or very high-dimensional data where diameter becomes very large"
+    }
+  ],
+  "baselines_compared": [
+    "Support Vector Machines",
+    "Core Vector Machine (CVM)",
+    "Gaussian Process regression",
+    "kernel ridge regression"
+  ],
+  "baseline_limitations_identified": "Kernel methods scale poorly with training set size due to O(N\u00b2) storage and computation requirements for the kernel matrix, making them impractical for datasets with hundreds of thousands of examples",
+  "proposed_improvement": "Replace expensive kernel computations with explicit low-dimensional feature mappings that approximate the kernel, enabling the use of fast linear algorithms that scale as O(ND) instead of O(N\u00b2)",
+  "condition_where_baseline_wins": "When the dataset is small (few thousand examples) and high accuracy is critical, full kernel methods may outperform the approximation, especially when the required number of random features D becomes comparable to the training set size N",
+  "datasets_used": [
+    "MNIST",
+    "Forest CoverType",
+    "Protein homology detection",
+    "USPS digits"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian blobs",
+    "Concentric circles",
+    "XOR problem",
+    "Spiral dataset"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of nonlinear classification boundaries that require kernel methods, are small enough for easy experimentation, and can demonstrate the approximation quality of random features compared to exact kernel methods",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "EASY",
+  "reproducibility_notes": "The algorithms are clearly specified with explicit steps. The main challenge is implementing the Fourier transforms for different kernels, but the paper provides the transforms for common kernels like Gaussian and Laplacian",
+  "key_components_for_ablation": [
+    {
+      "component": "Number of random features D",
+      "role_in_method": "Controls the approximation quality - more features give better kernel approximation",
+      "expected_effect_of_removal": "Reducing D would decrease approximation accuracy but speed up computation; there's a clear trade-off"
+    },
+    {
+      "component": "Random phase shifts b_i",
+      "role_in_method": "Provides additional randomization to reduce variance of the kernel approximation",
+      "expected_effect_of_removal": "Without random phases, the approximation would have higher variance and potentially worse performance"
+    },
+    {
+      "component": "Choice of frequency distribution p(\u03c9)",
+      "role_in_method": "Determines which kernel is being approximated - must match the Fourier transform of target kernel",
+      "expected_effect_of_removal": "Using wrong frequency distribution would approximate a different kernel entirely"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When the required number of features D becomes very large relative to training set size N",
+      "reason": "The computational advantage disappears and approximation error may accumulate",
+      "related_assumption": "Assumption that D << N for computational efficiency"
+    },
+    {
+      "scenario": "For kernels with very sharp or irregular Fourier transforms",
+      "reason": "Sampling from complex distributions p(\u03c9) becomes difficult and may require many features for good approximation",
+      "related_assumption": "Assumption that the Fourier transform p(\u03c9) is well-behaved and easy to sample from"
+    },
+    {
+      "scenario": "In very high-dimensional spaces where the diameter becomes extremely large",
+      "reason": "The convergence bounds degrade exponentially with diameter, requiring impractically many features",
+      "related_assumption": "Assumption of compact input space with reasonable diameter"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://people.eecs.berkeley.edu/~brecht/papers/07.rah.rec.nips.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

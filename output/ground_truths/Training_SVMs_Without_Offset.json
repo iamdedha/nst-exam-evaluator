@@ -1,0 +1,112 @@
+{
+  "paper_title": "Training SVMs Without Offset",
+  "venue": "Journal of Machine Learning Research",
+  "venue_abbreviation": "JMLR",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper develops a training algorithm for SVM classifiers without the offset term (bias), featuring a new statistically motivated stopping criterion based on clipped duality gap, warm start options, and working set selection strategies. The algorithm removes the equality constraint from the dual optimization problem, allowing more flexible coordinate updates and achieving faster convergence than standard SVMs with offset.",
+  "algorithm_steps": [
+    "Step 1: Formulate SVM without offset as optimization problem (1) with only box constraints in dual (3)",
+    "Step 2: Initialize dual variables \u03b1 and select working set of size 1 or 2 using KKT violation criteria",
+    "Step 3: For single coordinate update: compute \u03b1_new_i = [\u2207W_i(\u03b1) + \u03b1_i]^C_i_0 using equation (4)",
+    "Step 4: For two coordinate update: solve 2D quadratic subproblem exactly using analytical solution",
+    "Step 5: Apply new stopping criterion based on clipped duality gap with statistical motivation",
+    "Step 6: Use warm start strategies when working on hyperparameter grids"
+  ],
+  "key_equations": [
+    "Eq (1): SVM without offset formulation f_T,\u03bb \u2208 argmin_f \u03bb||f||\u00b2_H + R_L,T(f)",
+    "Eq (3): Dual problem max W(\u03b1) = \u27e8e,\u03b1\u27e9 - \u00bd\u27e8\u03b1,K\u03b1\u27e9 subject to 0 \u2264 \u03b1_i \u2264 C_i",
+    "Eq (4): Single coordinate update \u03b1_new_i = [\u2207W_i(\u03b1) + \u03b1_i]^C_i_0",
+    "Clipped duality gap stopping criterion based on statistical performance bounds"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Kernel k is strictly positive definite and normalized (k(x,x) = 1)",
+      "why_needed": "Ensures unique solution and simplifies algorithmic description, enables single coordinate updates",
+      "violation_scenario": "When using indefinite kernels or kernels with k(x,x) \u2260 1, requiring kernel normalization preprocessing"
+    },
+    {
+      "assumption": "Training samples x_1,...,x_n are mutually distinct",
+      "why_needed": "Ensures Gram matrix is strictly positive definite for convergence guarantees",
+      "violation_scenario": "When dataset contains duplicate samples, making Gram matrix singular"
+    },
+    {
+      "assumption": "Weighted binary classification setup with positive weights w_i > 0",
+      "why_needed": "Defines the empirical hinge risk and constraint bounds C_i in dual problem",
+      "violation_scenario": "When dealing with multi-class problems or regression tasks"
+    }
+  ],
+  "baselines_compared": [
+    "Standard SVM with offset",
+    "SMO algorithms",
+    "Rate certifying algorithms"
+  ],
+  "baseline_limitations_identified": "SVMs with offset require equality constraint in dual problem, forcing updates of at least two variables simultaneously, making working set selection more restrictive and duality gap calculation expensive",
+  "proposed_improvement": "Removes offset to eliminate equality constraint, enabling single coordinate updates, more flexible working set selection, and cheaper duality gap computation with new clipped stopping criterion",
+  "condition_where_baseline_wins": "When using kernels that are not strictly positive definite or when the geometric interpretation of the decision boundary is important, the offset may provide better learning performance both theoretically and practically",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian blobs",
+    "Linearly separable synthetic data",
+    "Small UCI binary classification datasets"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of binary classification with clear class separation, suitable for demonstrating SVM behavior with and without offset, and small enough for detailed algorithmic analysis",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Algorithm details are well-specified but implementation requires careful handling of working set selection strategies and the new stopping criterion. Warm start procedures add complexity.",
+  "key_components_for_ablation": [
+    {
+      "component": "Clipped duality gap stopping criterion",
+      "role_in_method": "Provides statistically motivated termination condition",
+      "expected_effect_of_removal": "Would require standard stopping criteria, potentially affecting convergence speed and solution quality"
+    },
+    {
+      "component": "Working set selection strategies (O(1) vs O(n) vs O(n\u00b2))",
+      "role_in_method": "Determines which dual variables to update at each iteration",
+      "expected_effect_of_removal": "Reverting to simple cyclic updates would significantly increase iteration count"
+    },
+    {
+      "component": "Warm start initialization",
+      "role_in_method": "Initializes solver with transformed previous solutions for hyperparameter grids",
+      "expected_effect_of_removal": "Would eliminate speedup benefits when solving multiple related problems"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When kernel is not strictly positive definite",
+      "reason": "Algorithm assumes strict positive definiteness for convergence guarantees",
+      "related_assumption": "Kernel k is strictly positive definite and normalized"
+    },
+    {
+      "scenario": "When dataset contains many duplicate samples",
+      "reason": "Makes Gram matrix singular, violating positive definiteness requirement",
+      "related_assumption": "Training samples are mutually distinct"
+    },
+    {
+      "scenario": "For very large-scale problems where O(n\u00b2) Gram matrix storage is prohibitive",
+      "reason": "Algorithm requires access to full kernel matrix for working set selection",
+      "related_assumption": "Implicit assumption that full Gram matrix can be stored and accessed"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://www.jmlr.org/papers/volume12/steinwart11a/steinwart11a.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "roll_number": "230088",
+  "full_name": "Rhythm Kumar Jain",
+  "paper_title": "Learning hierarchical invariant spatio-temporal features for action recognition with independent subspace analysis",
+  "venue": "CVPR",
+  "year": 2011,
+  "method": "Support Vector Machine (SVM)",
+  "github_url": "https://github.com/rhythm8877/230088-midsem",
+  "repo_checks": {
+    "github_url": "https://github.com/rhythm8877/230088-midsem",
+    "owner": "rhythm8877",
+    "repo": "230088-midsem",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": false,
+      "repo_public": false
+    },
+    "score_adjustments": {},
+    "flags": [
+      "REPO_NOT_FOUND"
+    ]
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 0,
+      "llm_disclosure_completeness": 0,
+      "llm_disclosure_verification": 0
+    },
+    "flags": [
+      "LLM_JSON_MISSING"
+    ],
+    "details": {
+      "year": "Year 2011 is valid (2009-2012)",
+      "venue": "Venue 'CVPR' is CORE A*",
+      "json_validity": "llm_usage_partA.json not found in repo",
+      "completeness": "JSON not available for completeness check",
+      "verification": "JSON not available"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 0,
+      "paper_validity_paper_type": 0,
+      "reproducibility_dataset_availability": 5,
+      "reproducibility_compute_feasibility": 5,
+      "reproducibility_experimental_scope": 4,
+      "top5_prompts_analytical_depth": 0,
+      "top5_prompts_relevance": 0
+    },
+    "flags": [
+      "METHOD_MISALIGNMENT",
+      "INVALID_PAPER_TYPE: deep learning paper"
+    ],
+    "details": {
+      "method_alignment": "Method 'OTHER' does NOT align",
+      "paper_type": "Invalid: deep learning paper",
+      "dataset": "Datasets: ['KTH', 'Hollywood2', 'UCF Sports', 'YouTube']",
+      "compute": "CPU feasible",
+      "scope": "Moderate difficulty",
+      "prompts": "LLM JSON not available for prompt evaluation"
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 0,
+    "llm_disclosure_completeness": 0,
+    "llm_disclosure_verification": 0,
+    "paper_validity_method_alignment": 0,
+    "paper_validity_paper_type": 0,
+    "reproducibility_dataset_availability": 5,
+    "reproducibility_compute_feasibility": 5,
+    "reproducibility_experimental_scope": 4,
+    "top5_prompts_analytical_depth": 0,
+    "top5_prompts_relevance": 0
+  },
+  "raw_total": 23,
+  "penalty": 0,
+  "penalty_reason": [
+    ""
+  ],
+  "final_total": 23,
+  "out_of": 50,
+  "scaled_score": 2.3,
+  "flags": [
+    "METHOD_MISALIGNMENT",
+    "INVALID_PAPER_TYPE: deep learning paper"
+  ],
+  "details": {
+    "year": "Year 2011 is valid (2009-2012)",
+    "venue": "Venue 'CVPR' is CORE A*",
+    "json_validity": "llm_usage_partA.json not found in repo",
+    "completeness": "JSON not available for completeness check",
+    "verification": "JSON not available",
+    "method_alignment": "Method 'OTHER' does NOT align",
+    "paper_type": "Invalid: deep learning paper",
+    "dataset": "Datasets: ['KTH', 'Hollywood2', 'UCF Sports', 'YouTube']",
+    "compute": "CPU feasible",
+    "scope": "Moderate difficulty",
+    "prompts": "LLM JSON not available for prompt evaluation"
+  },
+  "needs_human_review": true
+}

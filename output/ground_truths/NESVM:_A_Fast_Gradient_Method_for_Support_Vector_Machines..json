@@ -1,0 +1,110 @@
+{
+  "paper_title": "NESVM: A Fast Gradient Method for Support Vector Machines",
+  "venue": "ICDM",
+  "venue_abbreviation": "ICDM",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "NESVM proposes a fast gradient method for SVMs that smooths the non-differentiable hinge loss and \u21131-norm in the primal SVM formulation, then applies Nesterov's optimal gradient method to achieve O(1/k\u00b2) convergence rate. The method combines current and historical gradients to determine descent direction while using Lipschitz constants for step size.",
+  "algorithm_steps": [
+    "Step 1: Smooth the non-differentiable hinge loss using saddle point formulation and prox-function subtraction",
+    "Step 2: Calculate gradient of smoothed objective function using ui = median((1-yiXiw)/(\u03bc||Xi||\u221e), 0, 1)",
+    "Step 3: Apply Nesterov's method with two auxiliary optimizations combining current and historical gradients",
+    "Step 4: Update solution using weighted combination determined by Lipschitz constant",
+    "Step 5: Perform only two matrix-vector multiplications per iteration"
+  ],
+  "key_equations": [
+    "Eq. 5: Smoothed hinge loss \u2113\u03bc = max over u\u2208Q of ui(1-yiXiw) - \u03bc/2||Xi||\u221eui\u00b2",
+    "Eq. 6: Optimal ui = median((1-yiXiw)/(\u03bc||Xi||\u221e), 0, 1)",
+    "Eq. 7: Piecewise smoothed hinge loss approximation with three cases",
+    "Eq. 9: Gradient \u2202\u2113\u03bc/\u2202w = -(yiXi)\u1d40ui"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "The hinge loss can be adequately approximated by the smoothed version with bounded error",
+      "why_needed": "Enables gradient-based optimization on originally non-differentiable objective",
+      "violation_scenario": "When smooth parameter \u03bc is too large, approximation error becomes significant"
+    },
+    {
+      "assumption": "Lipschitz constant can be computed and remains bounded",
+      "why_needed": "Required for determining step size in Nesterov's method",
+      "violation_scenario": "With extremely ill-conditioned data matrices or kernel matrices"
+    },
+    {
+      "assumption": "Linear time complexity is achievable through sparse matrix operations",
+      "why_needed": "Core efficiency claim of the method",
+      "violation_scenario": "When feature matrices are completely dense with no exploitable structure"
+    }
+  ],
+  "baselines_compared": [
+    "SVM-Perf",
+    "Pegasos",
+    "SVM-Light",
+    "LIBSVM"
+  ],
+  "baseline_limitations_identified": "SVM-Perf has O(1/\u221ak) convergence rate and struggles with imbalanced classes; Pegasos has O(1/k) rate and poor performance on dense features; traditional solvers have super-linear time complexity",
+  "proposed_improvement": "Achieves optimal O(1/k\u00b2) convergence rate with linear time complexity by smoothing non-differentiable parts and applying Nesterov's method",
+  "condition_where_baseline_wins": "When features are extremely sparse and dataset size is small, Pegasos might be more efficient due to its simplicity and ability to exploit sparsity",
+  "datasets_used": [
+    "census income categorization",
+    "indoor/outdoor scene classification",
+    "event recognition",
+    "scene recognition"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "UCI datasets (breast cancer, ionosphere)",
+    "synthetic linearly separable data",
+    "MNIST subset"
+  ],
+  "toy_dataset_justification": "These datasets provide varying levels of separability and feature density to test the smoothing approach and convergence properties of NESVM",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Paper promises MATLAB code availability but implementation details of Nesterov's method adaptation and homotopy continuation require careful attention to convergence criteria",
+  "key_components_for_ablation": [
+    {
+      "component": "Smoothing parameter \u03bc",
+      "role_in_method": "Controls trade-off between approximation accuracy and smoothness",
+      "expected_effect_of_removal": "Without smoothing (\u03bc\u21920), method reduces to subgradient with slower convergence"
+    },
+    {
+      "component": "Homotopy continuation",
+      "role_in_method": "Accelerates convergence by dynamically decreasing smooth parameter",
+      "expected_effect_of_removal": "Fixed \u03bc would be slower but still maintain O(1/k\u00b2) rate"
+    },
+    {
+      "component": "Historical gradient combination",
+      "role_in_method": "Core of Nesterov's method for achieving optimal convergence",
+      "expected_effect_of_removal": "Would reduce to standard gradient descent with O(1/k) rate"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Classes are severely imbalanced or overlapping with large C parameter",
+      "reason": "Large number of support vectors makes constraint finding inefficient",
+      "related_assumption": "Linear time complexity assumption"
+    },
+    {
+      "scenario": "Very high-dimensional sparse features",
+      "reason": "Cannot exploit sparsity as effectively as specialized sparse methods",
+      "related_assumption": "Linear time complexity assumption"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://arxiv.org/abs/1008.4000",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

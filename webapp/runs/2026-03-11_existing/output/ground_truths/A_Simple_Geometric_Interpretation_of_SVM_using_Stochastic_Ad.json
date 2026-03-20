@@ -1,0 +1,103 @@
+{
+  "paper_title": "A Simple Geometric Interpretation of SVM using Stochastic Adversaries",
+  "venue": "AISTATS",
+  "venue_abbreviation": "AISTATS",
+  "year": 2012,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper provides a novel geometric interpretation of SVM by formulating it as a minimax problem with stochastic adversarial perturbations. For binary classification, they show this is equivalent to standard SVM, while for multiclass it yields an L2,\u221e regularization instead of the typical Frobenius norm regularization.",
+  "algorithm_steps": [
+    "Step 1: Define stochastic perturbation sets S(x;\u03c3,f) that constrain adversarial distributions to have expected value x and bounded expected distance",
+    "Step 2: Formulate minimax problem where learner minimizes maximum expected hinge loss over adversarial distributions",
+    "Step 3: Convert the infinite-dimensional optimization over probability measures to tractable dual form using linear programming duality",
+    "Step 4: Apply constraint reduction techniques to obtain equivalent (L2)\u221eSVM formulation with max-norm regularization",
+    "Step 5: Solve the resulting convex optimization problem with standard techniques"
+  ],
+  "key_equations": [
+    "Eq. 3: Minimax formulation with stochastic adversary maximizing expected hinge loss",
+    "Eq. 6: Adversary maximization problem for single labeled pair with L2 distance constraint",
+    "Eq. 13: Final equivalent (L2)\u221eSVM formulation with max-norm regularization"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Adversarial perturbations are stochastic rather than deterministic and must satisfy expected value and bounded distance constraints",
+      "why_needed": "This constraint makes the infinite-dimensional optimization tractable and leads to the SVM equivalence",
+      "violation_scenario": "If adversary can choose arbitrary deterministic perturbations without stochastic constraints, the equivalence to SVM breaks down"
+    },
+    {
+      "assumption": "Linear classification model with multiclass hinge loss is appropriate for the problem",
+      "why_needed": "The geometric interpretation and equivalence results depend on the specific structure of linear models and hinge loss",
+      "violation_scenario": "For non-linear models or different loss functions, the SVM equivalence would not hold"
+    },
+    {
+      "assumption": "Perturbation distributions belong to the set of Borel probability measures with finite second moments",
+      "why_needed": "Required for the dual problem formulation and constraint reduction to be well-defined",
+      "violation_scenario": "Heavy-tailed distributions or measures without finite moments would invalidate the mathematical framework"
+    }
+  ],
+  "baselines_compared": [
+    "Standard multiclass SVM with Frobenius norm regularization"
+  ],
+  "baseline_limitations_identified": "Standard SVM lacks a clear geometric interpretation for the regularization parameter choice and uses Frobenius norm regularization in multiclass settings",
+  "proposed_improvement": "Provides natural geometric interpretation through stochastic adversarial framework and suggests L2,\u221e regularization for multiclass problems with principled parameter selection",
+  "condition_where_baseline_wins": "When the assumption of stochastic perturbations is violated and deterministic worst-case perturbations are more appropriate, or when Frobenius norm regularization better matches the true data distribution structure",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Synthetic 2D binary classification",
+    "Iris dataset",
+    "Wine dataset"
+  ],
+  "toy_dataset_justification": "These datasets allow testing both binary and multiclass scenarios with clear geometric visualization of the max-norm vs Frobenius regularization effects",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The theoretical results are reproducible, but implementation details for the optimization solver and experimental setup are not fully specified",
+  "key_components_for_ablation": [
+    {
+      "component": "Stochastic constraint on perturbation distributions",
+      "role_in_method": "Enables tractable dual formulation and SVM equivalence",
+      "expected_effect_of_removal": "Would revert to intractable infinite-dimensional optimization without clear solution"
+    },
+    {
+      "component": "L2 distance constraint vs L2-squared constraint",
+      "role_in_method": "Determines the specific form of the resulting regularization",
+      "expected_effect_of_removal": "Different distance constraints lead to different equivalent optimization problems"
+    },
+    {
+      "component": "Max-norm regularization in multiclass case",
+      "role_in_method": "Natural consequence of the stochastic adversarial framework",
+      "expected_effect_of_removal": "Would require different regularization scheme, losing the geometric interpretation"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When perturbations are highly non-isotropic or follow complex non-Gaussian patterns",
+      "reason": "The L2 distance constraint may not capture the true perturbation structure",
+      "related_assumption": "Adversarial perturbations are stochastic rather than deterministic and must satisfy expected value and bounded distance constraints"
+    },
+    {
+      "scenario": "When the number of classes is very large relative to feature dimension",
+      "reason": "Max-norm regularization may be too restrictive compared to Frobenius norm",
+      "related_assumption": "Linear classification model with multiclass hinge loss is appropriate for the problem"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://proceedings.mlr.press/v22/livni12/livni12.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

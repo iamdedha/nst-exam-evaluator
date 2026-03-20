@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block title %}{{ roll }} - Student Detail{% endblock %}
+
+{# Flag explanations mapping #}
+{% set FLAG_EXPLAIN = {
+    'METHOD_MISALIGNMENT': 'The paper\'s primary method does not align with the required ARIMA/GMM/SVM categories',
+    'INVALID_YEAR': 'Publication year is outside the required 2009-2012 range',
+    'INVALID_VENUE': 'The publication venue is not recognized as a CORE A* conference/journal',
+    'VENUE_UNVERIFIED': 'Could not verify if the venue is CORE A*. Needs manual check',
+    'INVALID_PAPER_TYPE': 'Paper is a dataset, benchmark, survey, or deep learning paper — not allowed',
+    'LLM_JSON_MISSING': 'The llm_usage_partA.json file was not found in the repository',
+    'LLM_JSON_INVALID': 'The LLM usage JSON file exists but contains invalid JSON',
+    'REPO_NOT_FOUND': 'GitHub repository does not exist or is not accessible',
+    'REPO_PRIVATE': 'GitHub repository exists but is private — must be public',
+    'NAMING_MISMATCH': 'Repository name does not follow the required rollnumber-midsem format',
+    'DATASET_NOT_PUBLIC': 'The paper uses datasets that are not publicly available',
+    'DATASET_AVAILABILITY_UNCERTAIN': 'Could not determine if the dataset is publicly available',
+    'COMPUTE_GPU_REQUIRED': 'Paper requires GPU compute — not allowed for this exam',
+    'COMPUTE_UNCERTAIN': 'Could not determine compute requirements',
+    'HARD_TO_REPRODUCE': 'The paper\'s experiments are difficult to reproduce at student level',
+    'GENERIC_DESCRIPTION': 'Student\'s description was generic to the method family, not specific to this paper',
+    'REPORT_MISSING': 'report.pdf not found in the partB/ folder',
+    'MISSING_OR_EMPTY': 'A required notebook was not found or is empty',
+    'NO_OUTPUTS': 'Notebook exists but code cells have no outputs — was it executed?',
+    'RESUBMISSION_PENALTY': 'Score reduced due to multiple form submissions'
+} %}
+
+{% block content %}
+<a href="/results/{{ run_id }}" class="text-nst-600 hover:text-nst-800 text-sm font-medium no-underline">&larr; Back to Results</a>
+
+{% set info = detail.get('info', {}) %}
+
+<!-- Student Header -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h1 class="text-xl font-bold text-gray-900">{{ info.get('full_name', roll) }}</h1>
+            <div class="text-sm text-gray-500 mt-2 space-y-1">
+                <div><span class="font-medium text-gray-700">Roll:</span> {{ roll }}</div>
+                <div><span class="font-medium text-gray-700">Email:</span> {{ info.get('email', 'N/A') }}</div>
+            </div>
+        </div>
+        <div>
+            <div class="text-sm text-gray-500 space-y-1">
+                <div><span class="font-medium text-gray-700">Paper:</span> {{ info.get('paper_title', 'N/A') }}</div>
+                <div><span class="font-medium text-gray-700">Venue:</span> {{ info.get('venue', 'N/A') }} ({{ info.get('year_of_publication', '?') }})</div>
+                <div><span class="font-medium text-gray-700">Method:</span> {{ info.get('primary_method', 'N/A') }}</div>
+                {% if info.get('github_repo') %}
+                <div><span class="font-medium text-gray-700">GitHub:</span> <a href="{{ info.github_repo }}" target="_blank" class="text-nst-600 no-underline">{{ info.github_repo|truncate(50) }}</a></div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== PART A ==================== -->
+{% set pa = detail.get('part_a', {}) %}
+{% if pa %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-800">Part A: Paper Selection & LLM Usage</h2>
+        <div class="flex items-center gap-3">
+            {% if pa.get('penalty') %}<span class="text-xs text-red-500 font-medium">-{{ pa.penalty }} penalty</span>{% endif %}
+            <span class="text-2xl font-extrabold text-nst-600">{{ pa.get('final_total', 0) }}<span class="text-sm text-gray-400 font-normal">/50</span></span>
+        </div>
+    </div>
+    <div class="p-6">
+        {# Combine tier1 and tier2 scores with details #}
+        {% set all_scores = pa.get('scores', {}) %}
+        {% set all_details = pa.get('details', {}) %}
+
+        {% set criteria = [
+            ('paper_validity_venue', 'Venue Validity', 5),
+            ('paper_validity_year', 'Year Validity', 4),
+            ('paper_validity_method_alignment', 'Method Alignment', 4),
+            ('paper_validity_paper_type', 'Paper Type', 2),
+            ('reproducibility_dataset_availability', 'Dataset Availability', 5),
+            ('reproducibility_compute_feasibility', 'Compute Feasibility', 5),
+            ('reproducibility_experimental_scope', 'Experimental Scope', 5),
+            ('llm_disclosure_json_validity', 'JSON Structure', 4),
+            ('llm_disclosure_completeness', 'LLM Disclosure Completeness', 3),
+            ('llm_disclosure_verification', 'Verification & Declaration', 3),
+            ('top5_prompts_analytical_depth', 'Top-5 Prompts: Depth', 6),
+            ('top5_prompts_relevance', 'Top-5 Prompts: Relevance', 4),
+        ] %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {% for key, label, max_score in criteria %}
+            {% set score = all_scores.get(key, 0) %}
+            {% set pct = (score / max_score * 100) if max_score > 0 else 0 %}
+            {% set detail_text = all_details.get(key.replace('paper_validity_', '').replace('reproducibility_', '').replace('llm_disclosure_', '').replace('top5_prompts_', 'prompts_'), '') %}
+            <div class="border border-gray-100 rounded-lg p-4">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">{{ label }}</span>
+                    <span class="text-sm font-bold {% if pct >= 70 %}text-green-600{% elif pct >= 40 %}text-amber-600{% else %}text-red-600{% endif %}">{{ score }}/{{ max_score }}</span>
+                </div>
+                <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2">
+                    <div class="h-1.5 rounded-full score-bar-fill {% if pct >= 70 %}bg-green-500{% elif pct >= 40 %}bg-amber-500{% else %}bg-red-500{% endif %}" style="width: {{ pct }}%"></div>
+                </div>
+                {% if detail_text %}
+                <p class="text-xs text-gray-500 leading-relaxed">{{ detail_text }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if pa.get('flags') %}
+        <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <h4 class="text-sm font-semibold text-amber-800 mb-3">Flags & Issues</h4>
+            <div class="space-y-2">
+                {% for flag in pa.flags %}
+                {% set flag_key = flag.split(':')[0].strip() %}
+                <div class="flex items-start gap-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-200 text-amber-900 shrink-0 mt-0.5">{{ flag_key }}</span>
+                    <span class="text-xs text-amber-700">{{ FLAG_EXPLAIN.get(flag_key, flag) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- ==================== PART B ==================== -->
+{% set pb = detail.get('part_b', {}) %}
+{% if pb %}
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-6">
+    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-lg font-semibold text-gray-800">Part B: Reproduction & Analysis</h2>
+        <div class="flex items-center gap-3">
+            {% if pb.get('structure_penalty') %}<span class="text-xs text-red-500 font-medium">Structure penalty: {{ pb.structure_penalty }}</span>{% endif %}
+            <span class="text-2xl font-extrabold text-nst-600">{{ pb.get('final_total', 0) }}<span class="text-sm text-gray-400 font-normal">/130</span></span>
+        </div>
+    </div>
+    <div class="p-6 space-y-8">
+        {% for qname, qlabel, qmax in [('q1', 'Q1: Paper Understanding', 25), ('q2', 'Q2: Reproduction on Toy Dataset', 40), ('q3', 'Q3: Ablation Study', 35), ('q4', 'Q4: Report & LLM Usage', 30)] %}
+        {% set q = pb.get(qname, {}) %}
+        {% if q %}
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-base font-semibold text-gray-800">{{ qlabel }}</h3>
+                <span class="text-lg font-bold {% if q.total >= qmax * 0.7 %}text-green-600{% elif q.total >= qmax * 0.4 %}text-amber-600{% else %}text-red-600{% endif %}">{{ q.get('total', 0) }}<span class="text-sm text-gray-400 font-normal">/{{ qmax }}</span></span>
+            </div>
+
+            <div class="space-y-3">
+                {% for task_id, td in q.get('tasks', {}).items() %}
+                {% set tpct = (td.score / td.max * 100) if td.max > 0 else 0 %}
+                <div class="border border-gray-100 rounded-lg p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-mono font-medium text-gray-700">{{ task_id }}</span>
+                        <span class="text-sm font-bold {% if tpct >= 70 %}text-green-600{% elif tpct >= 40 %}text-amber-600{% else %}text-red-600{% endif %}">{{ td.score }}/{{ td.max }}</span>
+                    </div>
+                    <div class="w-full bg-gray-100 rounded-full h-1.5 mb-3">
+                        <div class="h-1.5 rounded-full score-bar-fill {% if tpct >= 70 %}bg-green-500{% elif tpct >= 40 %}bg-amber-500{% else %}bg-red-500{% endif %}" style="width: {{ tpct }}%"></div>
+                    </div>
+
+                    {# AI Reasoning #}
+                    {% if td.get('reason') %}
+                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">AI Reasoning</div>
+                        <p class="text-xs text-gray-600 leading-relaxed">{{ td.reason }}</p>
+                    </div>
+                    {% endif %}
+
+                    {# Sub-Agent Breakdown (for task_2_2 and task_3_1) #}
+                    {% if td.get('sub_agents') %}
+                    <div class="mt-3 border-t border-gray-100 pt-3">
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Multi-Agent Evaluation Breakdown</div>
+                        <div class="grid grid-cols-1 {% if td.sub_agents|length >= 3 %}md:grid-cols-3{% else %}md:grid-cols-2{% endif %} gap-3">
+                            {% for agent_name, agent_data in td.sub_agents.items() %}
+                            <div class="bg-blue-50 border border-blue-100 rounded-lg p-3">
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-xs font-semibold text-blue-800">{{ agent_data.get('dimension', agent_name|title) }}</span>
+                                    <span class="text-xs font-bold {% if agent_data.score >= agent_data.max * 0.7 %}text-green-600{% elif agent_data.score >= agent_data.max * 0.4 %}text-amber-600{% else %}text-red-600{% endif %}">{{ agent_data.score }}/{{ agent_data.max }}</span>
+                                </div>
+                                <div class="w-full bg-blue-100 rounded-full h-1 mb-2">
+                                    {% set apct = (agent_data.score / agent_data.max * 100) if agent_data.max > 0 else 0 %}
+                                    <div class="h-1 rounded-full {% if apct >= 70 %}bg-green-500{% elif apct >= 40 %}bg-amber-500{% else %}bg-red-500{% endif %}" style="width: {{ apct }}%"></div>
+                                </div>
+                                <p class="text-xs text-blue-700 leading-relaxed mb-2">{{ agent_data.get('reasoning', '') }}</p>
+                                {% if agent_data.get('evidence') %}
+                                <div class="space-y-1">
+                                    {% for ev in agent_data.evidence[:2] %}
+                                    <div class="text-xs text-blue-600 bg-blue-100 rounded px-2 py-1 italic">"{{ ev|truncate(120) }}"</div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                {% if agent_data.get('confidence') %}
+                                <div class="mt-2">
+                                    <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium
+                                        {% if agent_data.confidence == 'high' %}bg-green-100 text-green-700
+                                        {% elif agent_data.confidence == 'medium' %}bg-yellow-100 text-yellow-700
+                                        {% else %}bg-red-100 text-red-700{% endif %}">
+                                        {{ agent_data.confidence }} confidence
+                                    </span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {# Report sections (for task_4_1) #}
+                    {% if td.get('sections') %}
+                    <div class="mt-3 border-t border-gray-100 pt-3 space-y-2">
+                        {% for sec_name, sec_data in td.sections.items() %}
+                        <div class="flex items-start gap-3">
+                            <span class="text-xs font-medium text-gray-600 w-40 shrink-0">{{ sec_name.replace('_', ' ').title() }}</span>
+                            <div class="flex-1">
+                                <span class="text-xs font-bold {% if sec_data.score >= sec_data.max * 0.7 %}text-green-600{% elif sec_data.score >= sec_data.max * 0.4 %}text-amber-600{% else %}text-red-600{% endif %}">{{ sec_data.score }}/{{ sec_data.max }}</span>
+                                {% if sec_data.get('reason') %}<span class="text-xs text-gray-500 ml-2">{{ sec_data.reason }}</span>{% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        {% if pb.get('flags') %}
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+            <h4 class="text-sm font-semibold text-amber-800 mb-3">Flags & Issues</h4>
+            <div class="space-y-2">
+                {% for flag in pb.flags[:10] %}
+                {% set flag_key = flag.split(':')[0].strip() %}
+                <div class="flex items-start gap-2">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-amber-200 text-amber-900 shrink-0 mt-0.5">{{ flag_key }}</span>
+                    <span class="text-xs text-amber-700">{{ FLAG_EXPLAIN.get(flag_key, flag) }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Export -->
+<div class="flex gap-3 mb-8">
+    <a href="/export/{{ run_id }}/student/{{ roll }}" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 no-underline">Download Student JSON</a>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{
+  "paper_title": "COFFIN: A Computational Framework for Linear SVMs",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "COFFIN is a computational framework for linear SVMs that enables on-demand computation of kernel-like features and virtual examples in the primal formulation. It leverages the fact that linear SVM solvers only require DOT and ADD operations, allowing efficient handling of high-dimensional feature spaces without storing them explicitly.",
+  "algorithm_steps": [
+    "Step 1: Replace direct feature vector access with on-demand computation through DOT and ADD operations",
+    "Step 2: Implement efficient data structures (dense vectors, sorted arrays, trees, or hash tables) to represent the weight vector w",
+    "Step 3: Compute non-zero features \u03c6\u22600(z) on-demand when accessed during DOT operations",
+    "Step 4: Use hashing to reduce effective dimensionality when dealing with very high-dimensional feature spaces",
+    "Step 5: Apply standard linear SVM solvers (SGD, BMRM, OCAS, etc.) using the modified DOT/ADD interface"
+  ],
+  "key_equations": [
+    "Equation (1): Classical kernel machine prediction f(x) = sign(\u2211\u03b1\u1d62K(x,x\u1d62) + b)",
+    "Section 2: Linear SVM objective F(w) := \u00bd||w||\u00b2 + C\u2211max{0,1-y\u1d62(\u27e8w,x\u1d62\u27e9+b)}",
+    "Section 2.1: On-demand feature computation \u03c6\u22600(z) and |\u03c6\u22600(z)| for sparse representations"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Individual features \u03c6\u22600(z)\u1d65\u1d62 can be computed quickly in O(1) time",
+      "why_needed": "Essential for efficient DOT and ADD operations during training",
+      "violation_scenario": "When feature computation involves expensive operations like complex string matching or numerical integration"
+    },
+    {
+      "assumption": "The number of non-zero features |\u03c6\u22600(z)| is low, ideally O(dim(Z))",
+      "why_needed": "Keeps computational complexity manageable for DOT/ADD operations",
+      "violation_scenario": "Dense feature representations where most features are non-zero"
+    },
+    {
+      "assumption": "Hash collisions in hashed representations cause only minor information loss",
+      "why_needed": "Allows dimensionality reduction while maintaining performance",
+      "violation_scenario": "When hash function causes systematic collisions that destroy important feature distinctions"
+    }
+  ],
+  "baselines_compared": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "baseline_limitations_identified": "Classical kernel SVMs suffer from the curse of supporting vectors, where prediction complexity scales linearly with the number of support vectors, making them unsuitable for large-scale applications",
+  "proposed_improvement": "COFFIN enables kernel-like non-linearity in linear SVMs through on-demand feature computation, achieving linear training and prediction time while handling very high-dimensional feature spaces",
+  "condition_where_baseline_wins": "When the dataset is small enough that the number of support vectors doesn't create computational bottlenecks, and when explicit kernel computations are more efficient than on-demand feature computation",
+  "datasets_used": [
+    "Human splice site recognition (50 million examples)",
+    "Gender classification (5 million images)"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "20 Newsgroups text classification",
+    "MNIST digit recognition",
+    "Small DNA sequence classification"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of string kernels (20 Newsgroups), polynomial kernels (MNIST), and biological sequence kernels (DNA) while being computationally manageable for educational purposes",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Paper mentions source code availability but implementation details for specific kernels and data structures require careful attention to efficiency considerations",
+  "key_components_for_ablation": [
+    {
+      "component": "Hashing for dimensionality reduction",
+      "role_in_method": "Reduces memory requirements and enables dense representation of very high-dimensional feature spaces",
+      "expected_effect_of_removal": "Would require sparse data structures or explicit storage of full feature vectors, increasing memory usage significantly"
+    },
+    {
+      "component": "On-demand feature computation",
+      "role_in_method": "Avoids storing explicit feature vectors by computing them when needed",
+      "expected_effect_of_removal": "Would require preprocessing and storing all feature vectors, making large-scale applications infeasible"
+    },
+    {
+      "component": "Efficient data structures for weight vector w",
+      "role_in_method": "Enables fast DOT and ADD operations while managing memory efficiently",
+      "expected_effect_of_removal": "Would default to dense representation, potentially causing memory issues or slower operations"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When feature computation is expensive (not O(1))",
+      "reason": "DOT and ADD operations become computational bottlenecks",
+      "related_assumption": "Individual features can be computed quickly in O(1) time"
+    },
+    {
+      "scenario": "When most features are non-zero (dense representations)",
+      "reason": "Computational complexity scales poorly with feature density",
+      "related_assumption": "The number of non-zero features is low"
+    },
+    {
+      "scenario": "When hash collisions destroy important feature distinctions",
+      "reason": "Information loss degrades classification performance",
+      "related_assumption": "Hash collisions cause only minor information loss"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": false,
+    "code_available": true
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/Conferences/2010/papers/280.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

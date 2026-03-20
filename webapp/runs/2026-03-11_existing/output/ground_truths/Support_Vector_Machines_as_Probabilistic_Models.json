@@ -1,0 +1,100 @@
+{
+  "paper_title": "Support Vector Machines as Probabilistic Models",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper shows how SVMs can be viewed as maximum likelihood estimates of a semi-parametric probabilistic model. This model has a non-uniform marginal distribution and provides a generative interpretation of SVMs, analogous to how \u03bd-SVM reparameterizes the classical C-SVM.",
+  "algorithm_steps": [
+    "Step 1: Define semi-parametric probability distribution p(x,y;\u03c4,\u03c9,u) = Z(\u03c4,\u03c9)^(-1) exp(-\u03c9_y \u2113(y\u27e8u,x\u27e9)) h(x)",
+    "Step 2: Prove that normalization constant Z(\u03c4,\u03c9) is invariant to unit vector parameter u under radial basis function h(x)",
+    "Step 3: Show that ML estimation of u given fixed \u03c4,\u03c9 is equivalent to SVM optimization with w = \u03c4u",
+    "Step 4: Derive posterior probabilities and show they match logistic regression in margin band",
+    "Step 5: Establish correspondence between hyperparameter \u03c9 and prior class probabilities"
+  ],
+  "key_equations": [
+    "Eq (4): Semi-parametric model p(x,y;\u03c4,\u03c9,u) = Z(\u03c4,\u03c9)^(-1) exp(-\u03c9_y \u2113(y\u27e8u,x\u27e9)) h(x)",
+    "Eq (10): Posterior probability p(y|x;\u03c4,\u03c9,u) = exp(-\u03c9_y \u2113(y\u27e8u,x\u27e9)) / \u03a3_y exp(-\u03c9_y \u2113(y\u27e8u,x\u27e9))",
+    "Eq (13): Negative log-likelihood L(\u03c4,\u03c9,u) for ML estimation",
+    "Theorem 3: Equivalence between ML estimate and SVM solution w_SVM = \u03c4u_ML"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Function h(x) is radial basis function satisfying h(x) = h(x') for ||x|| = ||x'||",
+      "why_needed": "Ensures normalization constant Z(\u03c4,\u03c9) is invariant to parameter u, enabling ML estimation",
+      "violation_scenario": "When h(x) depends on direction of x, not just magnitude, breaking rotational invariance"
+    },
+    {
+      "assumption": "SVM without bias term (homogeneous hyperplane through origin)",
+      "why_needed": "Simplifies mathematical analysis and ensures correspondence with probabilistic model",
+      "violation_scenario": "Real-world problems often require bias term for optimal decision boundary placement"
+    },
+    {
+      "assumption": "Training data is i.i.d. from the proposed semi-parametric distribution",
+      "why_needed": "Required for ML estimation framework to be valid",
+      "violation_scenario": "When data has dependencies or comes from different distribution than assumed model"
+    }
+  ],
+  "baselines_compared": [
+    "Logistic Regression",
+    "Platt scaling",
+    "Previous probabilistic SVM interpretations"
+  ],
+  "baseline_limitations_identified": "Previous attempts to cast SVMs in probabilistic framework were unsatisfactory - either required artificial 'don't-know' class or provided only heuristic probability mappings without theoretical foundation",
+  "proposed_improvement": "Provides rigorous probabilistic interpretation through semi-parametric model with non-uniform marginal, showing SVM as ML estimate rather than ad-hoc probability mapping",
+  "condition_where_baseline_wins": "When true posterior probabilities are needed for decision making rather than just classification, logistic regression may be preferred as it directly models p(y|x) without requiring knowledge of marginal distribution h(x)",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "2D linearly separable Gaussian clusters",
+    "Synthetic data with known class imbalance"
+  ],
+  "toy_dataset_justification": "These datasets would allow verification of the theoretical results, testing the correspondence between \u03c9 parameter and class priors, and visualizing the non-uniform marginal distribution properties",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Theoretical results can be verified, but practical implementation requires careful handling of normalization constant computation and choice of radial basis function h(x)",
+  "key_components_for_ablation": [
+    {
+      "component": "Radial basis function h(x)",
+      "role_in_method": "Ensures normalization constant is invariant to u parameter and defines non-parametric part of marginal distribution",
+      "expected_effect_of_removal": "Would break the invariance property and make ML estimation dependent on arbitrary choice of coordinate system"
+    },
+    {
+      "component": "Cost-sensitive parameter \u03c9",
+      "role_in_method": "Controls class imbalance handling and determines prior probabilities",
+      "expected_effect_of_removal": "Would force uniform class priors (\u03c9 = 0.5) and eliminate ability to handle imbalanced datasets"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When bias term is crucial for optimal classification",
+      "reason": "Method restricted to homogeneous hyperplanes through origin",
+      "related_assumption": "SVM without bias term assumption"
+    },
+    {
+      "scenario": "When radial symmetry assumption of h(x) is violated",
+      "reason": "Breaks invariance of normalization constant to parameter u",
+      "related_assumption": "Radial basis function assumption for h(x)"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": false,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/2011/papers/386_icmlpaper.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

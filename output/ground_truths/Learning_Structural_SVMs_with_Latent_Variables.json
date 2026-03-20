@@ -1,0 +1,109 @@
+{
+  "paper_title": "Learning Structural SVMs with Latent Variables",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "Extends Structural SVMs to handle latent variables by reformulating the optimization problem as a difference of convex functions. Uses the Concave-Convex Procedure (CCCP) to find local optima by alternating between latent variable completion and solving standard Structural SVM problems.",
+  "algorithm_steps": [
+    "Initialize parameter vector w0",
+    "Latent variable completion: For each training example (xi, yi), find h*i = argmax_h w\u00b7\u03a6(xi, yi, h)",
+    "Solve standard Structural SVM problem treating latent variables h*i as observed using proximal bundle method",
+    "Update parameter vector wt+1",
+    "Repeat steps 2-4 until convergence"
+  ],
+  "key_equations": [
+    "Equation (2): Prediction rule fw(x) = argmax_(y,h) w\u00b7\u03a6(x,y,h)",
+    "Equation (5): Main optimization problem as difference of convex functions",
+    "Equation (6): Latent variable completion h*i = argmax_h wt\u00b7\u03a6(xi,yi,h)",
+    "Equation (7): Standard Structural SVM subproblem with completed latent variables"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Loss function does not depend on latent variables of correct labels: \u0394(yi, \u0177i(w), \u0125i(w)) instead of \u0394((yi, h*i(w)), (\u0177i(w), \u0125i(w)))",
+      "why_needed": "Enables the optimization problem to be written as difference of convex functions, making CCCP applicable",
+      "violation_scenario": "When the evaluation metric inherently depends on the latent structure of ground truth labels"
+    },
+    {
+      "assumption": "Joint feature function \u03a6(x,y,h) is linear in parameters w",
+      "why_needed": "Required for the convex formulation and efficient optimization",
+      "violation_scenario": "When the relationship between inputs, outputs, and latent variables is inherently nonlinear"
+    },
+    {
+      "assumption": "Latent variable space H is finite or has efficient argmax oracle",
+      "why_needed": "Latent variable completion step requires solving argmax over H",
+      "violation_scenario": "When latent variables are continuous or the argmax problem is intractable"
+    }
+  ],
+  "baselines_compared": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "baseline_limitations_identified": "Standard Structural SVMs cannot handle latent variables, excluding many applications where important modeling information is unobserved",
+  "proposed_improvement": "Extends Structural SVM framework to incorporate latent variables while maintaining efficient optimization through CCCP",
+  "condition_where_baseline_wins": "When all relevant information is fully observed and latent variables are unnecessary, standard Structural SVMs would be simpler and potentially faster",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Synthetic sequence labeling with hidden states",
+    "Simple object detection with part-based models",
+    "Document classification with latent topics"
+  ],
+  "toy_dataset_justification": "These datasets naturally contain latent structure (hidden states, object parts, topics) while being simple enough to verify correctness of the CCCP alternating optimization",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires implementing CCCP framework and proximal bundle method for Structural SVM subproblems. Algorithm details are clear but implementation complexity is moderate.",
+  "key_components_for_ablation": [
+    {
+      "component": "CCCP optimization procedure",
+      "role_in_method": "Handles non-convex optimization by alternating between latent variable completion and convex subproblems",
+      "expected_effect_of_removal": "Would require different non-convex optimization approach, likely with worse convergence guarantees"
+    },
+    {
+      "component": "Proximal bundle method for subproblems",
+      "role_in_method": "Efficiently solves the Structural SVM subproblem in each CCCP iteration",
+      "expected_effect_of_removal": "Could use standard cutting plane method instead, but likely with slower convergence"
+    },
+    {
+      "component": "Loss function restriction (no dependence on h*)",
+      "role_in_method": "Enables difference-of-convex formulation",
+      "expected_effect_of_removal": "Would require more complex optimization procedures to handle dependence on latent variables in loss"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When loss function depends on ground truth latent variables",
+      "reason": "Violates the key assumption that enables difference-of-convex formulation",
+      "related_assumption": "Loss function does not depend on latent variables of correct labels"
+    },
+    {
+      "scenario": "When latent variable completion problem is intractable",
+      "reason": "CCCP requires solving argmax over latent variables at each iteration",
+      "related_assumption": "Latent variable space H has efficient argmax oracle"
+    },
+    {
+      "scenario": "Poor local optima due to non-convex objective",
+      "reason": "CCCP only guarantees convergence to local minimum, not global optimum",
+      "related_assumption": "Optimization landscape allows good local optima to be found"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": false,
+    "code_available": true
+  },
+  "_metadata": {
+    "paper_url": "https://www.cs.cornell.edu/people/tj/publications/yu_joachims_09a.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

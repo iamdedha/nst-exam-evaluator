@@ -1,0 +1,101 @@
+{
+  "paper_title": "One-Sided Support Vector Regression for Multiclass Cost-Sensitive Classification",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes a novel reduction approach that transforms multiclass cost-sensitive classification into one-sided regression by encoding cost information in regression labels. They develop One-Sided Support Vector Regression (OSSVR) which extends one-versus-all SVM to handle cost-sensitive classification with theoretical guarantees.",
+  "algorithm_steps": [
+    "Step 1: Transform each cost-sensitive example (x,y,c) into K regression examples (x,k,c[k]) for k=1,...,K",
+    "Step 2: Define one-sided loss \u2113_k(r) = max(\u03be_k(r), 0) where \u03be_k(r) depends on whether c[k] is minimum cost or not",
+    "Step 3: Train OSSVR regressor r(x,k) to minimize total one-sided loss across all transformed examples",
+    "Step 4: For prediction, compute g_r(x) = argmin_{k} r(x,k) to find minimum predicted cost class"
+  ],
+  "key_equations": [
+    "Eq (1): g_r(x) = argmin_{1\u2264k\u2264K} r(x,k) - prediction rule using regressor outputs",
+    "Eq (2): \u2113_k(r) = max(\u03be_k(r), 0) - one-sided loss definition",
+    "Eq (3): c\u0304[g_r(x)] \u2264 \u03a3_{k=1}^K \u2113_k(r) - per-example loss bound theorem"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Cost vectors are example-dependent and bounded",
+      "why_needed": "The reduction approach requires finite cost values to encode in regression labels",
+      "violation_scenario": "When costs are unbounded or undefined for some examples"
+    },
+    {
+      "assumption": "One-sided regression can be solved effectively",
+      "why_needed": "The entire approach depends on learning a good one-sided regressor",
+      "violation_scenario": "When the regression problem is too complex or high-dimensional for effective learning"
+    },
+    {
+      "assumption": "Cost information is available during training",
+      "why_needed": "The method requires cost vectors c to create regression labels",
+      "violation_scenario": "When only class labels are available without cost information"
+    }
+  ],
+  "baselines_compared": [
+    "One-versus-all SVM (OVA-SVM)",
+    "MetaCost",
+    "SECOC",
+    "Filter Tree",
+    "Weighted All-Pairs"
+  ],
+  "baseline_limitations_identified": "Existing approaches either ignore cost information (OVA-SVM) or require complex encoding schemes with many weighted examples that are computationally expensive and practically difficult to implement",
+  "proposed_improvement": "Direct encoding of cost information in regression labels with simple one-sided loss, providing theoretical guarantees while maintaining computational efficiency similar to standard SVM",
+  "condition_where_baseline_wins": "When cost differences between classes are minimal or uniform, standard OVA-SVM might perform similarly with lower computational overhead since the cost-sensitive machinery becomes unnecessary",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": "UNKNOWN",
+  "suitable_toy_datasets": [
+    "Iris dataset with artificial cost matrices",
+    "Wine dataset with medical diagnosis costs",
+    "Synthetic 3-class dataset with varying misclassification costs"
+  ],
+  "toy_dataset_justification": "These datasets have clear multiclass structure where different types of misclassification errors can have meaningful cost differences, allowing demonstration of the cost-sensitive approach",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "While the OSSVR formulation is clearly described, implementation details for the SVM variant and specific experimental setup are not fully provided in the visible text",
+  "key_components_for_ablation": [
+    {
+      "component": "One-sided loss function",
+      "role_in_method": "Provides the asymmetric penalty that enforces correct cost ordering",
+      "expected_effect_of_removal": "Would reduce to standard regression without cost-sensitive properties"
+    },
+    {
+      "component": "Cost calibration (subtracting minimum cost)",
+      "role_in_method": "Normalizes cost vectors to have minimum value of zero",
+      "expected_effect_of_removal": "Would still work but with shifted cost values affecting optimization"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When cost differences are very small or noisy",
+      "reason": "The regression approach may not distinguish between similar cost values effectively",
+      "related_assumption": "Cost vectors are example-dependent and bounded"
+    },
+    {
+      "scenario": "High-dimensional input spaces with limited training data",
+      "reason": "The regression problem becomes ill-posed and overfitting occurs",
+      "related_assumption": "One-sided regression can be solved effectively"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/Conferences/2010/papers/207.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "paper_title": "Object Detection with Grammar Models",
+  "venue": "PAMI",
+  "venue_abbreviation": "PAMI",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "A grammar-based object detection model for person detection that uses hierarchical deformable parts with variable structure and explicit occlusion modeling. The method introduces weak-label structural SVM for learning from weakly-labeled data (bounding boxes) while making strong predictions (detailed part configurations).",
+  "algorithm_steps": [
+    "Step 1: Define grammar with start symbol Q having 6 production rules for different visibility patterns (heavy occlusion to no occlusion)",
+    "Step 2: For each part, define subtypes (left/right facing) and deformation schemas allowing quadratic displacement penalties",
+    "Step 3: Include explicit occlusion model O with appearance filters for occluding objects",
+    "Step 4: Add hierarchical subparts at multiple resolutions (same scale and 2x resolution)",
+    "Step 5: Train using weak-label structural SVM with loss function L(y,s) relating weak labels y to strong predictions s",
+    "Step 6: At test time, use dynamic programming to find maximum scoring derivations at each location",
+    "Step 7: Apply non-maximal suppression to produce final detections"
+  ],
+  "key_equations": [
+    "Eq 2: score(T) = sum of production scores + sum of terminal appearance scores",
+    "Eq 4: Deformation schema X(\u03c9)^\u03c6(\u03b4) \u2192 {Y(\u03c9)} with quadratic displacement features \u03c6(\u03b4) = (dx,dy,dx\u00b2,dy\u00b2)"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Person occlusion follows one of six discrete visibility patterns",
+      "why_needed": "Grammar structure requires finite set of production rules to model different occlusion states",
+      "violation_scenario": "Complex partial occlusions that don't match any of the six predefined patterns"
+    },
+    {
+      "assumption": "Part deformations follow quadratic displacement penalties",
+      "why_needed": "Enables efficient dynamic programming inference while modeling spatial flexibility",
+      "violation_scenario": "Highly articulated poses where quadratic penalties are insufficient to model joint constraints"
+    },
+    {
+      "assumption": "Occluding objects have consistent appearance that can be modeled with filters",
+      "why_needed": "Explicit occlusion model requires learnable appearance patterns for occluders",
+      "violation_scenario": "Occlusion by highly variable objects or transparent/reflective surfaces"
+    }
+  ],
+  "baselines_compared": [
+    "UoC-TTI object detector",
+    "voc-release4 system"
+  ],
+  "baseline_limitations_identified": "Previous systems use separate mixture components for different visibility patterns, dividing training data inefficiently and learning independent parts for each component",
+  "proposed_improvement": "Single grammar model shares parts across visibility patterns, uses training data more efficiently, and includes explicit occlusion modeling with part subtypes for greater appearance variability",
+  "condition_where_baseline_wins": "Simple scenes with clearly visible, unoccluded people where the additional complexity of grammar modeling provides no benefit over simpler mixture models",
+  "datasets_used": [
+    "PASCAL VOC"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "INRIA Person Dataset",
+    "Caltech Pedestrian Dataset"
+  ],
+  "toy_dataset_justification": "These datasets contain person detection tasks with varying degrees of occlusion and pose variation, suitable for testing hierarchical part models and occlusion handling",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Grammar structure is hand-designed and specific implementation details for weak-label structural SVM training are not fully specified. HOG feature extraction and dynamic programming inference are standard.",
+  "key_components_for_ablation": [
+    {
+      "component": "Explicit occlusion model",
+      "role_in_method": "Models appearance of occluding objects when person is partially visible",
+      "expected_effect_of_removal": "Reduced performance on partially occluded people, may increase false positives"
+    },
+    {
+      "component": "Part subtypes",
+      "role_in_method": "Provides left/right facing variants for each part independently",
+      "expected_effect_of_removal": "Less flexibility in modeling pose variation, reduced detection accuracy"
+    },
+    {
+      "component": "Hierarchical subparts",
+      "role_in_method": "Captures fine details at multiple resolutions for large objects",
+      "expected_effect_of_removal": "Reduced performance on large person instances where fine details matter"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Highly articulated poses not covered by the six visibility patterns",
+      "reason": "Grammar structure is limited to predefined production rules",
+      "related_assumption": "Person occlusion follows one of six discrete visibility patterns"
+    },
+    {
+      "scenario": "Small objects where high-resolution subparts fall off feature pyramid",
+      "reason": "Hierarchical model cannot use fine-scale features for very small detections",
+      "related_assumption": "Part deformations follow quadratic displacement penalties"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://cs.brown.edu/people/pfelzens/papers/grammar-nips11.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block title %}Results - NST Exam Evaluator{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-2xl font-bold text-gray-900">Evaluation Results</h1>
+        <p class="text-gray-500 text-sm mt-1">Run: <span class="font-mono text-gray-700">{{ run_id }}</span></p>
+    </div>
+    <div class="flex gap-2">
+        <a href="/export/{{ run_id }}/csv" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 no-underline">CSV</a>
+        <a href="/export/{{ run_id }}/json" class="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 no-underline">JSON</a>
+    </div>
+</div>
+
+<!-- Summary Stats -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div class="text-2xl font-extrabold text-gray-800">{{ stats.total }}</div>
+        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Total</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div class="text-2xl font-extrabold text-green-600">{{ stats.valid }}</div>
+        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Valid</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div class="text-2xl font-extrabold text-nst-600">{{ stats.a_avg }}/50</div>
+        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Part A Avg</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div class="text-2xl font-extrabold text-blue-600">{{ stats.part_b_count }}</div>
+        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Part B</div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 text-center">
+        <div class="text-2xl font-extrabold text-amber-600">{{ stats.flagged }}</div>
+        <div class="text-xs text-gray-400 uppercase tracking-wider mt-1">Flagged</div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Score Distribution (Part A)</h3>
+        <div id="histChart" style="height:260px"></div>
+    </div>
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+        <h3 class="text-sm font-semibold text-gray-700 mb-2">Part A vs Part B (KMeans Clusters)</h3>
+        <div id="scatterChart" style="height:260px"></div>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-4">
+    <div class="flex flex-wrap gap-3 items-center">
+        <input type="search" id="searchInput" placeholder="Search roll or name..." oninput="filterTable()" class="flex-1 min-w-[200px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nst-500 focus:border-transparent">
+        <select id="statusFilter" onchange="filterTable()" class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nst-500">
+            <option value="all">All Students</option>
+            <option value="valid">Valid Only</option>
+            <option value="disqualified">Disqualified</option>
+            <option value="flagged">Flagged</option>
+            <option value="part_b">Part B Only</option>
+        </select>
+        <span class="text-xs text-gray-400" id="rowCount"></span>
+    </div>
+</div>
+
+<!-- Results Table -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="overflow-x-auto">
+<table class="min-w-full divide-y divide-gray-200" id="resultsTable">
+    <thead class="bg-gray-50">
+        <tr>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:text-gray-700" onclick="sortTable(0)">Roll</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase cursor-pointer hover:text-gray-700" onclick="sortTable(1)">Name</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Paper</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer hover:text-gray-700" onclick="sortTable(3)">Status</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer hover:text-gray-700" onclick="sortTable(4)">Part A</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase cursor-pointer hover:text-gray-700" onclick="sortTable(5)">Part B</th>
+            <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Flags</th>
+            <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase"></th>
+        </tr>
+    </thead>
+    <tbody class="divide-y divide-gray-100">
+        {% for s in scores %}
+        <tr class="result-row hover:bg-gray-50 cursor-pointer
+            {% if s.Status == 'disqualified' %}opacity-50{% endif %}
+            {% if s.get('Needs Review') == 'YES' and s.Status != 'disqualified' %}bg-amber-50{% endif %}"
+            data-status="{{ s.Status }}" data-review="{{ s.get('Needs Review', 'NO') }}"
+            data-partb="{{ 'yes' if s.get('Part B Raw (130)') not in ['NO SUBMISSION', 'N/A', 'N/A (disqualified)'] else 'no' }}"
+            data-roll="{{ s['Roll Number'] }}" data-name="{{ s.Name|lower }}"
+            onclick="toggleExpand('expand-{{ s['Roll Number'] }}')">
+            <td class="px-4 py-3 text-sm font-mono text-gray-700">{{ s['Roll Number'] }}</td>
+            <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ s.Name }}</td>
+            <td class="px-4 py-3 text-sm text-gray-500 max-w-[220px] truncate" title="{{ s['Paper Title'] }}">{{ s['Paper Title'][:50] }}{% if s['Paper Title']|length > 50 %}...{% endif %}</td>
+            <td class="px-4 py-3 text-center">
+                {% if s.Status == 'valid' %}<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800">Valid</span>
+                {% else %}<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-800">DQ</span>{% endif %}
+            </td>
+            <td class="px-4 py-3 text-center">
+                {% set a = s.get('Part A Final (50)', 'N/A') %}
+                {% if a is number %}<span class="text-sm font-bold {% if a >= 35 %}text-green-600{% elif a >= 25 %}text-amber-600{% else %}text-red-600{% endif %}">{{ a }}</span><span class="text-xs text-gray-400">/50</span>
+                {% else %}<span class="text-xs text-gray-400 italic">{{ a }}</span>{% endif %}
+            </td>
+            <td class="px-4 py-3 text-center">
+                {% set b = s.get('Part B Raw (130)', 'NO SUBMISSION') %}
+                {% if b is number %}<span class="text-sm font-bold {% if b >= 80 %}text-green-600{% elif b >= 50 %}text-amber-600{% else %}text-red-600{% endif %}">{{ s.get('Part B Final (130)', 0) }}</span><span class="text-xs text-gray-400">/130</span>
+                {% else %}<span class="text-xs text-gray-400 italic">-</span>{% endif %}
+            </td>
+            <td class="px-4 py-3">
+                {% set flags = s.get('Flags', '') %}
+                {% if flags %}<span class="text-xs text-amber-600" title="{{ flags }}">{{ flags.split(';')|length }} flag{{ 's' if flags.split(';')|length > 1 }}</span>{% endif %}
+            </td>
+            <td class="px-4 py-3 text-center">
+                <a href="/results/{{ run_id }}/student/{{ s['Roll Number'] }}" class="text-nst-600 hover:text-nst-800 text-xs font-medium no-underline" onclick="event.stopPropagation()">Details &rarr;</a>
+            </td>
+        </tr>
+        <!-- Expandable reasoning row -->
+        <tr class="expand-row bg-gray-50" id="expand-{{ s['Roll Number'] }}">
+            <td colspan="8" class="px-6 py-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div>
+                        <span class="font-semibold text-gray-700">Part A Breakdown:</span>
+                        <span class="text-gray-500 ml-1">Scaled {{ s.get('Part A Scaled (5%)', '-') }}/5</span>
+                        {% if s.get('Part A Penalty', 0) %}<span class="text-red-500 ml-2">Penalty: -{{ s.get('Part A Penalty') }}</span>{% endif %}
+                    </div>
+                    <div>
+                        <span class="font-semibold text-gray-700">Part B Breakdown:</span>
+                        {% if s.get('Part B Q1 (25)') is not none and s.get('Part B Q1 (25)') != '' %}
+                        <span class="text-gray-500 ml-1">Q1:{{ s.get('Part B Q1 (25)', '-') }} Q2:{{ s.get('Part B Q2 (40)', '-') }} Q3:{{ s.get('Part B Q3 (35)', '-') }} Q4:{{ s.get('Part B Q4 (30)', '-') }}</span>
+                        {% else %}<span class="text-gray-400 italic ml-1">No Part B</span>{% endif %}
+                    </div>
+                    {% if flags %}
+                    <div class="col-span-2">
+                        <span class="font-semibold text-gray-700">Flags:</span>
+                        <span class="text-amber-600 ml-1">{{ flags }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/export.js') }}"></script>
+<script>
+updateRowCount();
+
+function toggleExpand(id) {
+    const row = document.getElementById(id);
+    if (row) row.classList.toggle('active');
+}
+
+function filterTable() {
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    const filter = document.getElementById('statusFilter').value;
+    document.querySelectorAll('#resultsTable tbody tr.result-row').forEach(row => {
+        let show = true;
+        if (search && !row.dataset.roll.includes(search) && !row.dataset.name.includes(search)) show = false;
+        if (filter === 'valid' && row.dataset.status !== 'valid') show = false;
+        if (filter === 'disqualified' && row.dataset.status !== 'disqualified') show = false;
+        if (filter === 'flagged' && row.dataset.review !== 'YES') show = false;
+        if (filter === 'part_b' && row.dataset.partb !== 'yes') show = false;
+        row.style.display = show ? '' : 'none';
+        // Also hide expand row
+        const expandId = 'expand-' + row.dataset.roll;
+        const expandRow = document.getElementById(expandId);
+        if (expandRow && !show) { expandRow.classList.remove('active'); expandRow.style.display = 'none'; }
+        else if (expandRow) { expandRow.style.display = ''; }
+    });
+    updateRowCount();
+}
+
+function sortTable(ci) {
+    const table = document.getElementById('resultsTable');
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr.result-row'));
+    const asc = table.dataset.sc == ci && table.dataset.sd === 'asc';
+    table.dataset.sc = ci; table.dataset.sd = asc ? 'desc' : 'asc';
+    rows.sort((a, b) => {
+        let av = a.cells[ci].textContent.trim(), bv = b.cells[ci].textContent.trim();
+        const an = parseFloat(av), bn = parseFloat(bv);
+        if (!isNaN(an) && !isNaN(bn)) return asc ? bn - an : an - bn;
+        return asc ? bv.localeCompare(av) : av.localeCompare(bv);
+    });
+    rows.forEach(row => {
+        tbody.appendChild(row);
+        const er = document.getElementById('expand-' + row.dataset.roll);
+        if (er) tbody.appendChild(er);
+    });
+}
+
+function updateRowCount() {
+    const v = document.querySelectorAll('#resultsTable tbody tr.result-row:not([style*="display: none"])').length;
+    const t = document.querySelectorAll('#resultsTable tbody tr.result-row').length;
+    document.getElementById('rowCount').textContent = `${v} of ${t} students`;
+}
+
+// Charts
+{% if chart_data %}
+var pa = {{ chart_data.part_a_scores | tojson }};
+if (pa.length > 0) {
+    Plotly.newPlot('histChart', [{ x: pa, type: 'histogram', marker: { color: '#3b82f6' }, xbins: { size: 5 } }],
+        { xaxis: { title: 'Score', range: [0,52] }, yaxis: { title: 'Count' }, margin: { t:10, b:35, l:35, r:10 }, paper_bgcolor:'transparent', plot_bgcolor:'transparent', font: { size:10 } },
+        { responsive: true, displayModeBar: false });
+}
+var scatter = {{ chart_data.scatter | tojson }};
+if (scatter.x.length > 0) {
+    var clusterColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6'];
+    var clusterNames = ['Cluster A', 'Cluster B', 'Cluster C', 'Cluster D', 'Cluster E'];
+    var traces = [];
+    if (scatter.clusters && scatter.clusters.labels) {
+        var nClusters = scatter.clusters.n_clusters;
+        for (var c = 0; c < nClusters; c++) {
+            var cx = [], cy = [], cl = [];
+            for (var i = 0; i < scatter.x.length; i++) {
+                if (scatter.clusters.labels[i] === c) {
+                    cx.push(scatter.x[i]);
+                    cy.push(scatter.y[i]);
+                    cl.push(scatter.labels[i]);
+                }
+            }
+            traces.push({
+                x: cx, y: cy, text: cl, mode: 'markers', type: 'scatter',
+                name: clusterNames[c],
+                marker: { color: clusterColors[c], size: 11, line: { color: '#fff', width: 1.5 },
+                          symbol: ['circle','diamond','square','triangle-up','pentagon'][c] },
+                hovertemplate: '%{text}<br>A: %{x}/50<br>B: %{y}/130<extra>' + clusterNames[c] + '</extra>'
+            });
+        }
+        // Add cluster centers
+        if (scatter.clusters.centers) {
+            traces.push({
+                x: scatter.clusters.centers.map(function(c){return c[0]}),
+                y: scatter.clusters.centers.map(function(c){return c[1]}),
+                mode: 'markers', type: 'scatter', name: 'Centroids',
+                marker: { color: '#000', size: 14, symbol: 'x', line: { color: '#fff', width: 2 } },
+                hovertemplate: 'Centroid<br>A: %{x:.1f}<br>B: %{y:.1f}<extra></extra>'
+            });
+        }
+    } else {
+        traces.push({ x: scatter.x, y: scatter.y, text: scatter.labels, mode: 'markers', type: 'scatter',
+            marker: { color: '#10b981', size: 10, line: { color: '#059669', width: 1 } },
+            hovertemplate: '%{text}<br>A: %{x}/50<br>B: %{y}/130<extra></extra>' });
+    }
+    Plotly.newPlot('scatterChart', traces,
+        { xaxis: { title: 'Part A (/50)', range: [0,52] }, yaxis: { title: 'Part B (/130)', range: [0,135] },
+          margin: { t:10, b:35, l:40, r:10 }, paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+          font: { size:10 }, legend: { x: 0.01, y: 0.99, bgcolor: 'rgba(255,255,255,0.8)', bordercolor: '#e5e7eb', borderwidth: 1 },
+          showlegend: true },
+        { responsive: true, displayModeBar: false });
+} else {
+    document.getElementById('scatterChart').innerHTML = '<div class="flex items-center justify-center h-full text-gray-400 text-sm">No Part B data</div>';
+}
+{% endif %}
+</script>
+{% endblock %}

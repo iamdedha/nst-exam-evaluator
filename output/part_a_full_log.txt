@@ -1,0 +1,3081 @@
+NST Advanced ML Exam Evaluator
+Started at: 2026-03-11T10:52:09.365403
+======================================================================
+Starting Part A evaluation for 100 students...
+======================================================================
+
+============================================================
+Evaluating: 233079 (Mehak Jain)
+Paper: Online Multiscale Dynamic Topic Models
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 4/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 42/50
+  FINAL: 42/50 (scaled: 4.2/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', "NAMING_MISMATCH: expected '233079-midsem', got '230079_midsem'"]
+
+============================================================
+Evaluating: 230049 (Aryan Soni)
+Paper: Revisiting k-means: New Algorithms via Bayesian Nonparametri
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', "NAMING_MISMATCH: expected '230049-midsem', got '230049_midsem'", 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230159 (soniya malviya)
+Paper: Baselines and Bigrams: Simple, Good Sentiment and Topic Clas
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 30/50
+  FINAL: 30/50 (scaled: 3.0/5)
+  FLAGS: ['LLM_JSON_MISSING', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230136 (Kalash kumari thakur)
+Paper: Time Series Shapelets: A New Primitive for Data Mining
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_INVALID', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'JSON_PARSE_ERROR: Extra data: line 1 column 19 (char 18)']
+
+============================================================
+Evaluating: 230072 (Yashi Gupta)
+Paper: Efficiently Learning the Accuracy of Labeling Sources for Se
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230124 (Deepanshu Mehta)
+Paper: From Natural Images to GMMs and Dead Leaves
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: From Natural Images to GMMs and Dead Leaves...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2012/file/e97ee2054defb209c35fe...
+    Saved PDF (2056575 bytes)
+    Extracted 32183 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230117 (Janhvi Yadav)
+Paper: Adaptive Kernel Approximation for Large-Scale Non-Linear SVM
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Adaptive Kernel Approximation for Large-Scale Non-Linear SVM...
+    Downloading PDF from https://icml.cc/2011/papers/283_icmlpaper.pdf...
+    Saved PDF (599913 bytes)
+    Extracted 30969 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230145 (aditya kammati)
+Paper: Ensemble of Exemplar-SVMs for Object Detection and Beyond
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Ensemble of Exemplar-SVMs for Object Detection and Beyond...
+    Downloading PDF from https://www.cs.cmu.edu/~efros/exemplarsvm-iccv11.pdf...
+    Saved PDF (9948190 bytes)
+    Extracted 32673 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230060 (Prince Sahoo)
+Paper: Improving the Fisher Kernel for Large-Scale Image Classifica
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Improving the Fisher Kernel for Large-Scale Image Classifica...
+    Downloading PDF from https://link.springer.com/content/pdf/10.1007/978-3-642-15561-1_11.pdf...
+    Saved PDF (244090 bytes)
+    Extracted 36953 chars from 14 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230074 (Ronit kumar choudhary)
+Paper: Convergence of the EM Algorithm for Gaussian Mixtures with U
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Convergence of the EM Algorithm for Gaussian Mixtures with U...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://icml.cc/2012/papers/814.pdf?utm_source=chatgpt.com
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+>>> Progress: 10/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230106 (Ritik Raj)
+Paper: Large-scale Linear Support Vector Regression
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Large-scale Linear Support Vector Regression...
+    Downloading PDF from https://jmlr.org/papers/volume13/ho12a/ho12a.pdf...
+    Saved PDF (1080182 bytes)
+    Extracted 55993 chars from 26 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230110 (Yash Lunawat)
+Paper: Poisoning Attacks against Support Vector Machines
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Poisoning Attacks against Support Vector Machines...
+    Downloading PDF from https://arxiv.org/pdf/1206.6389.pdf...
+    Saved PDF (533188 bytes)
+    Extracted 30250 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230075 (Charan Adithya)
+Paper: SVM Classifier Estimation from Group Probabilities
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: SVM Classifier Estimation from Group Probabilities...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/223.pdf...
+    Saved PDF (194668 bytes)
+    Extracted 27987 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230138 (Pichuka Bhavani Shanker)
+Paper: Support Vector Machines as Probabilistic Models
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Support Vector Machines as Probabilistic Models...
+    Downloading PDF from https://icml.cc/2011/papers/386_icmlpaper.pdf...
+    Saved PDF (304732 bytes)
+    Extracted 30272 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230094 (Belal Raza)
+Paper: Training and Testing Low-degree Polynomial Data via Linear S
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Training and Testing Low-degree Polynomial Data via Linear S...
+    Downloading PDF from https://jmlr.org/papers/volume11/chang10a/chang10a.pdf...
+    Saved PDF (150509 bytes)
+    Extracted 53892 chars from 20 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  PENALTY: -5 (20%)
+  FINAL: 21/50 (scaled: 2.1/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230137 (Abhishek Meena)
+Paper: Exact Discovery of Time Series Motifs
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Exact Discovery of Time Series Motifs...
+    Downloading PDF from http://www.cs.ucr.edu/~mueen/pdf/EM.pdf...
+    Saved PDF (442017 bytes)
+    Extracted 64190 chars from 12 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230141 (Tejmul Movin)
+Paper: Learning Sparse SVM for Feature Selection on Very High Dimen
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning Sparse SVM for Feature Selection on Very High Dimen...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/227.pdf...
+    Saved PDF (211394 bytes)
+    Extracted 36350 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230087 (Saloni Sharma)
+Paper: Locally Linear Support Vector Machines
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Locally Linear Support Vector Machines...
+    Downloading PDF from https://icml.cc/2011/papers/508_icmlpaper.pdf...
+    Saved PDF (260460 bytes)
+    Extracted 32362 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230078 (Manasa Chinnam)
+Paper: Exact Soft Confidence-Weighted Learning
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Exact Soft Confidence-Weighted Learning...
+    Downloading PDF from https://icml.cc/2012/papers/86.pdf...
+    Saved PDF (261106 bytes)
+    Extracted 31906 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230103 (Meesala Sree Sai Nath)
+Paper: Breaking the Curse of Kernelization: Budgeted Stochastic Gra
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Breaking the Curse of Kernelization: Budgeted Stochastic Gra...
+    Downloading PDF from https://jmlr.org/papers/volume13/wang12b/wang12b.pdf...
+    Saved PDF (304579 bytes)
+    Extracted 76364 chars from 29 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+>>> Progress: 20/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230037 (Subham Mahapatra)
+Paper: Logical-Shapelets: An Expressive Primitive for Time Series C
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Logical-Shapelets: An Expressive Primitive for Time Series C...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/epdf/10.1145/2020408.2020587
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  PENALTY: -5 (20%)
+  FINAL: 19/50 (scaled: 1.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230046 (Sai Kiran Bompelliwar)
+Paper: Multiple Kernel Learning Algorithms
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Multiple Kernel Learning Algorithms...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/gonen11a/gonen11a.pdf...
+    Saved PDF (395805 bytes)
+    Extracted 140162 chars from 58 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'INVALID_PAPER_TYPE: survey paper', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230120 (Akula Jithendranath)
+Paper: Efficient Online Learning for Large-Scale Sparse Kernel Logi
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Efficient Online Learning for Large-Scale Sparse Kernel Logi...
+    Downloading PDF from https://cdn.aaai.org/ojs/8300/8300-13-11828-1-2-20201228.pdf...
+    Saved PDF (798416 bytes)
+    Extracted 29057 chars from 7 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230047 (Pranay Sarkar)
+Paper: Risk minimization, probability elicitation, and cost-sensiti
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Risk minimization, probability elicitation, and cost-sensiti...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/376.pdf...
+    Saved PDF (193262 bytes)
+    Extracted 32245 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230059 (Divyanshi Sachan)
+Paper: Variable Selection in Model-Based Clustering: To Do or To Fa
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Variable Selection in Model-Based Clustering: To Do or To Fa...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://icml.cc/Conferences/2010/papers/207.pdf⁠
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  PENALTY: -5 (20%)
+  FINAL: 21/50 (scaled: 2.1/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230080 (Nikhil Raj)
+Paper: Efficient Additive Kernels via Explicit Feature Maps
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Efficient Additive Kernels via Explicit Feature Maps...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://ieeexplore.ieee.org/document/6136519
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230040 (MEENAKSH SINGHANIA)
+Paper: Pegasos: Primal Estimated sub-GrAdient SOlver for SVM
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Pegasos: Primal Estimated sub-GrAdient SOlver for SVM...
+    Downloading PDF from https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf...
+    Saved PDF (317289 bytes)
+    Extracted 70601 chars from 26 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230086 (Vaiditya Tanwar)
+Paper: A Simple Geometric Interpretation of SVM using Stochastic Ad
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Simple Geometric Interpretation of SVM using Stochastic Ad...
+    Downloading PDF from https://proceedings.mlr.press/v22/livni12/livni12.pdf...
+    Saved PDF (421062 bytes)
+    Extracted 40163 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230039 (Prerak Arya)
+Paper: Time Series Classification with COTE: The Collective of Tran
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Time Series Classification with COTE: The Collective of Tran...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://ieeexplore.ieee.org/document/6413753
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230077 (Pottabathini Vivekananda)
+Paper: The Kernelized Stochastic Batch Perceptron
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: The Kernelized Stochastic Batch Perceptron...
+    Downloading PDF from https://icml.cc/2012/papers/493.pdf...
+    Saved PDF (518573 bytes)
+    Extracted 34190 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+>>> Progress: 30/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230160 (Vaishnav  Verma)
+Paper: One-Sided Support Vector Regression for Multiclass Cost-Sens
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: One-Sided Support Vector Regression for Multiclass Cost-Sens...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/207.pdf...
+    Saved PDF (3265784 bytes)
+    Extracted 34290 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  PENALTY: -5 (20%)
+  FINAL: 22/50 (scaled: 2.2/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230101 (Prashant Kumar)
+Paper: Finding Deceptive Opinion Spam by Any Stretch of the Imagina
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Finding Deceptive Opinion Spam by Any Stretch of the Imagina...
+    Downloading PDF from https://aclanthology.org/P11-1032.pdf...
+    Saved PDF (183203 bytes)
+    Extracted 43957 chars from 11 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'INVALID_PAPER_TYPE: dataset/benchmark paper', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230055 (Abhay Pratap Rana)
+Paper: Fast Global Alignment Kernels
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Fast Global Alignment Kernels...
+    Downloading PDF from https://icml.cc/2011/papers/489_icmlpaper.pdf...
+    Saved PDF (243972 bytes)
+    Extracted 32641 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 22/50
+  FINAL: 22/50 (scaled: 2.2/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230064 (Aman Kumar)
+Paper: Object Detection with Discriminatively Trained Part-Based Mo
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Object Detection with Discriminatively Trained Part-Based Mo...
+    Downloading PDF from https://cs.brown.edu/people/pfelzens/papers/lsvm-pami.pdf...
+    Saved PDF (2672613 bytes)
+    Extracted 82567 chars from 20 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230139 (J amathziah)
+Paper: SGD-QN: Careful Quasi-Newton Stochastic Gradient Descent
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: SGD-QN: Careful Quasi-Newton Stochastic Gradient Descent...
+    Downloading PDF from http://jmlr.org/papers/volume10/bordes09a/bordes09a.pdf...
+    Saved PDF (151450 bytes)
+    Extracted 43451 chars from 18 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230127 (Shashwat)
+Paper: Object Detection with Grammar Models
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Object Detection with Grammar Models...
+    Downloading PDF from https://cs.brown.edu/people/pfelzens/papers/grammar-nips11.pdf...
+    Saved PDF (1123149 bytes)
+    Extracted 32871 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230130 (Prabhat Kumar)
+Paper: Incremental Learning of Temporally-Coherent Gaussian Mixture
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Incremental Learning of Temporally-Coherent Gaussian Mixture...
+    Downloading PDF from https://www.robots.ox.ac.uk/~phst/BMVC2005/papers/26/paper026.pdf...
+    Saved PDF (320644 bytes)
+    Extracted 21971 chars from 10 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230121 (Eranki Sai Vikas)
+Paper: Pairwise Support Vector Machines and their Application to La
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Pairwise Support Vector Machines and their Application to La...
+    Downloading PDF from https://www.jmlr.org/papers/volume13/brunner12a/brunner12a.pdf...
+    Saved PDF (262888 bytes)
+    Extracted 35600 chars from 14 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230052 (Dibyajyoti Behera)
+Paper: COFFIN: A Computational Framework for Linear SVMs
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: COFFIN: A Computational Framework for Linear SVMs...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/280.pdf...
+    Saved PDF (477780 bytes)
+    Extracted 40404 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230050 (Kush Agarwal)
+Paper: Training SVMs Without Offset
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Training SVMs Without Offset...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/steinwart11a/steinwart11a.pdf...
+    Saved PDF (922835 bytes)
+    Extracted 143261 chars from 62 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+>>> Progress: 40/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230143 (Dally R)
+Paper: Training and Testing Low-degree Polynomial Data Mappings via
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230158 (Rishabh Gusain)
+Paper: Nonconvex Online Support Vector Machines
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Nonconvex Online Support Vector Machines...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://doi.org/10.1109/TPAMI.2010.109
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230096 (Himanshu Rawat)
+Paper: Adaptive Subgradient Methods for Online Learning and Stochas
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Adaptive Subgradient Methods for Online Learning and Stochas...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/duchi11a/duchi11a.pdf...
+    Saved PDF (307882 bytes)
+    Extracted 99602 chars from 39 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 22/50
+  FINAL: 22/50 (scaled: 2.2/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230063 (Asmit Kumar)
+Paper: Fast and Scalable Local Kernel Machines
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Fast and Scalable Local Kernel Machines...
+    Downloading PDF from https://jmlr.org/papers/volume11/segata10a/segata10a.pdf...
+    Saved PDF (425905 bytes)
+    Extracted 118258 chars from 44 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230066 (Pugazhendhi J)
+Paper: Efficient variable selection in support vector machines via 
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230089 (Amod Ranjan)
+Paper: Multiple Kernels for Object Detection
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Multiple Kernels for Object Detection...
+    Downloading PDF from https://robots.ox.ac.ukvedaldi09.pdf...
+    PDF download error: HTTPSConnectionPool(host='robots.ox.ac.ukvedaldi09.pdf', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='robots.ox.ac.ukvedaldi09.pdf', port=443): Failed to resolve 'robots.ox.ac.ukvedaldi09.pdf' ([Errno 8] nodename nor servname provided, or not known)"))
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230119 (Vivek)
+Paper: Early Prediction on Time Series: A Nearest Neighbor Approach
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Early Prediction on Time Series: A Nearest Neighbor Approach...
+    Downloading PDF from https://www.ijcai.org/Proceedings/09/Papers/218.pdf...
+    Saved PDF (532829 bytes)
+    Extracted 33972 chars from 6 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230102 (Soumyaranjan Behera)
+Paper: A Study of Information Retrieval Weighting Schemes for Senti
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Study of Information Retrieval Weighting Schemes for Senti...
+    Downloading PDF from https://aclanthology.org/P10-1141.pdf...
+    Saved PDF (280669 bytes)
+    Extracted 39604 chars from 10 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230051 (Ashwin Sathiyamoorthy)
+Paper: DynaMMo: Mining and Summarization of Coevolving Sequences wi
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: DynaMMo: Mining and Summarization of Coevolving Sequences wi...
+    Downloading PDF from https://graphics.cs.cmu.edu/nsp/papers/DynaMMoFinalPaper.pdf...
+    PDF download error: HTTPSConnectionPool(host='graphics.cs.cmu.edu', port=443): Max retries exceeded with url: /nsp/papers/DynaMMoFinalPaper.pdf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1032)')))
+  WARNING: Could not fetch paper. Error: Could not extract text from https://graphics.cs.cmu.edu/nsp/papers/DynaMMoFinalPaper.pdf
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230065 (Aman Kumar)
+Paper: Dual coordinate descent methods for logistic regression and 
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Dual coordinate descent methods for logistic regression and ...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://link.springer.com/article/10.1007/s10994-010-5221-8a
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 20/50
+  FINAL: 20/50 (scaled: 2.0/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+>>> Progress: 50/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230054 (Shivansh Gupta)
+Paper: Learning Structural SVMs with Latent Variables
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning Structural SVMs with Latent Variables...
+    Downloading PDF from https://www.cs.cornell.edu/people/tj/publications/yu_joachims_09a.pdf...
+    Saved PDF (159033 bytes)
+    Extracted 36077 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230062 (Kanhaiya Kumar)
+Paper: Robust Point Set Registration Using Gaussian Mixture Models
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Robust Point Set Registration Using Gaussian Mixture Models...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://ieeexplore.ieee.org/document/5674050
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230068 (Kartik Yadav)
+Paper: Diversity Regularized Machine
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Diversity Regularized Machine...
+    Downloading PDF from https://www.ijcai.org/Proceedings/11/Papers/269.pdf...
+    Saved PDF (703484 bytes)
+    Extracted 32241 chars from 6 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230092 (Ayush Gupta)
+Paper: A Shapelet Transform for Time Series Classification
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Shapelet Transform for Time Series Classification...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/10.1145/2339530.2339579?__cf_chl_tk=Cv.Yv8.r_EgNyzXRaAO9h3MLgOmdfvAhfHiKbdRQRiQ-1772439233-1.0.1.1-mRJUi30lC8CLFuOxCWjUscbOCD4PM7BDLUuXRXT51_8
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230071 (Bhavishya Sahay)
+Paper: Gaussian Mixture Model with Local Consistency
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Gaussian Mixture Model with Local Consistency...
+    Downloading PDF from https://cdn.aaai.org/ojs/7659/7659-13-11189-1-2-20201228.pdf...
+    Saved PDF (182749 bytes)
+    Extracted 28080 chars from 6 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230048 (YASH GOYAL)
+Paper: Learning from Distributions via Support Measure Machines
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning from Distributions via Support Measure Machines...
+    Downloading PDF from https://arxiv.org/pdf/1202.6504.pdf...
+    Saved PDF (242756 bytes)
+    Extracted 38914 chars from 11 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230082 (Udita)
+Paper: Learning to Grade Short Answer Questions using Semantic Simi
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning to Grade Short Answer Questions using Semantic Simi...
+    Downloading PDF from https://aclanthology.org/P11-1076.pdf...
+    Saved PDF (212993 bytes)
+    Extracted 41692 chars from 11 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  PENALTY: -5 (20%)
+  FINAL: 21/50 (scaled: 2.1/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230038 (Gangadhar Yadav)
+Paper: Multiple Incremental Decremental Learning of Support Vector 
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Multiple Incremental Decremental Learning of Support Vector ...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2009/file/e6b4b2a746ed40e1af829...
+    Saved PDF (251909 bytes)
+    Extracted 25535 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230070 (Agrapujya Lashkari)
+Paper: Hierarchical Classification via Orthogonal Transfer
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Hierarchical Classification via Orthogonal Transfer...
+    Downloading PDF from https://icml.cc/2011/papers/437_icmlpaper.pdf...
+    Saved PDF (212390 bytes)
+    Extracted 35560 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230135 (Aviral Singh)
+Paper: Scalable Training of Mixture Models via Coresets
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Scalable Training of Mixture Models via Coresets...
+    Downloading PDF from https://papers.nips.cc/paper_files/paper/2011/file/2b6d65b9a9445c4271ab9076ead56...
+    Saved PDF (845464 bytes)
+    Extracted 36722 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'REPO_NOT_FOUND']
+
+>>> Progress: 60/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230042 (Samarth Shekhar)
+Paper: Kernel Methods for Deep Learning
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Kernel Methods for Deep Learning...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2009/file/5751ec3e9a4feab575962...
+    Saved PDF (769272 bytes)
+    Extracted 47436 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230081 (Sourabh Sarkar)
+Paper: Cost-Sensitive Semi-Supervised Support Vector Machine
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Cost-Sensitive Semi-Supervised Support Vector Machine...
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230113 (Monu Kumar)
+Paper: Latent Structural SVM for Object Detection
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Latent Structural SVM for Object Detection...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dspace.mit.edu/bitstream/handle/1721.1/73863/Freeman-Latent%20hierarchical.pdf?sequence=1&isAllowed=y
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230114 (Shiven Ahuja)
+Paper: Computing Gaussian Mixture Models with EM using Equivalence 
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Computing Gaussian Mixture Models with EM using Equivalence ...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2003/file/831caa1b600f852b78444...
+    Saved PDF (328488 bytes)
+    Extracted 23214 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230036 (Abhijeet Kumar Shah)
+Paper: MSVMpack: A Multi-Class Support Vector Machine Package
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: MSVMpack: A Multi-Class Support Vector Machine Package...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/lauer11a/lauer11a.pdf...
+    Saved PDF (46009 bytes)
+    Extracted 10478 chars from 4 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 28/50
+  FINAL: 28/50 (scaled: 2.8/5)
+  FLAGS: ['LLM_JSON_MISSING', 'INVALID_PAPER_TYPE: dataset/benchmark paper', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230152 (Manish Kumar)
+Paper: Sentiment Analysis of Twitter Data
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Sentiment Analysis of Twitter Data...
+    Downloading PDF from https://aclanthology.org/W11-0705.pdf...
+    Saved PDF (219622 bytes)
+    Extracted 34635 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230091 (Samyak Mittal)
+Paper: Sparse Inverse Covariance Estimation with the Lasso
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  PENALTY: -5 (20%)
+  FINAL: 21/50 (scaled: 2.1/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'REPO_NOT_FOUND', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230088 (Rhythm Kumar Jain)
+Paper: Learning hierarchical invariant spatio-temporal features for
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning hierarchical invariant spatio-temporal features for...
+    Downloading PDF from https://ai.stanford.edu/~syyeung/resources/LeZouYeungNg11.pdf...
+    Saved PDF (722878 bytes)
+    Extracted 32992 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 23/50
+  FINAL: 23/50 (scaled: 2.3/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'INVALID_PAPER_TYPE: deep learning paper', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230057 (Suyash Parmar)
+Paper: A Fast Dual Method for HIK SVM Learning
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Fast Dual Method for HIK SVM Learning...
+    Downloading PDF from https://link.springer.com/content/pdf/10.1007/978-3-642-15552-9_40.pdf...
+    Saved PDF (277385 bytes)
+    Extracted 37048 chars from 14 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 2/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 42/50
+  PENALTY: -8 (20%)
+  FINAL: 34/50 (scaled: 3.4/5)
+  FLAGS: ['DATASET_NOT_PUBLIC', 'RESUBMISSION_PENALTY: 20% = -8 marks']
+
+============================================================
+Evaluating: 230115 (C Murali Madhav)
+Paper: Estimating Spatial Layout of Rooms using Volumetric Reasonin
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Estimating Spatial Layout of Rooms using Volumetric Reasonin...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2010/file/076a0c97d09cf1a0ec3e1...
+    Saved PDF (9750658 bytes)
+    Extracted 29712 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 22/50
+  FINAL: 22/50 (scaled: 2.2/5)
+  FLAGS: ['LLM_JSON_MISSING', 'METHOD_MISALIGNMENT', 'DATASET_NOT_PUBLIC', 'LLM_JSON_MISSING']
+
+>>> Progress: 70/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230073 (Anuj kumar Singh)
+Paper: Clustering Time Series Using Unsupervised-Shapelets
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Clustering Time Series Using Unsupervised-Shapelets...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://ieeexplore.ieee.org/document/6413851
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 2/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 40/50
+  FINAL: 40/50 (scaled: 4.0/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', "NAMING_MISMATCH: expected '230073-midsem', got '230073_midsem'"]
+
+============================================================
+Evaluating: 230043 (fathal koul)
+Paper: Discovery of significant emerging trends
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Discovery of significant emerging trends...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/10.1145/1835804.1835815
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 22/50
+  FINAL: 22/50 (scaled: 2.2/5)
+  FLAGS: ['LLM_JSON_MISSING', 'INVALID_PAPER_TYPE: dataset/benchmark paper', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230146 (Ankush)
+Paper: Collaborative Filtering with Temporal Dynamics
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Collaborative Filtering with Temporal Dynamics...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/10.1145/1721654.1721677
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  PENALTY: -5 (20%)
+  FINAL: 19/50 (scaled: 1.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'LLM_JSON_MISSING', 'RESUBMISSION_PENALTY: 20% = -5 marks']
+
+============================================================
+Evaluating: 230132 (Mann Vaswani)
+Paper: The Constrained Weight Space SVM: Learning with Ranked Featu
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Using cached ground truth
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230118 (Manshu Saini)
+Paper: Learning From Crowds
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning From Crowds...
+    Downloading PDF from https://www.jmlr.org/papers/volume11/raykar10a/raykar10a.pdf...
+    Saved PDF (238950 bytes)
+    Extracted 57218 chars from 26 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 2/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 4/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 39/50
+  FINAL: 39/50 (scaled: 3.9/5)
+  FLAGS: ['METHOD_MISALIGNMENT', 'DATASET_NOT_PUBLIC']
+
+============================================================
+Evaluating: 230093 (Harsh Gupta)
+Paper: LIBLINEAR: A Library for Large Linear Classification
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: LIBLINEAR: A Library for Large Linear Classification...
+    Downloading PDF from https://www.jmlr.org/papers/volume9/fan08a/fan08a.pdf...
+    Saved PDF (62856 bytes)
+    Extracted 9980 chars from 4 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 0/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 28/50
+  PENALTY: -11 (40%)
+  FINAL: 17/50 (scaled: 1.7/5)
+  FLAGS: ['LLM_JSON_INVALID', 'INVALID_PAPER_TYPE: dataset/benchmark paper', 'JSON_PARSE_ERROR: Expecting value: line 3 column 13 (char 38)', 'RESUBMISSION_PENALTY: 40% = -11 marks']
+
+============================================================
+Evaluating: 230109 (Sugat)
+Paper: A Fast Exact Method for Mining Time Series Subsequences unde
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Fast Exact Method for Mining Time Series Subsequences unde...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/epdf/10.1145/2339530.2339576
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', "NAMING_MISMATCH: expected '230109-midsem', got '230109-AMLmidsem'", 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230157 (Priyanshu)
+Paper: NESVM: A Fast Gradient Method for Support Vector Machines.
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: NESVM: A Fast Gradient Method for Support Vector Machines....
+    Downloading PDF from https://arxiv.org/pdf/1008.4000.pdf...
+    Saved PDF (453122 bytes)
+    Extracted 40531 chars from 10 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230140 (Mahendra Parihar)
+Paper: Infinite SVM: a Dirichlet Process Mixture of Large-margin Ke
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Infinite SVM: a Dirichlet Process Mixture of Large-margin Ke...
+    Downloading PDF from https://icml.cc/Conferences/2011/papers/374_icmlpaper.pdf...
+    Saved PDF (3555115 bytes)
+    Extracted 36805 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', "NAMING_MISMATCH: expected '230140-midsem', got '230140_Midsem'", 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230084 (Aryan Jangde)
+Paper: Copula Mixture Model for Dependency-seeking Clustering
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Copula Mixture Model for Dependency-seeking Clustering...
+    Downloading PDF from https://icml.cc/2012/papers/486.pdf...
+    Saved PDF (3098983 bytes)
+    Extracted 32256 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 26/50
+  FINAL: 26/50 (scaled: 2.6/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_NOT_PUBLIC', 'LLM_JSON_MISSING']
+
+>>> Progress: 80/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230129 (Vishesh)
+Paper: Analysis of SVM with Indefinite Kernels
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Analysis of SVM with Indefinite Kernels...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2009/file/7f1de29e6da19d22b51c6...
+    Saved PDF (208902 bytes)
+    Extracted 31507 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 2/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 1/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 43/50
+  FINAL: 43/50 (scaled: 4.3/5)
+  FLAGS: ["NAMING_MISMATCH: expected '230129-midsem', got '230129_midsem'"]
+
+============================================================
+Evaluating: 230125 (Manu Vahan)
+Paper: Nyström Method vs Random Fourier Features: A Theoretical and
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Nyström Method vs Random Fourier Features: A Theoretical and...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2012/file/621bf66ddb7c962aa0d22...
+    Saved PDF (1227295 bytes)
+    Extracted 28250 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 5/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 45/50
+  FINAL: 45/50 (scaled: 4.5/5)
+  FLAGS: ['DATASET_NOT_PUBLIC']
+
+============================================================
+Evaluating: 230098 (AKASH G)
+Paper: Large Scale Learning to Rank
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Large Scale Learning to Rank...
+    Downloading PDF from https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/...
+    Saved PDF (93275 bytes)
+    Extracted 18397 chars from 6 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 2/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 4/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 47/50
+  FINAL: 47/50 (scaled: 4.7/5)
+
+============================================================
+Evaluating: 230083 (Pranay Vishwakarma)
+Paper: Kernel Latent SVM for Visual Recognition
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Kernel Latent SVM for Visual Recognition...
+    Downloading PDF from https://proceedings.neurips.cc/paper_files/paper/2012/file/beed13602b9b0e6ecb5b5...
+    Saved PDF (6709604 bytes)
+    Extracted 35119 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 2/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 1/6
+    top5_prompts_relevance: 3/4
+  RAW TOTAL: 42/50
+  FINAL: 42/50 (scaled: 4.2/5)
+  FLAGS: ["NAMING_MISMATCH: expected '230083-midsem', got '230083_midsem'"]
+
+============================================================
+Evaluating: 230131 (Ravi Yadav)
+Paper: Dual Coordinate Descent Methods for Linear SVM
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Dual Coordinate Descent Methods for Linear SVM...
+    Downloading PDF from https://www.csie.ntu.edu.tw/~cjlin/papers/cddual.pdf...
+    PDF download error: HTTPSConnectionPool(host='www.csie.ntu.edu.tw', port=443): Max retries exceeded with url: /~cjlin/papers/cddual.pdf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl.c:1032)')))
+  WARNING: Could not fetch paper. Error: Could not extract text from https://www.csie.ntu.edu.tw/~cjlin/papers/cddual.pdf
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_INVALID', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', "NAMING_MISMATCH: expected '230131-midsem', got '230131_midsem'", 'JSON_PARSE_ERROR: Expecting value: line 2 column 1 (char 1)']
+
+============================================================
+Evaluating: 230112 (Piyush Kaushal)
+Paper: Learning SVM Classifiers with Indefinite Kernels
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Learning SVM Classifiers with Indefinite Kernels...
+    Downloading PDF from https://www2.cs.uh.edu/~ceick/ML/C3.pdf...
+    Saved PDF (216528 bytes)
+    Extracted 33119 chars from 7 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230111 (A M YEESHU)
+Paper: Adaptive Regularization of Weight Vectors
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Adaptive Regularization of Weight Vectors...
+    Downloading PDF from https://papers.nips.cc/paper_files/paper/2009/file/8ebda540cbcc4d7336496819a46a1...
+    Saved PDF (1020032 bytes)
+    Extracted 27594 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 3/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 1/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 5/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 42/50
+  FINAL: 42/50 (scaled: 4.2/5)
+  FLAGS: ['DATASET_NOT_PUBLIC']
+
+============================================================
+Evaluating: 230058 (Sanskar Singh)
+Paper: On the Consistency of ARMA Model Selection
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: On the Consistency of ARMA Model Selection...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/wang11a/wang11a.pdf...
+    Saved PDF (244701 bytes)
+    Extracted 67242 chars from 29 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 2/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 39/50
+  FINAL: 39/50 (scaled: 3.9/5)
+  FLAGS: ['METHOD_MISALIGNMENT', 'DATASET_AVAILABILITY_UNCERTAIN', "NAMING_MISMATCH: expected '230058-midsem', got '230058_midsem'"]
+
+============================================================
+Evaluating: 230104 (Siddhartha Shukla)
+Paper: Sparse Online Learning via Truncated Gradient
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Sparse Online Learning via Truncated Gradient...
+    Downloading PDF from https://www.jmlr.org/papers/volume10/langford09a/langford09a.pdf...
+    Saved PDF (287281 bytes)
+    Extracted 55270 chars from 25 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 0/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 4/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 40/50
+  FINAL: 40/50 (scaled: 4.0/5)
+  FLAGS: ['METHOD_MISALIGNMENT', 'DATASET_NOT_PUBLIC']
+
+============================================================
+Evaluating: 230076 (Harshal Jitendra Nerpagar)
+Paper: Beyond Blacklists: Learning to Detect Malicious Web Sites fr
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Beyond Blacklists: Learning to Detect Malicious Web Sites fr...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/10.1145/1557019.1557153
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 5/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 45/50
+  FINAL: 45/50 (scaled: 4.5/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN']
+
+>>> Progress: 90/100 students evaluated <<<
+
+
+============================================================
+Evaluating: 230035 (Karthik Reddy)
+Paper: Gaussian Processes for time-marked time-series data
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Gaussian Processes for time-marked time-series data...
+    Downloading PDF from https://proceedings.mlr.press/v22/cunningham12.html , https://proceedings.mlr.pr...
+    PDF download failed: status=404, size=9379
+  WARNING: Could not fetch paper. Error: Could not extract text from https://proceedings.mlr.press/v22/cunningham12.html , https://proceedings.mlr.press/v22/cunningham12/cunningham12.pdf
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 2/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 40/50
+  FINAL: 40/50 (scaled: 4.0/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN']
+
+============================================================
+Evaluating: 230056 (Ritesh Patil)
+Paper: Prototype Vector Machine for Large Scale Semi-Supervised Lea
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Prototype Vector Machine for Large Scale Semi-Supervised Lea...
+    Downloading PDF from https://icml.cc/Conferences/2009/papers/198.pdf...
+    Saved PDF (316756 bytes)
+    Extracted 35835 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 2/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 43/50
+  FINAL: 43/50 (scaled: 4.3/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN', "NAMING_MISMATCH: expected '230056-midsem', got '230056_midsem'"]
+
+============================================================
+Evaluating: 230085 (Navnit Naman)
+Paper: A Dual Coordinate Descent Method for Large-scale Linear SVM
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: A Dual Coordinate Descent Method for Large-scale Linear SVM...
+    Downloading PDF from http://www.csie.ntu.edu.tw/~cjlin/papers/dcd_svm.pdf...
+    PDF download error: HTTPSConnectionPool(host='www.csie.ntu.edu.tw', port=443): Max retries exceeded with url: /~cjlin/papers/dcd_svm.pdf (Caused by SSLError(SSLCertVerificationError(1, '[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Missing Subject Key Identifier (_ssl.c:1032)')))
+  WARNING: Could not fetch paper. Error: Could not extract text from http://www.csie.ntu.edu.tw/~cjlin/papers/dcd_svm.pdf
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 2/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 33/50
+  FINAL: 33/50 (scaled: 3.3/5)
+  FLAGS: ['DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', "NAMING_MISMATCH: expected '230085-midsem', got 'advanced_ML_Midsem_230085'"]
+
+============================================================
+Evaluating: 230044 (Meghavi)
+Paper: Weisfeiler-Lehman Graph Kernels
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Weisfeiler-Lehman Graph Kernels...
+    Downloading PDF from https://www.jmlr.org/papers/volume12/shervashidze11a/shervashidze11a.pdf...
+    Saved PDF (299278 bytes)
+    Extracted 62393 chars from 23 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 4/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 48/50
+  FINAL: 48/50 (scaled: 4.8/5)
+
+============================================================
+Evaluating: 230107 (Raman Luhach)
+Paper: Advice Refinement in Knowledge-Based SVMs
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Advice Refinement in Knowledge-Based SVMs...
+    Downloading PDF from https://papers.nips.cc/paper_files/paper/2011/file/d79aac075930c83c2f1e369a51114...
+    Saved PDF (410230 bytes)
+    Extracted 32658 chars from 9 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 4/4
+    llm_disclosure_completeness: 3/3
+    llm_disclosure_verification: 3/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 2/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 3/6
+    top5_prompts_relevance: 4/4
+  RAW TOTAL: 43/50
+  FINAL: 43/50 (scaled: 4.3/5)
+  FLAGS: ['DATASET_NOT_PUBLIC']
+
+============================================================
+Evaluating: 230128 (Rachit Kumar)
+Paper: Simple and Efficient Multiple Kernel Learning by Group Lasso
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Simple and Efficient Multiple Kernel Learning by Group Lasso...
+    Downloading PDF from https://icml.cc/Conferences/2010/papers/540.pdf...
+    Saved PDF (166566 bytes)
+    Extracted 34039 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'LLM_JSON_MISSING']
+
+============================================================
+Evaluating: 230123 (Aditya Raj Sharma)
+Paper: Laplacian Support Vector Machines Trained in the Primal
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Laplacian Support Vector Machines Trained in the Primal...
+    Downloading PDF from https://jmlr.org/papers/volume12/melacci11a/melacci11a.pdf...
+    Saved PDF (502275 bytes)
+    Extracted 91121 chars from 36 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 29/50
+  FINAL: 29/50 (scaled: 2.9/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230153 (Sahil Sarawgi)
+Paper: Dirichlet Process Gaussian Mixture Models
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Dirichlet Process Gaussian Mixture Models...
+    Downloading PDF from https://mlg.eng.cam.ac.uk/pub/pdf/GoeRas10.pdf...
+    Saved PDF (4526106 bytes)
+    Extracted 46237 chars from 12 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 4/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 27/50
+  FINAL: 27/50 (scaled: 2.7/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230061 (Ayush Dev)
+Paper: Scalable Support Vector Machines using Random Fourier Featur
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Scalable Support Vector Machines using Random Fourier Featur...
+    Downloading PDF from https://people.eecs.berkeley.edu/~brecht/papers/07.rah.rec.nips.pdf...
+    Saved PDF (488453 bytes)
+    Extracted 30201 chars from 8 pages
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 5/5
+    reproducibility_compute_feasibility: 5/5
+    reproducibility_experimental_scope: 5/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 30/50
+  FINAL: 30/50 (scaled: 3.0/5)
+  FLAGS: ['LLM_JSON_MISSING', 'REPO_NOT_FOUND']
+
+============================================================
+Evaluating: 230053 (Nilesh Chakrabarty)
+Paper: Online discovery and maintenance of time series motifs
+============================================================
+  Checking GitHub repo...
+  Getting paper ground truth...
+  Fetching paper: Online discovery and maintenance of time series motifs...
+  WARNING: Could not fetch paper. Error: Could not extract text from https://dl.acm.org/doi/10.1145/1835804.1835941
+  Calling LLM for ground truth analysis...
+  Running Tier 1 (deterministic) evaluation...
+  Running Tier 2 (LLM) evaluation...
+
+  SCORES:
+    paper_validity_year: 4/4
+    paper_validity_venue: 5/5
+    llm_disclosure_json_validity: 0/4
+    llm_disclosure_completeness: 0/3
+    llm_disclosure_verification: 0/3
+    paper_validity_method_alignment: 4/4
+    paper_validity_paper_type: 2/2
+    reproducibility_dataset_availability: 3/5
+    reproducibility_compute_feasibility: 3/5
+    reproducibility_experimental_scope: 3/5
+    top5_prompts_analytical_depth: 0/6
+    top5_prompts_relevance: 0/4
+  RAW TOTAL: 24/50
+  FINAL: 24/50 (scaled: 2.4/5)
+  FLAGS: ['LLM_JSON_MISSING', 'DATASET_AVAILABILITY_UNCERTAIN', 'COMPUTE_UNCERTAIN', 'REPO_NOT_FOUND']
+
+>>> Progress: 100/100 students evaluated <<<
+
+
+======================================================================
+PART A EVALUATION COMPLETE
+======================================================================
+  Students evaluated: 100
+  Average score: 28.5/50
+  Min: 17/50, Max: 48/50
+  Flagged for review: 98
+
+======================================================================
+Completed at: 2026-03-11T11:36:23.626607

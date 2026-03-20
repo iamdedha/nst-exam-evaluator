@@ -1,0 +1,111 @@
+{
+  "paper_title": "Kernel Methods for Deep Learning",
+  "venue": "NeurIPS",
+  "venue_abbreviation": "NeurIPS",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "KERNEL",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper introduces arc-cosine kernel functions that mimic computation in multilayer neural networks, enabling deep-like architectures in kernel machines. These kernels are derived from infinite single-layer threshold networks and can be composed recursively to create multilayer kernel machines (MKMs).",
+  "algorithm_steps": [
+    "Step 1: Define nth order arc-cosine kernel via integral representation with Gaussian weights and threshold activation functions",
+    "Step 2: Evaluate the integral analytically to obtain closed-form expression in terms of input angle and magnitudes",
+    "Step 3: For multilayer kernels, recursively compose the nonlinear mappings induced by arc-cosine kernels",
+    "Step 4: Train SVMs or MKMs using these kernels with standard quadratic programming optimization",
+    "Step 5: For MKMs, use n=1 kernels at higher recursion levels while allowing different degrees at the first layer"
+  ],
+  "key_equations": [
+    "Eq 1: Arc-cosine kernel integral representation with Gaussian weights and threshold functions",
+    "Eq 3: Closed-form expression separating magnitude and angular dependence",
+    "Eq 4: Angular dependence function J_n(\u03b8) using trigonometric derivatives",
+    "Eq 9: Recursive composition for multilayer kernels"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Infinite width single-layer threshold networks with Gaussian distributed weights",
+      "why_needed": "Required to derive the arc-cosine kernel as the limit of inner products between network outputs",
+      "violation_scenario": "When using finite networks or non-Gaussian weight distributions"
+    },
+    {
+      "assumption": "n=1 kernels preserve sufficient information for effective composition",
+      "why_needed": "Higher recursion levels require norm-preserving kernels to maintain meaningful representations",
+      "violation_scenario": "Using n=0 or n>1 kernels at all recursion levels leads to information loss or distorted dynamic ranges"
+    },
+    {
+      "assumption": "Threshold activation functions capture essential nonlinearities for deep computation",
+      "why_needed": "The kernel derivation relies on specific one-sided polynomial activation functions",
+      "violation_scenario": "When the target function requires smooth or symmetric activation functions"
+    }
+  ],
+  "baselines_compared": [
+    "SVMs with RBF kernels",
+    "Deep Belief Networks (DBN-3)"
+  ],
+  "baseline_limitations_identified": "SVMs with RBF kernels cannot benefit from deep architectural advantages, while deep belief networks require difficult nonlinear optimization and architecture search",
+  "proposed_improvement": "Arc-cosine kernels enable deep-like computation in kernel machines while maintaining the simple quadratic programming training of SVMs",
+  "condition_where_baseline_wins": "When the problem requires smooth decision boundaries or when the data has very high dimensionality where the angular dependence of arc-cosine kernels becomes less meaningful",
+  "datasets_used": [
+    "rectangles-image dataset",
+    "convex dataset"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "synthetic 2D classification with geometric patterns",
+    "MNIST subset",
+    "synthetic data with hierarchical structure"
+  ],
+  "toy_dataset_justification": "These datasets would test the geometric pattern recognition capabilities that arc-cosine kernels are designed for, particularly problems that benefit from hierarchical feature composition",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "While the kernel formulations are clearly specified, the recursive composition implementation and the specific choice of n=1 kernels at higher levels requires careful implementation details not fully specified",
+  "key_components_for_ablation": [
+    {
+      "component": "Kernel degree (n=0,1,2)",
+      "role_in_method": "Controls the polynomial degree of the activation function in the equivalent neural network",
+      "expected_effect_of_removal": "Different degrees would change the feature space properties and classification performance"
+    },
+    {
+      "component": "Recursion depth (\u2113 levels)",
+      "role_in_method": "Creates multilayer representations by composing kernel mappings",
+      "expected_effect_of_removal": "Reducing to single layer would eliminate deep architectural benefits"
+    },
+    {
+      "component": "n=1 constraint at higher recursion levels",
+      "role_in_method": "Preserves norm information for effective kernel composition",
+      "expected_effect_of_removal": "Using other degrees at all levels would likely degrade performance due to information loss"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "High-dimensional sparse data where angular relationships are not meaningful",
+      "reason": "Arc-cosine kernels depend heavily on angular relationships between input vectors",
+      "related_assumption": "Threshold activation functions capture essential nonlinearities for deep computation"
+    },
+    {
+      "scenario": "Problems requiring smooth decision boundaries",
+      "reason": "Threshold-based kernels create piecewise linear decision boundaries",
+      "related_assumption": "Threshold activation functions capture essential nonlinearities for deep computation"
+    },
+    {
+      "scenario": "Using n\u22601 kernels at all recursion levels",
+      "reason": "Leads to information loss or distorted dynamic ranges in feature space",
+      "related_assumption": "n=1 kernels preserve sufficient information for effective composition"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://papers.nips.cc/paper_files/paper/2009/hash/5751ec3e9a4feab575962e78e006250d-Abstract.html",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

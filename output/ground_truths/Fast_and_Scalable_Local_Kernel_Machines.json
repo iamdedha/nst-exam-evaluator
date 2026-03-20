@@ -1,0 +1,114 @@
+{
+  "paper_title": "Fast and Scalable Local Kernel Machines",
+  "venue": "Journal of Machine Learning Research",
+  "venue_abbreviation": "JMLR",
+  "year": 2010,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "FaLK-SVM (Fast Local Kernel Support Vector Machine) pre-computes a set of local SVMs on fixed-cardinality neighborhoods covering the training set with adjustable redundancy. At test time, it selects the most appropriate local model based on proximity in feature space, achieving scalability while maintaining locality.",
+  "algorithm_steps": [
+    "Step 1: Divide training set into overlapping neighborhoods of fixed size k",
+    "Step 2: Train local SVM models on each neighborhood during training phase",
+    "Step 3: For each query point, find the nearest neighborhood in feature space",
+    "Step 4: Use the corresponding pre-computed local SVM model for prediction",
+    "Step 5: Apply local model selection procedure to optimize parameters for each local model"
+  ],
+  "key_equations": [
+    "Training complexity: O(N log N) where N is training set size",
+    "Testing complexity: O(log N) per query point",
+    "Neighborhood size parameter k controls locality vs global behavior trade-off"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Local decision boundaries are simpler than global ones",
+      "why_needed": "Justifies training separate local models instead of one global model",
+      "violation_scenario": "When the optimal decision boundary is inherently global or when local regions don't have sufficient structure"
+    },
+    {
+      "assumption": "Training examples are not uniformly distributed across feature space",
+      "why_needed": "Locality only helps when different regions have different characteristics",
+      "violation_scenario": "When data is uniformly distributed or when the decision function is globally linear"
+    },
+    {
+      "assumption": "Query points will be near training neighborhoods",
+      "why_needed": "Pre-computed local models must be relevant for test queries",
+      "violation_scenario": "When test distribution differs significantly from training distribution"
+    }
+  ],
+  "baselines_compared": [
+    "SVM",
+    "Local SVM",
+    "Core Vector Machines (CVM)",
+    "Ball Vector Machines (BVM)",
+    "LASVM"
+  ],
+  "baseline_limitations_identified": "Existing approaches trade locality for scalability, leading to under-fitting and loss of local decision boundary information. Local SVM has excellent accuracy but prohibitive computational cost at test time.",
+  "proposed_improvement": "Pre-computes local models during training to avoid expensive test-time neighborhood computation, while maintaining locality through proximity-based model selection.",
+  "condition_where_baseline_wins": "High-dimensional problems (like text classification) where linear kernels perform better than non-linear ones, or when the optimal decision boundary is inherently global rather than locally structured.",
+  "datasets_used": [
+    "Forest CoverType",
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Two moons dataset",
+    "Concentric circles",
+    "XOR problem",
+    "Checkerboard pattern"
+  ],
+  "toy_dataset_justification": "These datasets have clear local structure with different decision boundaries in different regions, making them ideal for demonstrating the benefits of local learning approaches over global methods.",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Paper provides algorithmic details and mentions freely available source code (FaLKM-lib), but specific implementation details for neighborhood construction and model selection procedures may require careful attention.",
+  "key_components_for_ablation": [
+    {
+      "component": "Local model selection procedure",
+      "role_in_method": "Optimizes parameters separately for each local model",
+      "expected_effect_of_removal": "Would use global parameters for all local models, potentially reducing accuracy in regions with different characteristics"
+    },
+    {
+      "component": "Neighborhood redundancy/overlap",
+      "role_in_method": "Ensures smooth transitions between local models",
+      "expected_effect_of_removal": "Could create discontinuities in decision boundaries at neighborhood borders"
+    },
+    {
+      "component": "Proximity-based model selection",
+      "role_in_method": "Chooses appropriate local model for each query",
+      "expected_effect_of_removal": "Would need alternative strategy like voting or averaging, potentially reducing efficiency"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "High-dimensional sparse data (e.g., text classification)",
+      "reason": "Local neighborhoods become meaningless in high dimensions due to curse of dimensionality",
+      "related_assumption": "Training examples are not uniformly distributed across feature space"
+    },
+    {
+      "scenario": "Small training sets relative to dimensionality",
+      "reason": "Insufficient data to populate meaningful local neighborhoods",
+      "related_assumption": "Local decision boundaries are simpler than global ones"
+    },
+    {
+      "scenario": "Globally linear decision boundaries",
+      "reason": "No benefit from local modeling when global linear model is optimal",
+      "related_assumption": "Local decision boundaries are simpler than global ones"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": true
+  },
+  "_metadata": {
+    "paper_url": "https://jmlr.org/papers/volume11/segata10a/segata10a.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

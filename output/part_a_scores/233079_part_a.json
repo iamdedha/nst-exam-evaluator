@@ -1,0 +1,263 @@
+{
+  "roll_number": "233079",
+  "full_name": "Mehak Jain",
+  "paper_title": "Online Multiscale Dynamic Topic Models",
+  "venue": "KDD",
+  "year": 2010,
+  "method": "Gaussian Mixture Model (GMM)",
+  "github_url": "https://github.com/Mehak261124/230079_midsem",
+  "repo_checks": {
+    "github_url": "https://github.com/Mehak261124/230079_midsem",
+    "owner": "Mehak261124",
+    "repo": "230079_midsem",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": true,
+      "repo_public": true,
+      "naming_correct": false,
+      "llm_json_exists": true,
+      "llm_json_valid": true,
+      "llm_json_schema": {
+        "has_student_metadata": true,
+        "has_llm_tools_used": true,
+        "has_interaction_log": true,
+        "has_top_5_prompts": true,
+        "has_student_declaration": true,
+        "metadata_has_name": true,
+        "metadata_has_roll": true,
+        "metadata_has_date": true,
+        "interaction_log_count": 7,
+        "log_has_required_fields": true,
+        "top_5_count": 5,
+        "top_5_has_5": true,
+        "declaration_has_statement": true,
+        "declaration_acknowledged": true
+      }
+    },
+    "score_adjustments": {},
+    "flags": [
+      "NAMING_MISMATCH: expected '233079-midsem', got '230079_midsem'"
+    ],
+    "llm_json_data": {
+      "student_metadata": {
+        "name": "Mehak Jain",
+        "roll_number": "230079",
+        "course": "Advanced Machine Learning",
+        "exam": "Mid-Semester Examination",
+        "part": "Part A",
+        "submission_date": "2026-03-01"
+      },
+      "llm_tools_used": [
+        {
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "provider": "Anthropic"
+        }
+      ],
+      "full_llm_interaction_log": [
+        {
+          "interaction_id": 1,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Finding a suitable research paper matching all Part A constraints",
+          "prompt": "Part A requires selecting one classical machine learning research paper under given constraints. The paper must be published between 2009-2012, from a top-tier A* conference (NeurIPS, ICML, AISTATS, KDD), whose primary contribution is a classical method in SVM, GMM, or Time Series modeling. Give me some paper suggestions related to my project: Dynamic Trend & Event Detector in Social Media Analytics.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Claude suggested multiple candidate papers including Online LDA (NeurIPS 2010) and Online Multiscale Dynamic Topic Models (KDD 2010), with a detailed comparison of each against the constraints.",
+          "student_verification": "I verified both papers on ACM Digital Library and confirmed their publication venues, years, and that their primary contributions are methodological and classical ML-based.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 2,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Comparing two candidate papers to decide which is better for the project",
+          "prompt": "Now tell which is best: Online Learning for Latent Dirichlet Allocation or Online Multiscale Dynamic Topic Models",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Claude provided a structured comparison table covering venue prestige, project fit, reproducibility, Part C explainability, and award recognition. This helped me make an informed final decision.",
+          "student_verification": "I cross-checked that KDD is indeed a CORE A* venue by visiting https://portal.core.edu.au and confirmed MDTM won Best Paper Honorable Mention at KDD 2010.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 3,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Verifying the correct official link for the selected paper",
+          "prompt": "https://www.researchgate.net/publication/221653561_Online_Multiscale_Dynamic_Topic_Models \u2014 is this the link?",
+          "llm_response_used": "Partially",
+          "how_it_helped": "Claude confirmed the paper identity and provided the correct official ACM Digital Library link instead of ResearchGate, which requires login.",
+          "student_verification": "I visited https://dl.acm.org/doi/10.1145/1835804.1835889 and confirmed the paper title, authors, year, and conference match exactly.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 4,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Checking whether the selected paper satisfies all official Part A constraints from the exam document",
+          "prompt": "This is the final doc for Part A \u2014 now tell the paper we selected for this is correct or not. The paper we selected does not have an arXiv paper.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Claude ran a systematic constraint-by-constraint check against the official exam rules and confirmed that the absence of an arXiv version is acceptable and even preferred since the paper is published only through official ACM proceedings.",
+          "student_verification": "I re-read the exam document constraint: arXiv-only papers are banned, not papers without arXiv. This matched Claude's explanation. Verified the ACM link is the official publisher version.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 5,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Understanding the core methodology of the paper and why it qualifies as GMM and Variant",
+          "prompt": "Tell the core methodology \u2014 SVM and Variant / Time Series and Variant / GMM and Variant",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Claude explained that LDA and its variants are Dirichlet-based mixture models analogous to GMMs, using Stochastic EM inference \u2014 the same algorithmic family as GMM fitting. This clarified why GMM and Variant is the correct category.",
+          "student_verification": "I verified this by reading the paper's generative model section, which uses Dirichlet priors and EM-based inference, confirming the GMM family classification.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 6,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Understanding my own project description so I can connect it to the selected paper",
+          "prompt": "Okay now can you explain me my project to me",
+          "llm_response_used": "Partially",
+          "how_it_helped": "Claude broke down all 4 layers of the project (Baseline ML, Advanced ML, DL, Hybrid) and showed exactly how the MDTM paper fits into the Advanced ML tier and enables dynamic trend and event detection.",
+          "student_verification": "I matched Claude's explanation against the official project description document and confirmed all layers and objectives were correctly interpreted.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 7,
+          "date": "2026-03-01",
+          "tool_name": "Claude",
+          "model": "Claude Sonnet 4.6",
+          "purpose": "Getting help filling in the Google Form submission fields accurately",
+          "prompt": "Timestamp, Full Name, Authors, Year of Publication, Link to the Paper, Primary Method Used, Roll Number, Paper Title, Email ID, Conference/Journal Name, Is the primary contribution methodological, Does the paper use publicly accessible data, Does the paper require GPU/restricted data, reproducibility responsibility, checked live sheet, duplicate disqualification, Why did you choose this paper \u2014 these are the things I have to add, can you help me to do this",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Claude populated all form fields with accurate information and provided a well-reasoned answer for the 'Why did you choose this paper' field that I reviewed and verified before using.",
+          "student_verification": "I reviewed every field against the paper's ACM page and the exam document to ensure all information is accurate before submission.",
+          "confidence_level": 5
+        }
+      ],
+      "top_5_prompts": [
+        {
+          "rank": 1,
+          "interaction_id": 2,
+          "prompt": "Now tell which is best: Online Learning for Latent Dirichlet Allocation or Online Multiscale Dynamic Topic Models",
+          "why_important": "This was the most critical decision point \u2014 choosing between two valid papers. The structured comparison made me think about trade-offs between venue prestige, reproducibility difficulty, project alignment, and explainability in Part C. It helped me reason about what matters most for a complete 3-part exam, not just Part A."
+        },
+        {
+          "rank": 2,
+          "interaction_id": 4,
+          "prompt": "This is the final doc for Part A \u2014 now tell the paper we selected for this is correct or not. The paper we selected does not have an arXiv paper.",
+          "why_important": "This prompt was analytically important because I was concerned that having no arXiv version might disqualify the paper. Understanding the distinction between arXiv-only papers (banned) versus papers without arXiv (perfectly fine) was a key insight that gave me confidence to proceed with submission."
+        },
+        {
+          "rank": 3,
+          "interaction_id": 5,
+          "prompt": "Tell the core methodology \u2014 SVM and Variant / Time Series and Variant / GMM and Variant",
+          "why_important": "Classifying the paper's methodology correctly is worth marks in the form and sets the foundation for Parts B and C. Understanding why Dirichlet-based topic models belong to the GMM family (shared EM inference, mixture model structure) deepened my understanding of the paper's algorithmic core."
+        },
+        {
+          "rank": 4,
+          "interaction_id": 1,
+          "prompt": "Part A requires selecting one classical machine learning research paper under given constraints. The paper must be published between 2009-2012, from a top-tier A* conference (NeurIPS, ICML, AISTATS, KDD), whose primary contribution is a classical method in SVM, GMM, or Time Series modeling. Give me some paper suggestions related to my project: Dynamic Trend & Event Detector in Social Media Analytics.",
+          "why_important": "This was the starting point of my paper selection process. It helped me understand what kinds of papers satisfy all constraints simultaneously, and introduced me to the MDTM paper which I would not have found easily on my own given the specific intersection of GMM methods and temporal topic modeling."
+        },
+        {
+          "rank": 5,
+          "interaction_id": 6,
+          "prompt": "Okay now can you explain me my project to me",
+          "why_important": "Understanding how my own project connects to the selected paper was essential for writing a strong justification in the form and for future Parts B and C. This prompt helped me see that MDTM directly implements the Advanced ML tier of my project and that its multiscale short-timescale component naturally maps to breaking event detection."
+        }
+      ],
+      "student_declaration": {
+        "statement": "I declare that this JSON file contains a complete and honest record of my LLM usage for Part A. All prompts listed are verbatim or near-verbatim as entered. I have verified all information independently and take full responsibility for the submitted paper selection and all content in this file.",
+        "understanding_acknowledged": true,
+        "signature": "Mehak Jain",
+        "date": "2026-03-01"
+      }
+    }
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 4,
+      "llm_disclosure_completeness": 3,
+      "llm_disclosure_verification": 3
+    },
+    "flags": [],
+    "details": {
+      "year": "Year 2010 is valid (2009-2012)",
+      "venue": "Venue 'KDD' is CORE A*",
+      "json_validity": "5/5 required sections present",
+      "completeness": "7 interactions logged with required fields",
+      "verification": "Declaration: True, Acknowledged: True, Top5: True"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 4,
+      "paper_validity_paper_type": 2,
+      "reproducibility_dataset_availability": 3,
+      "reproducibility_compute_feasibility": 3,
+      "reproducibility_experimental_scope": 3,
+      "top5_prompts_analytical_depth": 4,
+      "top5_prompts_relevance": 4
+    },
+    "flags": [
+      "DATASET_AVAILABILITY_UNCERTAIN",
+      "COMPUTE_UNCERTAIN"
+    ],
+    "details": {
+      "method_alignment": "Method 'GMM' aligns with ARIMA/GMM/SVM",
+      "paper_type": "Valid methodological paper",
+      "dataset": "Dataset availability uncertain",
+      "compute": "Compute requirements uncertain",
+      "scope": "Reproducibility uncertain",
+      "prompts_depth": "Shows good analytical thinking in comparing papers (trade-offs between venue prestige, reproducibility, alignment), understanding methodology classification rationale, and connecting paper to project goals. However, lacks deeper probing of failure modes or limitations.",
+      "prompts_relevance": "All prompts directly relate to paper selection process - comparing options, validating choice against constraints, understanding methodology classification, and assessing project alignment. Highly relevant to exam requirements."
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 4,
+    "llm_disclosure_completeness": 3,
+    "llm_disclosure_verification": 3,
+    "paper_validity_method_alignment": 4,
+    "paper_validity_paper_type": 2,
+    "reproducibility_dataset_availability": 3,
+    "reproducibility_compute_feasibility": 3,
+    "reproducibility_experimental_scope": 3,
+    "top5_prompts_analytical_depth": 4,
+    "top5_prompts_relevance": 4
+  },
+  "raw_total": 42,
+  "penalty": 0,
+  "penalty_reason": [
+    ""
+  ],
+  "final_total": 42,
+  "out_of": 50,
+  "scaled_score": 4.2,
+  "flags": [],
+  "details": {
+    "year": "Year 2010 is valid (2009-2012)",
+    "venue": "Venue 'KDD' is CORE A*",
+    "json_validity": "5/5 required sections present",
+    "completeness": "7 interactions logged with required fields",
+    "verification": "Declaration: True, Acknowledged: True, Top5: True",
+    "method_alignment": "Method 'GMM' aligns with ARIMA/GMM/SVM",
+    "paper_type": "Valid methodological paper",
+    "dataset": "Dataset availability uncertain",
+    "compute": "Compute requirements uncertain",
+    "scope": "Reproducibility uncertain",
+    "prompts_depth": "Shows good analytical thinking in comparing papers (trade-offs between venue prestige, reproducibility, alignment), understanding methodology classification rationale, and connecting paper to project goals. However, lacks deeper probing of failure modes or limitations.",
+    "prompts_relevance": "All prompts directly relate to paper selection process - comparing options, validating choice against constraints, understanding methodology classification, and assessing project alignment. Highly relevant to exam requirements."
+  },
+  "needs_human_review": false
+}

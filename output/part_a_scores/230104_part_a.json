@@ -1,0 +1,239 @@
+{
+  "roll_number": "230104",
+  "full_name": "Siddhartha Shukla",
+  "paper_title": "Sparse Online Learning via Truncated Gradient",
+  "venue": "JMLR",
+  "year": 2009,
+  "method": "Support Vector Machine (SVM)",
+  "github_url": "https://github.com/SiddharthaShukla8/230104-midsem",
+  "repo_checks": {
+    "github_url": "https://github.com/SiddharthaShukla8/230104-midsem",
+    "owner": "SiddharthaShukla8",
+    "repo": "230104-midsem",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": true,
+      "repo_public": true,
+      "naming_correct": true,
+      "llm_json_exists": true,
+      "llm_json_valid": true,
+      "llm_json_schema": {
+        "has_student_metadata": true,
+        "has_llm_tools_used": true,
+        "has_interaction_log": true,
+        "has_top_5_prompts": true,
+        "has_student_declaration": true,
+        "metadata_has_name": true,
+        "metadata_has_roll": true,
+        "metadata_has_date": true,
+        "interaction_log_count": 5,
+        "log_has_required_fields": true,
+        "top_5_count": 5,
+        "top_5_has_5": true,
+        "declaration_has_statement": true,
+        "declaration_acknowledged": true
+      }
+    },
+    "score_adjustments": {},
+    "flags": [],
+    "llm_json_data": {
+      "student_metadata": {
+        "name": "Siddhartha Shukla",
+        "roll_number": "230104",
+        "course": "Advanced Machine Learning",
+        "exam": "Mid-Semester Examination",
+        "part": "Part A",
+        "submission_date": "2026-03-03"
+      },
+      "llm_tools_used": [
+        {
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "provider": "OpenAI"
+        }
+      ],
+      "full_llm_interaction_log": [
+        {
+          "interaction_id": 1,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "purpose": "Identifying a valid CORE A* paper within 2009\u20132012 aligned with SVM/GMM/Time-Series syllabus.",
+          "prompt": "Suggest a safe and high-scoring classical ML paper (2009-2012, CORE A*, CPU feasible) aligned with SVM, GMM, or Time Series that is easy to reproduce.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Helped shortlist Sparse Online Learning via Truncated Gradient (JMLR 2009) as a methodologically strong and feasible paper.",
+          "student_verification": "I verified JMLR is a CORE A* venue and confirmed the publication year (2009) from the official JMLR website.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 2,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "purpose": "Checking methodological alignment with syllabus constraints.",
+          "prompt": "Does Sparse Online Learning via Truncated Gradient qualify as a classical SVM-related methodological contribution and not a dataset/system paper?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed that the primary contribution is an optimization method for sparse online learning in linear/SVM-style models.",
+          "student_verification": "I read the abstract and introduction to ensure the contribution is algorithmic and not dataset-focused.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 3,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "purpose": "Evaluating reproducibility and compute feasibility.",
+          "prompt": "Can the truncated gradient method be implemented on a CPU-only laptop using small public or synthetic datasets?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed feasibility of implementing truncated gradient using standard Python and small datasets.",
+          "student_verification": "I checked that the algorithm only requires iterative gradient updates and thresholding, which are lightweight operations.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 4,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "purpose": "Understanding limitations and failure cases.",
+          "prompt": "What are common failure cases or limitations of truncated gradient sparse learning?",
+          "llm_response_used": "Partially",
+          "how_it_helped": "Helped identify sensitivity to learning rate, truncation threshold, and potential accuracy-sparsity trade-offs.",
+          "student_verification": "I confirmed these aspects by reviewing the discussion section and analyzing the role of hyperparameters in sparse regularization.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 5,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5",
+          "purpose": "Planning for Part B reproduction.",
+          "prompt": "How can I design simple experiments comparing standard SGD and truncated gradient to analyze sparsity vs accuracy trade-offs?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Provided a clear plan for implementing baseline SGD and truncated gradient and measuring sparsity levels.",
+          "student_verification": "I mapped the proposed experiment plan to what is allowed in Part B (reproduction and analysis).",
+          "confidence_level": 5
+        }
+      ],
+      "top_5_prompts": [
+        {
+          "rank": 1,
+          "interaction_id": 1,
+          "prompt": "Suggest a safe and high-scoring classical ML paper (2009-2012, CORE A*, CPU feasible) aligned with SVM, GMM, or Time Series that is easy to reproduce.",
+          "why_important": "Ensured that the selected paper strictly satisfies venue, year, and reproducibility constraints."
+        },
+        {
+          "rank": 2,
+          "interaction_id": 3,
+          "prompt": "Can the truncated gradient method be implemented on a CPU-only laptop using small public or synthetic datasets?",
+          "why_important": "Directly addressed the strict CPU-only feasibility constraint of the examination."
+        },
+        {
+          "rank": 3,
+          "interaction_id": 4,
+          "prompt": "What are common failure cases or limitations of truncated gradient sparse learning?",
+          "why_important": "Helped identify analytical aspects such as sparsity-accuracy trade-offs for deeper reasoning in Parts B and C."
+        },
+        {
+          "rank": 4,
+          "interaction_id": 2,
+          "prompt": "Does Sparse Online Learning via Truncated Gradient qualify as a classical SVM-related methodological contribution and not a dataset/system paper?",
+          "why_important": "Confirmed compliance with the methodological contribution requirement."
+        },
+        {
+          "rank": 5,
+          "interaction_id": 5,
+          "prompt": "How can I design simple experiments comparing standard SGD and truncated gradient to analyze sparsity vs accuracy trade-offs?",
+          "why_important": "Prepared a structured experimental plan for Part B reproduction and analysis."
+        }
+      ],
+      "student_declaration": {
+        "statement": "I declare that this JSON file contains a complete and honest record of my LLM usage for Part A.",
+        "understanding_acknowledged": true,
+        "signature": "Siddhartha Shukla",
+        "date": "2026-03-03"
+      }
+    }
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 4,
+      "llm_disclosure_completeness": 3,
+      "llm_disclosure_verification": 3
+    },
+    "flags": [],
+    "details": {
+      "year": "Year 2009 is valid (2009-2012)",
+      "venue": "Venue 'JMLR' is CORE A*",
+      "json_validity": "5/5 required sections present",
+      "completeness": "5 interactions logged with required fields",
+      "verification": "Declaration: True, Acknowledged: True, Top5: True"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 0,
+      "paper_validity_paper_type": 2,
+      "reproducibility_dataset_availability": 2,
+      "reproducibility_compute_feasibility": 5,
+      "reproducibility_experimental_scope": 4,
+      "top5_prompts_analytical_depth": 4,
+      "top5_prompts_relevance": 4
+    },
+    "flags": [
+      "METHOD_MISALIGNMENT",
+      "DATASET_NOT_PUBLIC"
+    ],
+    "details": {
+      "method_alignment": "Method 'OTHER' does NOT align",
+      "paper_type": "Valid methodological paper",
+      "dataset": "Dataset not publicly available, but toy substitutes may work",
+      "compute": "CPU feasible",
+      "scope": "Moderate difficulty",
+      "prompts_depth": "Prompts 3 and 5 show good analytical thinking by asking about failure cases/limitations and designing comparative experiments for trade-off analysis. However, prompts 1, 2, and 4 are more verification-focused rather than deeply analytical.",
+      "prompts_relevance": "All prompts directly address key exam requirements: paper selection constraints (venue, year, methodology), CPU feasibility assessment, and experimental planning for reproduction - highly relevant to the paper selection and analysis process."
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 4,
+    "llm_disclosure_completeness": 3,
+    "llm_disclosure_verification": 3,
+    "paper_validity_method_alignment": 0,
+    "paper_validity_paper_type": 2,
+    "reproducibility_dataset_availability": 2,
+    "reproducibility_compute_feasibility": 5,
+    "reproducibility_experimental_scope": 4,
+    "top5_prompts_analytical_depth": 4,
+    "top5_prompts_relevance": 4
+  },
+  "raw_total": 40,
+  "penalty": 0,
+  "penalty_reason": [
+    ""
+  ],
+  "final_total": 40,
+  "out_of": 50,
+  "scaled_score": 4.0,
+  "flags": [
+    "METHOD_MISALIGNMENT"
+  ],
+  "details": {
+    "year": "Year 2009 is valid (2009-2012)",
+    "venue": "Venue 'JMLR' is CORE A*",
+    "json_validity": "5/5 required sections present",
+    "completeness": "5 interactions logged with required fields",
+    "verification": "Declaration: True, Acknowledged: True, Top5: True",
+    "method_alignment": "Method 'OTHER' does NOT align",
+    "paper_type": "Valid methodological paper",
+    "dataset": "Dataset not publicly available, but toy substitutes may work",
+    "compute": "CPU feasible",
+    "scope": "Moderate difficulty",
+    "prompts_depth": "Prompts 3 and 5 show good analytical thinking by asking about failure cases/limitations and designing comparative experiments for trade-off analysis. However, prompts 1, 2, and 4 are more verification-focused rather than deeply analytical.",
+    "prompts_relevance": "All prompts directly address key exam requirements: paper selection constraints (venue, year, methodology), CPU feasibility assessment, and experimental planning for reproduction - highly relevant to the paper selection and analysis process."
+  },
+  "needs_human_review": true
+}

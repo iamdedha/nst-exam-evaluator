@@ -1,0 +1,106 @@
+{
+  "paper_title": "Large-scale Linear Support Vector Regression",
+  "venue": "Journal of Machine Learning Research",
+  "venue_abbreviation": "JMLR",
+  "year": 2012,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper extends state-of-the-art training methods for linear SVC to linear SVR, specifically adapting TRON (Trust Region Newton) method for L2-loss SVR and developing improved dual coordinate descent (DCD) methods for both L1- and L2-loss SVR. A key innovation is a condensed coordinate descent implementation that exploits the property that \u03b1\u207a\u1d62\u03b1\u207b\u1d62 = 0 at optimum to reduce computational overhead.",
+  "algorithm_steps": [
+    "Step 1: For TRON method - compute gradient \u2207f(w) and generalized Hessian for L2-loss SVR at current iterate w\u2096",
+    "Step 2: Solve trust region subproblem min_s q\u2096(s) subject to ||s|| \u2264 \u0394\u2096 using iterative method with Hessian-vector products",
+    "Step 3: Update w\u2096 and trust region size \u0394\u2096 based on function reduction ratio",
+    "Step 4: For DCD method - sequentially update dual variables \u03b1\u1d62 using closed-form solution with projected gradient stopping condition",
+    "Step 5: For condensed DCD - exploit \u03b1\u207a\u1d62\u03b1\u207b\u1d62 = 0 property by updating (\u03b1\u207a\u1d62, \u03b1\u207b\u1d62) pairs together and maintaining single variable \u03b2\u1d62 = \u03b1\u207a\u1d62 - \u03b1\u207b\u1d62"
+  ],
+  "key_equations": [
+    "Eq (1): Primal SVR formulation min_w f(w) = \u00bdw^T w + C\u2211\u03be_\u03b5(w;x\u1d62,y\u1d62)",
+    "Eq (4-5): Dual SVR formulation with 2l variables \u03b1\u207a, \u03b1\u207b",
+    "Eq (8): Coordinate descent update rule for dual variables",
+    "Eq (10): Efficient maintenance of vector u for computing Q(\u03b1\u207a-\u03b1\u207b)",
+    "Eq (15): Condensed formulation using single variable \u03b2\u1d62 = \u03b1\u207a\u1d62 - \u03b1\u207b\u1d62"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Linear separability assumption - the method assumes linear SVR can achieve comparable performance to kernel SVR for the target applications",
+      "why_needed": "The entire motivation is that linear methods can replace kernel methods while being much faster",
+      "violation_scenario": "When data has complex nonlinear relationships that require kernel mapping to higher dimensional space"
+    },
+    {
+      "assumption": "Sparsity assumption - at optimum, \u03b1\u207a\u1d62\u03b1\u207b\u1d62 = 0 for all i",
+      "why_needed": "The condensed coordinate descent method relies on this property to reduce computational overhead",
+      "violation_scenario": "This is actually a theoretical property that always holds, but numerical precision issues could cause violations"
+    },
+    {
+      "assumption": "Large-scale assumption - problems are large enough that O(n) operations per iteration are acceptable",
+      "why_needed": "The methods are designed for large-scale problems where per-iteration cost of O(n) is justified",
+      "violation_scenario": "For small problems, the overhead of these sophisticated methods might not be worthwhile"
+    }
+  ],
+  "baselines_compared": [
+    "Kernel SVR",
+    "Standard dual coordinate descent for SVR"
+  ],
+  "baseline_limitations_identified": "Kernel SVR is time-consuming for training and testing on large-scale problems, while standard dual coordinate descent for SVR has 2l variables compared to l variables in SVC, making it potentially much slower",
+  "proposed_improvement": "Linear SVR achieves much faster training/testing than kernel SVR while maintaining competitive accuracy, and the condensed coordinate descent method reduces computational overhead by exploiting SVR-specific properties",
+  "condition_where_baseline_wins": "When the data has strong nonlinear patterns that cannot be captured by linear models, kernel SVR would significantly outperform linear SVR in terms of accuracy, making the speed advantage less relevant",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Boston Housing",
+    "California Housing",
+    "Synthetic linear regression with noise"
+  ],
+  "toy_dataset_justification": "These datasets provide regression targets with varying degrees of linearity and noise, allowing evaluation of both L1 and L2 loss SVR methods on problems of manageable size",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "The paper provides detailed algorithmic descriptions and the methods are implemented in LIBLINEAR, but specific experimental details and hyperparameter settings are not fully specified in the provided text",
+  "key_components_for_ablation": [
+    {
+      "component": "Trust region mechanism in TRON",
+      "role_in_method": "Controls step size and ensures convergence by adjusting \u0394\u2096 based on function reduction ratio",
+      "expected_effect_of_removal": "Could lead to convergence issues or slower convergence, especially for ill-conditioned problems"
+    },
+    {
+      "component": "Condensed representation using \u03b2\u1d62 = \u03b1\u207a\u1d62 - \u03b1\u207b\u1d62",
+      "role_in_method": "Reduces computational overhead by maintaining single variable instead of pair (\u03b1\u207a\u1d62, \u03b1\u207b\u1d62)",
+      "expected_effect_of_removal": "Would revert to standard 2l-variable formulation with higher computational cost per iteration"
+    },
+    {
+      "component": "Shrinking strategy",
+      "role_in_method": "Removes variables likely to be at bounds to solve smaller subproblems",
+      "expected_effect_of_removal": "Would increase computational cost but might improve numerical stability"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Highly nonlinear data where linear models are inadequate",
+      "reason": "Linear SVR cannot capture complex nonlinear relationships",
+      "related_assumption": "Linear separability assumption"
+    },
+    {
+      "scenario": "Problems where the generalized Hessian becomes ill-conditioned",
+      "reason": "TRON method relies on Hessian-vector products and trust region updates",
+      "related_assumption": "Large-scale assumption about acceptable per-iteration costs"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://jmlr.org/papers/v13/ho12a.html",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

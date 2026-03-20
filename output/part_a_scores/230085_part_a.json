@@ -1,0 +1,158 @@
+{
+  "roll_number": "230085",
+  "full_name": "Navnit Naman",
+  "paper_title": "A Dual Coordinate Descent Method for Large-scale Linear SVM",
+  "venue": "JMLR",
+  "year": 2011,
+  "method": "Support Vector Machine (SVM)",
+  "github_url": "https://github.com/naman394/advanced_ML_Midsem_230085",
+  "repo_checks": {
+    "github_url": "https://github.com/naman394/advanced_ML_Midsem_230085",
+    "owner": "naman394",
+    "repo": "advanced_ML_Midsem_230085",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": true,
+      "repo_public": true,
+      "naming_correct": false,
+      "llm_json_exists": true,
+      "llm_json_valid": true,
+      "llm_json_schema": {
+        "has_student_metadata": true,
+        "has_llm_tools_used": true,
+        "has_interaction_log": true,
+        "has_top_5_prompts": true,
+        "has_student_declaration": true,
+        "metadata_has_name": true,
+        "metadata_has_roll": true,
+        "metadata_has_date": true,
+        "interaction_log_count": 1,
+        "log_has_required_fields": true,
+        "top_5_count": 0,
+        "top_5_has_5": false,
+        "declaration_has_statement": true,
+        "declaration_acknowledged": true
+      }
+    },
+    "score_adjustments": {},
+    "flags": [
+      "NAMING_MISMATCH: expected '230085-midsem', got 'advanced_ML_Midsem_230085'"
+    ],
+    "llm_json_data": {
+      "student_metadata": {
+        "name": "Navnit Naman",
+        "roll_number": "230085",
+        "course": "Advanced Machine Learning",
+        "exam": "Mid-Semester Examination",
+        "part": "Part A",
+        "submission_date": "2026-03-03"
+      },
+      "llm_tools_used": [
+        {
+          "tool_name": "ChatGPT",
+          "model": "GPT-5-mini",
+          "provider": "OpenAI"
+        }
+      ],
+      "full_llm_interaction_log": [
+        {
+          "interaction_id": 1,
+          "date": "2026-03-03",
+          "tool_name": "ChatGPT",
+          "model": "GPT-5-mini",
+          "purpose": "Understanding the dual coordinate descent algorithm for SVM",
+          "prompt": "Explain step-by-step how the dual coordinate descent method works for large-scale linear SVM.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Clarified the update rules for dual variables and how convergence is achieved, which helped plan a simplified CPU-level experiment.",
+          "student_verification": "Verified using equations in the paper and cross-checked with class notes on SVM dual optimization.",
+          "confidence_level": 5
+        }
+      ],
+      "top_5_prompts": [],
+      "student_declaration": {
+        "statement": "I declare that this JSON file contains a complete and honest record of my LLM usage for Part A.",
+        "understanding_acknowledged": true,
+        "signature": "Navnit Naman",
+        "date": "2026-03-03"
+      }
+    }
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 4,
+      "llm_disclosure_completeness": 3,
+      "llm_disclosure_verification": 2
+    },
+    "flags": [],
+    "details": {
+      "year": "Year 2011 is valid (2009-2012)",
+      "venue": "Venue 'JMLR' is CORE A*",
+      "json_validity": "5/5 required sections present",
+      "completeness": "1 interactions logged with required fields",
+      "verification": "Declaration: True, Acknowledged: True, Top5: False"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 4,
+      "paper_validity_paper_type": 2,
+      "reproducibility_dataset_availability": 3,
+      "reproducibility_compute_feasibility": 3,
+      "reproducibility_experimental_scope": 3,
+      "top5_prompts_analytical_depth": 0,
+      "top5_prompts_relevance": 0
+    },
+    "flags": [
+      "DATASET_AVAILABILITY_UNCERTAIN",
+      "COMPUTE_UNCERTAIN"
+    ],
+    "details": {
+      "method_alignment": "Method 'SVM' aligns with ARIMA/GMM/SVM",
+      "paper_type": "Valid methodological paper",
+      "dataset": "Dataset availability uncertain",
+      "compute": "Compute requirements uncertain",
+      "scope": "Reproducibility uncertain",
+      "prompts": "No prompts found or empty"
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 4,
+    "llm_disclosure_completeness": 3,
+    "llm_disclosure_verification": 2,
+    "paper_validity_method_alignment": 4,
+    "paper_validity_paper_type": 2,
+    "reproducibility_dataset_availability": 3,
+    "reproducibility_compute_feasibility": 3,
+    "reproducibility_experimental_scope": 3,
+    "top5_prompts_analytical_depth": 0,
+    "top5_prompts_relevance": 0
+  },
+  "raw_total": 33,
+  "penalty": 0,
+  "penalty_reason": [
+    ""
+  ],
+  "final_total": 33,
+  "out_of": 50,
+  "scaled_score": 3.3,
+  "flags": [],
+  "details": {
+    "year": "Year 2011 is valid (2009-2012)",
+    "venue": "Venue 'JMLR' is CORE A*",
+    "json_validity": "5/5 required sections present",
+    "completeness": "1 interactions logged with required fields",
+    "verification": "Declaration: True, Acknowledged: True, Top5: False",
+    "method_alignment": "Method 'SVM' aligns with ARIMA/GMM/SVM",
+    "paper_type": "Valid methodological paper",
+    "dataset": "Dataset availability uncertain",
+    "compute": "Compute requirements uncertain",
+    "scope": "Reproducibility uncertain",
+    "prompts": "No prompts found or empty"
+  },
+  "needs_human_review": false
+}

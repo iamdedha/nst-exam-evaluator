@@ -1,0 +1,116 @@
+{
+  "paper_title": "SGD-QN: Careful Quasi-Newton Stochastic Gradient Descent",
+  "venue": "Journal of Machine Learning Research",
+  "venue_abbreviation": "JMLR",
+  "year": 2009,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "SGD-QN is a stochastic gradient descent algorithm for linear SVMs that carefully exploits second-order information through quasi-Newton techniques while maintaining computational efficiency. The method splits parameter updates into independently scheduled components and uses limited storage approximations of the inverse Hessian to achieve faster convergence than first-order SGD with minimal computational overhead.",
+  "algorithm_steps": [
+    "Step 1: Initialize parameter vector w and choose regularization parameter \u03bb",
+    "Step 2: For each iteration, draw a random training example (xt, yt)",
+    "Step 3: Compute gradient gt(wt) = \u03bbwt + \u2113'(ytw^T_txt)ytxt",
+    "Step 4: Apply quasi-Newton update wt+1 = wt - (1/(t+t0))B*gt(wt) where B approximates H^-1",
+    "Step 5: Use limited storage approximation for matrix B to maintain computational efficiency",
+    "Step 6: Split parameter updates into independently scheduled components for sparsity exploitation"
+  ],
+  "key_equations": [
+    "Equation (1): Primal cost function Pn(w) = \u03bb/2||w||\u00b2 + (1/n)\u03a3\u2113(yiw^Txi)",
+    "Equation (2): Generic SGD update wt+1 = wt - (1/(t+t0))Bgt(wt)",
+    "Equation (3): First-order SGD with B = \u03bb^-1I",
+    "Equation (4): Second-order SGD with B = H^-1",
+    "Theorem 1: Convergence bounds relating to spectrum of matrix HB"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Loss function \u2113(s) is convex and twice differentiable with continuous derivatives (\u2113 \u2208 C\u00b2[R])",
+      "why_needed": "Required for theoretical convergence guarantees and second-order information computation",
+      "violation_scenario": "When using non-smooth loss functions like hinge loss without smoothing"
+    },
+    {
+      "assumption": "Eigenvalues of HB are in range \u03bbmax \u2265 \u03bbmin > 1/2",
+      "why_needed": "Ensures convergence of the generic SGD algorithm with rescaling matrix B",
+      "violation_scenario": "When the approximation matrix B is poorly conditioned or inappropriate"
+    },
+    {
+      "assumption": "Training examples are drawn independently and identically distributed",
+      "why_needed": "Required for theoretical analysis and convergence proofs",
+      "violation_scenario": "When data has temporal dependencies or non-stationary distributions"
+    }
+  ],
+  "baselines_compared": [
+    "First-order SGD",
+    "Online BFGS (oBFGS)",
+    "Online Limited storage BFGS (oLBFGS)",
+    "Stochastic Meta-Descent",
+    "Natural Gradient Descent",
+    "Online Dual Solvers"
+  ],
+  "baseline_limitations_identified": "First-order SGD suffers from slow convergence on ill-conditioned problems due to sensitivity to condition number \u03ba, while existing quasi-Newton methods like oBFGS/oLBFGS have computational overhead that often exceeds their convergence benefits",
+  "proposed_improvement": "SGD-QN carefully balances second-order information exploitation with computational efficiency through limited storage approximations and independent component scheduling, achieving better constant factors in convergence while maintaining near first-order computational cost",
+  "condition_where_baseline_wins": "On well-conditioned problems with low condition number \u03ba, first-order SGD may be preferable due to its simplicity and minimal overhead, especially when the dataset is not very large",
+  "datasets_used": [
+    "PASCAL Large Scale Learning Challenge datasets"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Synthetic linearly separable data",
+    "MNIST binary classification",
+    "Adult/Census Income dataset"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of linear SVM performance with varying condition numbers and sparsity patterns, which are key factors affecting SGD-QN's performance relative to baselines",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "While the core algorithm is described, specific implementation details for the limited storage approximations and component scheduling are not fully detailed. The sparsity exploitation techniques mentioned in sections 3-4 are referenced but not included in the provided text.",
+  "key_components_for_ablation": [
+    {
+      "component": "Quasi-Newton rescaling matrix B",
+      "role_in_method": "Approximates inverse Hessian to incorporate second-order information",
+      "expected_effect_of_removal": "Reduces to first-order SGD, losing convergence speed benefits on ill-conditioned problems"
+    },
+    {
+      "component": "Limited storage approximation",
+      "role_in_method": "Maintains computational efficiency while preserving quasi-Newton benefits",
+      "expected_effect_of_removal": "Would require full matrix storage/computation, making method computationally prohibitive"
+    },
+    {
+      "component": "Independent component scheduling",
+      "role_in_method": "Exploits sparsity in parameter updates",
+      "expected_effect_of_removal": "Would lose efficiency gains from sparse data structures"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "High-dimensional problems where d\u00b2 storage becomes prohibitive",
+      "reason": "Second-order methods scale poorly with dimension even with approximations",
+      "related_assumption": "Limited storage approximation maintains effectiveness"
+    },
+    {
+      "scenario": "Non-smooth loss functions without proper smoothing",
+      "reason": "Violates differentiability requirements for second-order information",
+      "related_assumption": "Loss function is twice differentiable"
+    },
+    {
+      "scenario": "Poorly conditioned approximation matrix B",
+      "reason": "Can lead to divergence or very slow convergence",
+      "related_assumption": "Eigenvalues of HB are in appropriate range"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "http://jmlr.org/papers/volume10/bordes09a/bordes09a.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

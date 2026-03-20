@@ -1,0 +1,112 @@
+{
+  "paper_title": "Adaptive Kernel Approximation for Large-Scale Non-Linear SVM Prediction",
+  "venue": "International Conference on Machine Learning",
+  "venue_abbreviation": "ICML",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "AdaptSVM proposes an efficient prediction algorithm for non-linear SVMs that approximates kernel function computation using aggregated statistics from support vectors. The method provides theoretical guarantees through mean and variance estimation of kernel functions, and includes an adaptive fallback mechanism to original kernel computation when approximation quality is insufficient.",
+  "algorithm_steps": [
+    "Offline aggregation: Cluster positive and negative support vectors into J/2 groups each",
+    "For each group, compute aggregated weights and centroids, plus distance-independent terms from Theorem 1",
+    "Online prediction: For each group, estimate E[f] and Var[f] using the main theorem",
+    "Apply adaptive fallback: if Var[f] < \u03b5\u00b2E\u00b2[f], use approximation; otherwise use original kernel computation",
+    "Combine predictions from all groups to get final SVM prediction"
+  ],
+  "key_equations": [
+    "Theorem 1: Provides closed-form expressions for E[f(x)] and Var[f(x)] for RBF kernels under stated assumptions",
+    "Equation (1): First-order Taylor expansion f(x) = f(\u03bc) + \u2207f(\u03bc)\u1d40R(x) + \u03b5\u2093",
+    "Adaptive condition: Var[f] < \u03b5\u00b2E\u00b2[f] determines when to use approximation vs original computation"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Support vectors are i.i.d. realizations of a random variable x, with weights \u03b1\u1d62 as functions of x",
+      "why_needed": "Enables statistical approximation of kernel summation using expected values",
+      "violation_scenario": "When support vectors have strong spatial correlations or non-random selection bias"
+    },
+    {
+      "assumption": "Distance between r\u2093 and r\u0304 becomes negligible as feature dimension K\u2192\u221e (Assumption 1)",
+      "why_needed": "Allows approximation of individual distances with mean distance in high dimensions",
+      "violation_scenario": "Low-dimensional data or when support vectors have very heterogeneous distances"
+    },
+    {
+      "assumption": "cos \u03b8\u2093 follows normal distribution N(0, \u03c3\u00b2) where \u03c3\u00b2 = \u03b2/K (Assumption 2)",
+      "why_needed": "Enables analytical computation of kernel function expectations and variances",
+      "violation_scenario": "Non-uniform data distributions or when angular relationships don't follow normality"
+    }
+  ],
+  "baselines_compared": [
+    "ClusterSVM",
+    "Core Vector Machine (CVM)",
+    "Cutting-Plane Subspace Pursuit (CPSP)",
+    "Ball tree algorithm",
+    "SV tree"
+  ],
+  "baseline_limitations_identified": "Existing approaches either require significant modifications to training algorithms or focus only on training optimization without fully exploiting prediction speedup potential",
+  "proposed_improvement": "AdaptSVM focuses purely on prediction acceleration without modifying training, uses statistical approximation with theoretical guarantees, and includes adaptive fallback to maintain accuracy",
+  "condition_where_baseline_wins": "When the number of support vectors is already very small, or when the data distribution violates the high-dimensional assumptions, making the approximation inaccurate",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Synthetic high-dimensional Gaussian data",
+    "MNIST digit classification",
+    "Two-class synthetic RBF kernel data"
+  ],
+  "toy_dataset_justification": "These datasets have high dimensionality needed for Assumption 1, can generate sufficient support vectors for meaningful approximation, and allow controlled testing of the angular distribution assumptions",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires implementing the complex mathematical expressions from Theorem 1, estimating the \u03b2 parameter from training data, and tuning the group size J and tolerance \u03b5 parameters",
+  "key_components_for_ablation": [
+    {
+      "component": "Adaptive fallback mechanism",
+      "role_in_method": "Switches between approximation and original computation based on variance estimation",
+      "expected_effect_of_removal": "Would lose accuracy guarantees and potentially degrade performance on difficult cases"
+    },
+    {
+      "component": "Support vector clustering into groups",
+      "role_in_method": "Reduces computation by aggregating similar support vectors",
+      "expected_effect_of_removal": "Would increase computational cost but might improve approximation accuracy"
+    },
+    {
+      "component": "Higher-order Taylor expansion terms",
+      "role_in_method": "Provides more accurate approximation through correction terms",
+      "expected_effect_of_removal": "Would reduce approximation quality but simplify computation"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Low-dimensional feature spaces",
+      "reason": "Assumption 1 about distance concentration fails in low dimensions",
+      "related_assumption": "Distance between r\u2093 and r\u0304 becomes negligible as K\u2192\u221e"
+    },
+    {
+      "scenario": "Highly non-uniform data distributions",
+      "reason": "Angular relationships may not follow the assumed normal distribution",
+      "related_assumption": "cos \u03b8\u2093 follows normal distribution N(0, \u03b2/K)"
+    },
+    {
+      "scenario": "Very sparse support vector sets",
+      "reason": "Statistical approximation becomes unreliable with insufficient samples",
+      "related_assumption": "Support vectors are i.i.d. realizations enabling statistical approximation"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://icml.cc/2011/papers/283_icmlpaper.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

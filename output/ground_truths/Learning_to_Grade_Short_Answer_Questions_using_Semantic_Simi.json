@@ -1,0 +1,107 @@
+{
+  "paper_title": "Learning to Grade Short Answer Questions using Semantic Similarity Measures and Dependency Graph Alignments",
+  "venue": "Association for Computational Linguistics",
+  "venue_abbreviation": "ACL",
+  "year": 2011,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "A three-stage pipeline for automatic short answer grading that combines dependency graph alignment features with lexical semantic similarity measures using machine learning. The method first learns node-to-node matching scores using a perceptron, then finds optimal graph alignments using the Hungarian algorithm, and finally combines alignment scores with semantic similarity measures using SVMs.",
+  "algorithm_steps": [
+    "Parse student and instructor answers into dependency graphs using Stanford Dependency Parser",
+    "Train a perceptron to compute node-to-node similarity scores using 68 features (36 semantic similarity features across 4 subgraph types, 32 lexico-syntactic features)",
+    "Create bipartite graph with nodes from student answer on left, instructor answer on right, weighted by similarity scores",
+    "Apply Hungarian algorithm to find optimal alignment and compute alignment score",
+    "Apply question demoting to reduce advantage of parroting question words",
+    "Combine alignment scores with bag-of-words semantic similarity measures using SVM",
+    "Apply Isotonic Regression to transform output scores to original [0,5] grading scale"
+  ],
+  "key_equations": [
+    "f(xi,xs) = wT\u03c6(xi,xs): Linear scoring function for node-to-node matching using learned weight vector w and feature vector \u03c6"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Dependency parse structure provides meaningful alignment information for grading",
+      "why_needed": "The method relies on syntactic structure to improve upon bag-of-words approaches",
+      "violation_scenario": "When answers have very different syntactic structures but equivalent semantic meaning"
+    },
+    {
+      "assumption": "Optimal bipartite matching corresponds to meaningful semantic alignment",
+      "why_needed": "Hungarian algorithm assumes one-to-one node correspondence represents best alignment",
+      "violation_scenario": "When multiple student answer nodes should align to single instructor answer node or vice versa"
+    },
+    {
+      "assumption": "Linear combination of features captures grading criteria",
+      "why_needed": "Both perceptron and SVM use linear models for scoring",
+      "violation_scenario": "When grading requires complex non-linear interactions between semantic and structural features"
+    }
+  ],
+  "baselines_compared": [
+    "LSA (Latent Semantic Analysis)",
+    "WordNet-based similarity measures",
+    "Bag-of-words approaches",
+    "Pattern-based systems (Oxford-UCLES)",
+    "C-Rater syntactic matching"
+  ],
+  "baseline_limitations_identified": "Existing bag-of-words approaches ignore structural and syntactic differences between sentences, while pattern-based approaches require manual crafting",
+  "proposed_improvement": "Combines structural information from dependency graphs with semantic similarity measures using machine learning to automatically learn optimal feature combinations",
+  "condition_where_baseline_wins": "When student answers use very different vocabulary but correct structure, pure semantic similarity measures might outperform the structural alignment approach",
+  "datasets_used": [
+    "Short answer dataset with instructor and student answers"
+  ],
+  "dataset_publicly_available": false,
+  "suitable_toy_datasets": [
+    "Simple Q&A pairs with known correct answers",
+    "Paraphrase detection datasets adapted for grading",
+    "Textual entailment datasets"
+  ],
+  "toy_dataset_justification": "These datasets contain paired texts with similarity judgments that can be adapted to the grading task, allowing testing of the dependency alignment and semantic similarity components",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Requires Stanford Dependency Parser, manual annotation of node alignments for training perceptron (32 answers with 7303 node pairs), and specific feature engineering details",
+  "key_components_for_ablation": [
+    {
+      "component": "Dependency graph alignment features",
+      "role_in_method": "Provides structural matching information beyond bag-of-words",
+      "expected_effect_of_removal": "Performance would degrade to baseline semantic similarity measures"
+    },
+    {
+      "component": "Question demoting",
+      "role_in_method": "Reduces advantage of parroting question words back in answer",
+      "expected_effect_of_removal": "System might give higher scores to answers that simply repeat question terms"
+    },
+    {
+      "component": "Subgraph similarity features (N0, N1, N2 vs N3)",
+      "role_in_method": "Captures different levels of syntactic context around nodes",
+      "expected_effect_of_removal": "Would lose ability to match semantically similar phrases with different surface forms"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "Student answers with correct meaning but very different syntactic structure",
+      "reason": "Dependency alignment may fail to find good matches between structurally different but semantically equivalent expressions",
+      "related_assumption": "Dependency parse structure provides meaningful alignment information for grading"
+    },
+    {
+      "scenario": "Answers requiring many-to-one or one-to-many node alignments",
+      "reason": "Hungarian algorithm enforces one-to-one matching constraint",
+      "related_assumption": "Optimal bipartite matching corresponds to meaningful semantic alignment"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://aclanthology.org/P11-1076.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

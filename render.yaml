@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nst-exam-evaluator
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn webapp.app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.11"
+      - key: FLASK_SECRET_KEY
+        generateValue: true
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: LLM_PROVIDER
+        value: openrouter

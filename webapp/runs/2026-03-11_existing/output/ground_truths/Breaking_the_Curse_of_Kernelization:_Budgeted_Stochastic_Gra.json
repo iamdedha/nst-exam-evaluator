@@ -1,0 +1,122 @@
+{
+  "paper_title": "Breaking the Curse of Kernelization: Budgeted Stochastic Gradient Descent for Large-Scale SVM Training",
+  "venue": "Journal of Machine Learning Research",
+  "venue_abbreviation": "JMLR",
+  "year": 2012,
+  "venue_is_core_a_star": true,
+  "year_in_range": true,
+  "method_category": "SVM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper proposes Budgeted Stochastic Gradient Descent (BSGD) algorithms for large-scale kernel SVM training that maintain constant space and time complexity by limiting the number of support vectors through budget maintenance strategies. The method addresses the curse of kernelization where the number of support vectors grows unboundedly with data size, making standard kernel SGD impractical for large datasets.",
+  "algorithm_steps": [
+    "Step 1: Initialize budget B (maximum number of support vectors allowed)",
+    "Step 2: Receive a new training example (x_t, y_t)",
+    "Step 3: Compute prediction using current support vectors",
+    "Step 4: Update support vector weights using SGD gradient step",
+    "Step 5: If number of support vectors exceeds budget B, apply budget maintenance strategy (removal, projection, or merging)",
+    "Step 6: Return to step 2 for next example"
+  ],
+  "key_equations": [
+    "SGD update rule: gradient computation for hinge loss with respect to support vector weights",
+    "Budget maintenance: optimal removal strategy removes support vector with smallest weight",
+    "Projection strategy: minimizes accumulated loss when projecting one support vector onto remaining ones",
+    "Merging strategy: for Gaussian kernels, new support vector lies on line connecting merged support vectors"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Fixed budget size B is sufficient to capture the essential structure of the data",
+      "why_needed": "The method requires limiting support vectors to achieve constant space/time complexity",
+      "violation_scenario": "When the true decision boundary requires more than B support vectors to represent accurately"
+    },
+    {
+      "assumption": "Budget maintenance strategies preserve sufficient information about discarded support vectors",
+      "why_needed": "To minimize the gap between BSGD and optimal SVM solutions",
+      "violation_scenario": "When removed/merged support vectors contain critical boundary information that cannot be preserved"
+    },
+    {
+      "assumption": "Training examples arrive in a reasonable order (not adversarially ordered)",
+      "why_needed": "SGD convergence properties depend on example ordering",
+      "violation_scenario": "When examples are ordered to maximize interference with budget maintenance"
+    }
+  ],
+  "baselines_compared": [
+    "LASVM",
+    "SimpleSVM",
+    "CVM",
+    "Standard SGD",
+    "Perceptron with budget",
+    "Forgetron",
+    "Projectron"
+  ],
+  "baseline_limitations_identified": "Existing kernel SVM methods suffer from unbounded growth in model size and update time with data size, making them impractical for large-scale learning",
+  "proposed_improvement": "BSGD maintains constant space and time complexity through budget maintenance while preserving accuracy close to optimal SVM solutions",
+  "condition_where_baseline_wins": "When computational resources are unlimited and the dataset size is small enough that the full kernel SVM can be trained efficiently without budget constraints",
+  "datasets_used": [
+    "Adult",
+    "Web",
+    "RCV1",
+    "MNIST",
+    "USPS",
+    "Synthetic datasets"
+  ],
+  "dataset_publicly_available": true,
+  "suitable_toy_datasets": [
+    "Two-class Gaussian mixture",
+    "Concentric circles",
+    "XOR problem",
+    "Spiral dataset"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of nonlinear classification capabilities with known ground truth, varying levels of noise, and different degrees of class overlap to evaluate budget maintenance strategies",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "Algorithm details are provided but implementation of budget maintenance strategies requires careful attention to computational efficiency and numerical stability",
+  "key_components_for_ablation": [
+    {
+      "component": "Budget maintenance strategy (removal vs projection vs merging)",
+      "role_in_method": "Determines how to handle support vector overflow when budget is exceeded",
+      "expected_effect_of_removal": "Without budget maintenance, algorithm reverts to standard SGD with unbounded growth"
+    },
+    {
+      "component": "Budget size B",
+      "role_in_method": "Controls the trade-off between computational efficiency and model accuracy",
+      "expected_effect_of_removal": "Smaller budgets increase efficiency but may hurt accuracy; larger budgets improve accuracy but reduce efficiency gains"
+    },
+    {
+      "component": "Kernel function choice",
+      "role_in_method": "Determines the feature space and affects budget maintenance strategies",
+      "expected_effect_of_removal": "Linear kernel eliminates the curse of kernelization but reduces nonlinear modeling capability"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When the optimal decision boundary requires more support vectors than the budget allows",
+      "reason": "Budget constraint forces loss of critical boundary information",
+      "related_assumption": "Fixed budget size B is sufficient to capture the essential structure of the data"
+    },
+    {
+      "scenario": "When training data has high noise levels or many outliers",
+      "reason": "Budget maintenance may remove important boundary examples or retain noisy ones",
+      "related_assumption": "Budget maintenance strategies preserve sufficient information about discarded support vectors"
+    },
+    {
+      "scenario": "When classes are highly imbalanced",
+      "reason": "Budget allocation may not properly represent minority class boundaries",
+      "related_assumption": "Training examples arrive in a reasonable order"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": true,
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://jmlr.org/papers/volume13/wang12b/wang12b.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

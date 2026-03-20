@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Evaluation Progress - NST Exam Evaluator{% endblock %}
+
+{% block content %}
+<div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-900">Evaluation Progress</h1>
+    <p class="text-gray-500 text-sm mt-1">Run: <span class="font-mono text-gray-700">{{ run_id }}</span></p>
+</div>
+
+<!-- Phase Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="phaseCards">
+    {% for phase_id, phase_name in [('phase0','Data Cleanup'),('part_a','Part A Eval'),('part_b','Part B Eval'),('aggregate','Aggregation')] %}
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 border-l-4 border-l-gray-200 transition-all" id="card-{{ phase_id }}">
+        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ phase_name }}</div>
+        <div class="text-sm font-bold text-gray-400 mt-2" id="status-{{ phase_id }}">Waiting</div>
+        <div class="text-xs text-gray-400 mt-1" id="detail-{{ phase_id }}"></div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Progress -->
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="flex items-center justify-between text-sm mb-2">
+        <span class="font-medium text-gray-700" id="progressLabel">Ready to start</span>
+        <span class="text-gray-400 font-mono text-xs" id="progressCount"></span>
+    </div>
+    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+        <div class="bg-nst-600 h-2.5 rounded-full score-bar-fill" style="width: 0%" id="progressBar"></div>
+    </div>
+    <div class="text-xs text-gray-400 italic" id="currentStudent"></div>
+</div>
+
+<!-- Start Button -->
+<div id="startSection" class="mb-6">
+    {% if meta.status in ['uploaded', 'phase0_complete', 'created'] %}
+    <button id="startBtn" onclick="startEvaluation('{{ run_id }}')" class="w-full bg-nst-600 text-white py-3 rounded-lg font-semibold hover:bg-nst-700 transition-colors">Start Full Evaluation</button>
+    {% endif %}
+</div>
+
+<!-- Complete -->
+<div id="completeSection" class="hidden">
+    <div class="bg-green-50 border-2 border-green-200 rounded-xl p-6 text-center">
+        <svg class="w-12 h-12 mx-auto text-green-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <h3 class="text-lg font-bold text-green-700 mb-4">Evaluation Complete</h3>
+        <div class="flex gap-3 justify-center">
+            <a href="/results/{{ run_id }}" class="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 no-underline">View Results</a>
+            <a href="/export/{{ run_id }}/csv" class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-50 no-underline">Download CSV</a>
+            <a href="/export/{{ run_id }}/json" class="border border-gray-300 text-gray-700 px-6 py-2 rounded-lg font-medium hover:bg-gray-50 no-underline">Download JSON</a>
+        </div>
+    </div>
+</div>
+
+<!-- Error -->
+<div id="errorSection" class="hidden">
+    <div class="bg-red-50 border-2 border-red-200 rounded-xl p-6">
+        <h3 class="text-lg font-bold text-red-700 mb-2">Error</h3>
+        <p class="text-sm text-red-600" id="errorMessage"></p>
+    </div>
+</div>
+
+<!-- Log -->
+<details class="mt-6">
+    <summary class="text-sm font-medium text-gray-500 cursor-pointer hover:text-gray-700">Live Log</summary>
+    <pre id="logOutput" class="log-output mt-2"></pre>
+</details>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const runId = '{{ run_id }}';
+let evtSource = null;
+
+function setPhaseState(id, state, detail) {
+    const card = document.getElementById('card-'+id);
+    const status = document.getElementById('status-'+id);
+    card.className = card.className.replace(/border-l-(gray|yellow|green)-\d+/g, '');
+    if (state === 'done') {
+        card.classList.add('border-l-green-500'); card.style.background='#f0fdf4';
+        status.textContent = 'Done'; status.className = 'text-sm font-bold text-green-600 mt-2';
+    } else if (state === 'active') {
+        card.classList.add('border-l-yellow-500'); card.style.background='#fffbeb';
+        status.textContent = 'Running...'; status.className = 'text-sm font-bold text-yellow-600 mt-2';
+    }
+    if (detail) document.getElementById('detail-'+id).textContent = detail;
+}
+
+function startEvaluation(runId) {
+    const btn = document.getElementById('startBtn');
+    btn.disabled = true; btn.textContent = 'Starting...'; btn.classList.add('opacity-60');
+    fetch(`/eval/${runId}/start`, { method: 'POST' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) { showError(data.error); return; }
+            document.getElementById('startSection').style.display = 'none';
+            connectSSE(runId);
+        }).catch(err => showError(err.message));
+}
+
+function connectSSE(runId) {
+    evtSource = new EventSource(`/eval/${runId}/progress`);
+    evtSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.error) { showError(data.error); evtSource.close(); return; }
+        if (data.type === 'log') { appendLog(data.message); return; }
+        if (data.type === 'progress') {
+            updateProgress(data);
+            if (data.phase === 'complete') { evtSource.close(); showComplete(); }
+            else if (data.phase === 'error') { evtSource.close(); showError(data.error || 'Unknown error'); }
+        }
+    };
+    evtSource.onerror = () => { evtSource.close(); setTimeout(() => pollStatus(runId), 3000); };
+}
+
+function pollStatus(runId) {
+    fetch(`/eval/${runId}/status`).then(r => r.json()).then(data => {
+        if (data.phase === 'complete' || data.status === 'complete') showComplete();
+        else if (data.phase === 'error' || data.status === 'error') showError(data.error || 'Failed');
+        else { updateProgress(data); setTimeout(() => pollStatus(runId), 3000); }
+    }).catch(() => setTimeout(() => pollStatus(runId), 5000));
+}
+
+function updateProgress(data) {
+    const phases = ['phase0', 'part_a', 'part_b', 'aggregate'];
+    const idx = phases.indexOf(data.phase);
+    phases.forEach((p, i) => { if (i < idx) setPhaseState(p, 'done'); else if (i === idx) setPhaseState(p, 'active'); });
+    if (data.phase_results) {
+        const pr = data.phase_results;
+        if (pr.phase0) setPhaseState('phase0', 'done', `${pr.phase0.valid} valid, ${pr.phase0.disqualified} disq, ${pr.phase0.part_b} Part B`);
+        if (pr.part_a) setPhaseState('part_a', 'done', `${pr.part_a.evaluated}/${pr.part_a.total}, avg ${pr.part_a.avg_score}/50`);
+        if (pr.part_b) setPhaseState('part_b', 'done', `${pr.part_b.evaluated}/${pr.part_b.total} evaluated`);
+    }
+    if (data.total_students > 0 && data.current_index > 0) {
+        const pct = Math.round((data.current_index / data.total_students) * 100);
+        document.getElementById('progressBar').style.width = pct + '%';
+        document.getElementById('progressCount').textContent = `${data.current_index}/${data.total_students}`;
+    }
+    document.getElementById('progressLabel').textContent = data.current_step || data.phase;
+    if (data.current_roll) document.getElementById('currentStudent').textContent = `Current: ${data.current_roll} (${data.current_name})`;
+}
+
+function appendLog(msg) { const l = document.getElementById('logOutput'); l.textContent += msg + '\n'; l.scrollTop = l.scrollHeight; }
+
+function showComplete() {
+    document.getElementById('completeSection').classList.remove('hidden');
+    document.getElementById('startSection').style.display = 'none';
+    document.getElementById('progressLabel').textContent = 'Complete';
+    document.getElementById('progressBar').style.width = '100%';
+    ['phase0','part_a','part_b','aggregate'].forEach(p => setPhaseState(p, 'done'));
+}
+
+function showError(msg) { document.getElementById('errorSection').classList.remove('hidden'); document.getElementById('errorMessage').textContent = msg; }
+
+{% if meta.status == 'running' %}
+document.addEventListener('DOMContentLoaded', () => connectSSE(runId));
+{% endif %}
+</script>
+{% endblock %}

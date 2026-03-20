@@ -1,0 +1,99 @@
+{
+  "paper_title": "Dirichlet Process Gaussian Mixture Models: Choice of the Base Distribution",
+  "venue": "Journal of Computer Science and Technology",
+  "venue_abbreviation": "JCST",
+  "year": 2010,
+  "venue_is_core_a_star": false,
+  "year_in_range": true,
+  "method_category": "GMM",
+  "method_category_valid": true,
+  "is_methodological": true,
+  "is_dataset_benchmark_system_paper": false,
+  "is_deep_learning": false,
+  "is_survey": false,
+  "core_contribution": "The paper compares conjugate versus conditionally conjugate base distributions for Dirichlet Process Gaussian Mixture Models (DPGMM). It proposes using a conditionally conjugate base distribution that removes the undesirable dependency between mean and covariance parameters present in the standard conjugate Normal-Inverse-Wishart prior.",
+  "algorithm_steps": [
+    "Step 1: Define DPGMM as infinite limit of finite Gaussian mixture model with symmetric Dirichlet prior on mixing proportions",
+    "Step 2: For conjugate model, use Normal-Wishart base distribution where mean prior depends on precision: p(\u03bc|S,\u03bd,\u03ba) ~ N(\u03bd,(\u03baS)^-1)",
+    "Step 3: For conditionally conjugate model, use independent priors: p(\u03bc|\u03bd,R) ~ N(\u03bd,R^-1) and p(S|\u03b2,W) ~ W(\u03b2,(\u03b2W)^-1)",
+    "Step 4: Apply MCMC inference using Gibbs sampling with component assignment updates based on Chinese Restaurant Process probabilities",
+    "Step 5: For conditionally conjugate case, alternate between sampling \u03bc given S and sampling S given \u03bc to exploit conditional conjugacy"
+  ],
+  "key_equations": [
+    "Eq (6a,6b): Chinese Restaurant Process probabilities for component assignment in infinite limit",
+    "Eq (7-9): Conjugate Normal-Wishart base distribution specification",
+    "Eq (10): Conditionally conjugate independent Normal prior for means",
+    "Eq (4): Prior distribution over component assignments in terms of Dirichlet parameter \u03b1"
+  ],
+  "key_assumptions": [
+    {
+      "assumption": "Data points are exchangeable and can be modeled as arising from a mixture of Gaussians",
+      "why_needed": "Required for the Chinese Restaurant Process construction and infinite mixture limit",
+      "violation_scenario": "When data has temporal dependencies or non-Gaussian cluster shapes"
+    },
+    {
+      "assumption": "The base distribution G0 adequately captures the prior belief about component parameters",
+      "why_needed": "The DP is centered around G0, so poor choice leads to poor clustering",
+      "violation_scenario": "When true cluster parameters are far from the support of G0"
+    },
+    {
+      "assumption": "MCMC chain converges to the posterior distribution",
+      "why_needed": "Inference relies on MCMC sampling for intractable posterior",
+      "violation_scenario": "When the posterior is highly multimodal or the chain gets stuck in local modes"
+    }
+  ],
+  "baselines_compared": [
+    "Conjugate DPGMM with Normal-Wishart base distribution"
+  ],
+  "baseline_limitations_identified": "The conjugate Normal-Wishart prior creates an undesirable dependency between the mean and covariance parameters, where the prior precision of the mean depends on the component precision",
+  "proposed_improvement": "Use conditionally conjugate priors with independent Normal prior for means and Wishart prior for precisions, removing the mean-covariance dependency while maintaining computational tractability",
+  "condition_where_baseline_wins": "When the true data generating process actually has the mean-covariance dependency structure assumed by the conjugate prior, or when computational efficiency is the primary concern and modeling flexibility is less important",
+  "datasets_used": [
+    "UNABLE_TO_DETERMINE"
+  ],
+  "dataset_publicly_available": "UNABLE_TO_DETERMINE",
+  "suitable_toy_datasets": [
+    "2D Gaussian mixture data",
+    "Multivariate Gaussian clusters with varying covariances",
+    "Iris dataset"
+  ],
+  "toy_dataset_justification": "These datasets allow testing of clustering performance and density estimation quality while being simple enough to visualize results and verify that the method correctly identifies cluster structure",
+  "compute_requirements": "CPU_FEASIBLE",
+  "reproducibility_assessment": "MODERATE",
+  "reproducibility_notes": "MCMC implementation details and hyperparameter settings would need to be carefully specified. The paper provides mathematical formulation but implementation details for the sampling schemes are not fully detailed",
+  "key_components_for_ablation": [
+    {
+      "component": "Hyperprior on base distribution parameters",
+      "role_in_method": "Provides robustness by allowing uncertainty in the base distribution parameters",
+      "expected_effect_of_removal": "Less robust performance when base distribution is misspecified, but simpler inference"
+    },
+    {
+      "component": "Conditional conjugacy exploitation in MCMC",
+      "role_in_method": "Improves mixing by alternating between sampling mean given precision and precision given mean",
+      "expected_effect_of_removal": "Slower convergence and poorer mixing of the MCMC chain"
+    }
+  ],
+  "known_failure_modes": [
+    {
+      "scenario": "When clusters have very different scales or the base distribution is poorly specified",
+      "reason": "The DP is centered around G0, so poor base distribution choice affects all components",
+      "related_assumption": "The base distribution G0 adequately captures prior belief about component parameters"
+    },
+    {
+      "scenario": "When the number of true clusters is very large relative to sample size",
+      "reason": "MCMC may not explore the full space of possible clusterings effectively",
+      "related_assumption": "MCMC chain converges to the posterior distribution"
+    }
+  ],
+  "paper_quality_flags": {
+    "has_clear_algorithm": true,
+    "has_experimental_results": "UNABLE_TO_DETERMINE",
+    "has_comparison_with_baselines": true,
+    "code_available": "UNKNOWN"
+  },
+  "_metadata": {
+    "paper_url": "https://mlg.eng.cam.ac.uk/pub/pdf/GoeRas10.pdf",
+    "paper_text_length": 15039,
+    "paper_text_available": true
+  }
+}

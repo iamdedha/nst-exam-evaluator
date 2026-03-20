@@ -1,0 +1,344 @@
+{
+  "roll_number": "230107",
+  "full_name": "Raman Luhach",
+  "paper_title": "Advice Refinement in Knowledge-Based SVMs",
+  "venue": "NeurIPS",
+  "year": 2011,
+  "method": "Support Vector Machine (SVM)",
+  "github_url": "https://github.com/Raman-Luhach/230107-midsem",
+  "repo_checks": {
+    "github_url": "https://github.com/Raman-Luhach/230107-midsem",
+    "owner": "Raman-Luhach",
+    "repo": "230107-midsem",
+    "checks": {
+      "url_valid": true,
+      "repo_exists": true,
+      "repo_public": true,
+      "naming_correct": true,
+      "llm_json_exists": true,
+      "llm_json_valid": true,
+      "llm_json_schema": {
+        "has_student_metadata": true,
+        "has_llm_tools_used": true,
+        "has_interaction_log": true,
+        "has_top_5_prompts": true,
+        "has_student_declaration": true,
+        "metadata_has_name": true,
+        "metadata_has_roll": true,
+        "metadata_has_date": true,
+        "interaction_log_count": 14,
+        "log_has_required_fields": true,
+        "top_5_count": 5,
+        "top_5_has_5": true,
+        "declaration_has_statement": true,
+        "declaration_acknowledged": true
+      }
+    },
+    "score_adjustments": {},
+    "flags": [],
+    "llm_json_data": {
+      "student_metadata": {
+        "name": "Raman Luhach",
+        "roll_number": "230107",
+        "course": "Advanced Machine Learning",
+        "exam": "Mid-Semester Examination",
+        "part": "Part A",
+        "submission_date": "2026-03-03"
+      },
+      "llm_tools_used": [
+        {
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "provider": "Google"
+        }
+      ],
+      "full_llm_interaction_log": [
+        {
+          "interaction_id": 1,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Initial search for papers",
+          "prompt": "give me some papers for my exam. need core a* between 2009-2012 about arima, gmm or svm.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Gave me a list of papers that meet the exam constraints.",
+          "student_verification": "I checked the MidSem_PartA.pdf and confirmed these are the right categories.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 2,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Check if paper is taken",
+          "prompt": "is the logical shapelets paper already taken by someone else in the sheet?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Informed me that Subham Mahapatra already chose this paper.",
+          "student_verification": "Checked the response sheet and confirmed it was taken. Discarded this choice.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 3,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Verify paper year",
+          "prompt": "is the fastfood paper from 2009 to 2012? i need to be sure about the year.",
+          "llm_response_used": "No",
+          "how_it_helped": "Found out the paper is from 2013, which is too late for the rules.",
+          "student_verification": "Verified on the conference website that it is from 2013. Discarded.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 4,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Evaluate difficulty",
+          "prompt": "is the suboptimal solution path paper too hard? i dont want to do too much math on my laptop.",
+          "llm_response_used": "Partially",
+          "how_it_helped": "Suggested it might be too complex for a standard CPU and hard to explain.",
+          "student_verification": "Looked at the math in the paper and decided to avoid it.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 5,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Check if final choice is taken",
+          "prompt": "is anyone doing the advice refinement paper yet? check the sheet for me.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed no one else has submitted this paper yet.",
+          "student_verification": "Searched the live sheet and found no matches for this paper.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 6,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Confirm venue and year",
+          "prompt": "is advice refinement in a core a* venue? also tell me if it is 2010 or 2011.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed it is NIPS 2011, which is a CORE A* venue.",
+          "student_verification": "Verified the NIPS 2011 proceedings online.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 7,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Check hardware compatibility",
+          "prompt": "can i run this advice svm on my laptop? i dont have any gpu.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed it is CPU-friendly and suitable for a laptop.",
+          "student_verification": "Checked the paper's experiments and they used simple hardware.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 8,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Understand core concept",
+          "prompt": "what does advice mean here? how does it help the svm margin?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Explained that advice acts as constraints to improve the SVM margin.",
+          "student_verification": "Read the method section and confirmed it uses prior knowledge as constraints.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 9,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Check data availability",
+          "prompt": "are the uci datasets in this paper free to download? i need public data.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed the datasets are public and available on the UCI repository.",
+          "student_verification": "Downloaded the datasets from the UCI website myself.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 10,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Identify failure cases",
+          "prompt": "what happens if the advice is wrong? will the svm fail?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Explained the refinement process that handles noisy or incorrect advice.",
+          "student_verification": "Checked the results section to see performance with bad advice.",
+          "confidence_level": 4
+        },
+        {
+          "interaction_id": 11,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Plan implementation",
+          "prompt": "can i use sklearn for this or do i need to write my own code?",
+          "llm_response_used": "Partially",
+          "how_it_helped": "Suggested that I would need custom code for the specific refinement constraints.",
+          "student_verification": "Found a library for quadratic programming that I can use in Python.",
+          "confidence_level": 3
+        },
+        {
+          "interaction_id": 12,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Verify inference",
+          "prompt": "is the inference same as regular svm or does it change because of the advice?",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed that once trained, the inference is a standard SVM prediction.",
+          "student_verification": "Verified the decision function math in the paper.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 13,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Verify contribution type",
+          "prompt": "is this a methodological paper? i dont want a dataset paper.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Confirmed the primary contribution is a new method for refining advice.",
+          "student_verification": "Confirmed by reading the contribution summary in the introduction.",
+          "confidence_level": 5
+        },
+        {
+          "interaction_id": 14,
+          "date": "2026-03-03",
+          "tool_name": "Gemini",
+          "model": "Gemini 1.5 Pro",
+          "purpose": "Draft submission reason",
+          "prompt": "write a simple reason why i chose this paper for my form.",
+          "llm_response_used": "Yes",
+          "how_it_helped": "Provided a short and simple summary for my submission.",
+          "student_verification": "Simplified the text even more to match my own style.",
+          "confidence_level": 5
+        }
+      ],
+      "top_5_prompts": [
+        {
+          "rank": 1,
+          "interaction_id": 1,
+          "prompt": "give me some papers for my exam. need core a* between 2009-2012 about arima, gmm or svm.",
+          "why_important": "This helped me start with a valid list of papers that fit the rules."
+        },
+        {
+          "rank": 2,
+          "interaction_id": 5,
+          "prompt": "is anyone doing the advice refinement paper yet? check the sheet for me.",
+          "why_important": "Essential to make sure my choice was unique and would not be disqualified."
+        },
+        {
+          "rank": 3,
+          "interaction_id": 7,
+          "prompt": "can i run this advice svm on my laptop? i dont have any gpu.",
+          "why_important": "Ensured that I could actually complete the reproduction task on my hardware."
+        },
+        {
+          "rank": 4,
+          "interaction_id": 10,
+          "prompt": "what happens if the advice is wrong? will the svm fail?",
+          "why_important": "Helped me understand the most important failure mode for my chosen method."
+        },
+        {
+          "rank": 5,
+          "interaction_id": 12,
+          "prompt": "is the inference same as regular svm or does it change because of the advice?",
+          "why_important": "Confirmed I could handle the inference part of the exam as required."
+        }
+      ],
+      "student_declaration": {
+        "statement": "I declare that this JSON file contains a complete and honest record of my LLM usage for Part A.",
+        "understanding_acknowledged": true,
+        "signature": "Raman Luhach",
+        "date": "2026-03-03"
+      }
+    }
+  },
+  "ground_truth_available": true,
+  "tier1": {
+    "scores": {
+      "paper_validity_year": 4,
+      "paper_validity_venue": 5,
+      "llm_disclosure_json_validity": 4,
+      "llm_disclosure_completeness": 3,
+      "llm_disclosure_verification": 3
+    },
+    "flags": [],
+    "details": {
+      "year": "Year 2011 is valid (2009-2012)",
+      "venue": "Venue 'NeurIPS' is CORE A*",
+      "json_validity": "5/5 required sections present",
+      "completeness": "14 interactions logged with required fields",
+      "verification": "Declaration: True, Acknowledged: True, Top5: True"
+    }
+  },
+  "tier2": {
+    "scores": {
+      "paper_validity_method_alignment": 4,
+      "paper_validity_paper_type": 2,
+      "reproducibility_dataset_availability": 2,
+      "reproducibility_compute_feasibility": 5,
+      "reproducibility_experimental_scope": 4,
+      "top5_prompts_analytical_depth": 3,
+      "top5_prompts_relevance": 4
+    },
+    "flags": [
+      "DATASET_NOT_PUBLIC"
+    ],
+    "details": {
+      "method_alignment": "Method 'SVM' aligns with ARIMA/GMM/SVM",
+      "paper_type": "Valid methodological paper",
+      "dataset": "Dataset not publicly available, but toy substitutes may work",
+      "compute": "CPU feasible",
+      "scope": "Moderate difficulty",
+      "prompts_depth": "Prompts 4 and 5 show some analytical thinking about failure modes and inference differences, but most prompts are logistical rather than deeply analytical about the method's properties or limitations",
+      "prompts_relevance": "All prompts directly relate to paper selection feasibility - finding valid papers, ensuring uniqueness, checking hardware requirements, and understanding key technical aspects for reproduction"
+    }
+  },
+  "scores": {
+    "paper_validity_year": 4,
+    "paper_validity_venue": 5,
+    "llm_disclosure_json_validity": 4,
+    "llm_disclosure_completeness": 3,
+    "llm_disclosure_verification": 3,
+    "paper_validity_method_alignment": 4,
+    "paper_validity_paper_type": 2,
+    "reproducibility_dataset_availability": 2,
+    "reproducibility_compute_feasibility": 5,
+    "reproducibility_experimental_scope": 4,
+    "top5_prompts_analytical_depth": 3,
+    "top5_prompts_relevance": 4
+  },
+  "raw_total": 43,
+  "penalty": 0,
+  "penalty_reason": [
+    ""
+  ],
+  "final_total": 43,
+  "out_of": 50,
+  "scaled_score": 4.3,
+  "flags": [],
+  "details": {
+    "year": "Year 2011 is valid (2009-2012)",
+    "venue": "Venue 'NeurIPS' is CORE A*",
+    "json_validity": "5/5 required sections present",
+    "completeness": "14 interactions logged with required fields",
+    "verification": "Declaration: True, Acknowledged: True, Top5: True",
+    "method_alignment": "Method 'SVM' aligns with ARIMA/GMM/SVM",
+    "paper_type": "Valid methodological paper",
+    "dataset": "Dataset not publicly available, but toy substitutes may work",
+    "compute": "CPU feasible",
+    "scope": "Moderate difficulty",
+    "prompts_depth": "Prompts 4 and 5 show some analytical thinking about failure modes and inference differences, but most prompts are logistical rather than deeply analytical about the method's properties or limitations",
+    "prompts_relevance": "All prompts directly relate to paper selection feasibility - finding valid papers, ensuring uniqueness, checking hardware requirements, and understanding key technical aspects for reproduction"
+  },
+  "needs_human_review": false
+}

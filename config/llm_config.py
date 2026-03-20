@@ -5,7 +5,7 @@ import os
 
 # --- Provider Selection ---
 # Set to "openrouter" (default, paid) or "gemini" (fallback, free tier)
-LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "openrouter")
+LLM_PROVIDER = os.environ.get("LLM_PROVIDER", "gemini")
 
 # --- OpenRouter Config ---
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")

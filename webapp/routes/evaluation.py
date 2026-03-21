@@ -20,7 +20,9 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST"])
 def start_eval(run_id):
-    """Start evaluation - runs synchronously, streams progress as chunked text."""
+    """Start evaluation synchronously (same pattern as run-sync which works)."""
+    import json as _json, traceback as tb_mod
+
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
@@ -31,25 +33,25 @@ def start_eval(run_id):
     progress = create_progress(run_id)
     run_manager.update_meta(run_id, status="running")
 
-    def _stream():
-        import json as _json, traceback as tb_mod
+    def generate():
         yield _json.dumps({"status": "started", "run_id": run_id}) + "\n"
 
         try:
             run_full_pipeline(run_id, progress)
             yield _json.dumps({"status": "complete"}) + "\n"
-        except BaseException as e:
+        except SystemExit:
+            # Gunicorn SIGABRT — should not happen with timeout 0 but catch it
+            yield _json.dumps({"status": "error", "error": "Server timeout (SystemExit)"}) + "\n"
+        except Exception as e:
             tb = tb_mod.format_exc()
             print(f"[PIPELINE ERROR] {e}\n{tb}", flush=True)
             run_manager.update_meta(run_id, status="error", phase="error",
                                    error=str(e), traceback=tb[-500:])
             yield _json.dumps({"status": "error", "error": str(e)}) + "\n"
 
-    return Response(
-        stream_with_context(_stream()),
-        mimetype="application/x-ndjson",
-        headers={"X-Accel-Buffering": "no", "Cache-Control": "no-cache"}
-    )
+    # Use plain Response (NOT stream_with_context) — same as run-sync which works
+    return Response(generate(), mimetype="text/plain",
+                   headers={"X-Accel-Buffering": "no"})
 
 
 @eval_bp.route("/eval/<run_id>/progress")

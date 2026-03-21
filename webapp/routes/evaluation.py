@@ -18,11 +18,9 @@ def eval_page(run_id):
                          progress=progress)
 
 
-@eval_bp.route("/eval/<run_id>/start", methods=["POST"])
+@eval_bp.route("/eval/<run_id>/start", methods=["POST", "GET"])
 def start_eval(run_id):
-    """Start evaluation synchronously (same pattern as run-sync which works)."""
-    import json as _json, traceback as tb_mod
-
+    """Start evaluation - returns JSON immediately, triggers run-sync in background via redirect."""
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
@@ -30,27 +28,161 @@ def start_eval(run_id):
     if meta.get("status") == "complete":
         return jsonify({"error": "Evaluation already complete"}), 409
 
-    progress = create_progress(run_id)
+    # Just mark as running and return - frontend will call /run-full which does the actual work
     run_manager.update_meta(run_id, status="running")
+    create_progress(run_id)
+    return jsonify({"status": "started", "run_id": run_id})
+
+
+@eval_bp.route("/eval/<run_id>/run-full")
+def run_full(run_id):
+    """Run the FULL pipeline synchronously (GET endpoint - same as run-sync which works)."""
+    import sys, traceback
+
+    meta = run_manager.get_meta(run_id)
+    if not meta:
+        return "Run not found", 404
+
+    eval_dir = str(run_manager.Config.EVALUATOR_DIR)
+    if eval_dir not in sys.path:
+        sys.path.insert(0, eval_dir)
+
+    run_dir = run_manager.get_run_dir(run_id)
+    output_dir = run_dir / "output"
+    uploads_dir = run_dir / "uploads"
 
     def generate():
-        yield _json.dumps({"status": "started", "run_id": run_id}) + "\n"
+        yield "=== FULL PIPELINE START ===\n"
 
+        xlsx_path = uploads_dir / "part_a.xlsx"
+        csv_path = uploads_dir / "part_b.csv"
+        yield f"Part A: {xlsx_path.exists()}, Part B: {csv_path.exists()}\n"
+
+        # Phase 0
         try:
-            run_full_pipeline(run_id, progress)
-            yield _json.dumps({"status": "complete"}) + "\n"
-        except SystemExit:
-            # Gunicorn SIGABRT — should not happen with timeout 0 but catch it
-            yield _json.dumps({"status": "error", "error": "Server timeout (SystemExit)"}) + "\n"
+            yield "--- PHASE 0: Data Cleanup ---\n"
+            run_manager.update_meta(run_id, phase="phase0", current_step="Running Phase 0...")
+            from phase0_data_cleanup import run_phase0_web
+            summary = run_phase0_web(str(xlsx_path), str(csv_path), output_dir)
+            valid_count = summary['stats']['total_valid_part_a']
+            yield f"Phase 0 OK: {valid_count} valid students, {summary['stats']['total_part_b_submissions']} Part B\n"
+            run_manager.update_meta(run_id, phase="phase0_done", total_students=valid_count,
+                                   current_step=f"Phase 0 complete: {valid_count} students")
         except Exception as e:
-            tb = tb_mod.format_exc()
-            print(f"[PIPELINE ERROR] {e}\n{tb}", flush=True)
-            run_manager.update_meta(run_id, status="error", phase="error",
-                                   error=str(e), traceback=tb[-500:])
-            yield _json.dumps({"status": "error", "error": str(e)}) + "\n"
+            yield f"Phase 0 FAILED: {traceback.format_exc()}\n"
+            run_manager.update_meta(run_id, status="error", error=str(e))
+            return
 
-    # Use plain Response (NOT stream_with_context) — same as run-sync which works
-    return Response(generate(), mimetype="text/plain",
+        # Part A
+        try:
+            yield "\n--- PART A: Evaluation ---\n"
+            import agents.part_a_evaluator as pa_eval
+            import json, time
+
+            scores_dir = output_dir / "part_a_scores"
+            scores_dir.mkdir(parents=True, exist_ok=True)
+
+            from webapp.config import Config
+            gt_dir = Config.GROUND_TRUTH_DIR
+            gt_dir.mkdir(parents=True, exist_ok=True)
+
+            orig_output = pa_eval.OUTPUT_DIR
+            orig_scores = pa_eval.SCORES_DIR
+            orig_gt = pa_eval.GROUND_TRUTH_DIR
+            pa_eval.OUTPUT_DIR = output_dir
+            pa_eval.SCORES_DIR = scores_dir
+            pa_eval.GROUND_TRUTH_DIR = gt_dir
+
+            valid_students = summary.get("valid_students", [])
+            penalties = summary.get("resubmission_penalties", {})
+            all_a_results = []
+
+            for i, student in enumerate(valid_students):
+                roll = student["roll_number"]
+                name = student["full_name"]
+                penalty_pct = penalties.get(roll, {}).get("penalty_percentage", 0)
+                run_manager.update_meta(run_id, phase="part_a",
+                                       current_step=f"Evaluating {roll} ({name}) [{i+1}/{len(valid_students)}]",
+                                       current_index=i+1, evaluated_part_a=i)
+                try:
+                    result = pa_eval.evaluate_student_part_a(student, penalty_pct)
+                    all_a_results.append(result)
+                    yield f"  {roll} ({name}): {result.get('final_total', '?')}/50\n"
+                except Exception as e:
+                    yield f"  {roll} ERROR: {e}\n"
+                    all_a_results.append({"roll_number": roll, "error": str(e), "final_total": 0, "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_ERROR"]})
+                time.sleep(0.5)
+
+            with open(output_dir / "part_a_all_results.json", "w") as f:
+                json.dump(all_a_results, f, indent=2, default=str)
+
+            pa_eval.OUTPUT_DIR = orig_output
+            pa_eval.SCORES_DIR = orig_scores
+            pa_eval.GROUND_TRUTH_DIR = orig_gt
+
+            evaluated_a = sum(1 for r in all_a_results if "error" not in r)
+            run_manager.update_meta(run_id, phase="part_a_done", evaluated_part_a=evaluated_a,
+                                   current_step=f"Part A complete: {evaluated_a}/{len(valid_students)}")
+            yield f"Part A done: {evaluated_a}/{len(valid_students)} evaluated\n"
+        except Exception as e:
+            yield f"Part A FAILED: {traceback.format_exc()}\n"
+            run_manager.update_meta(run_id, current_step=f"Part A error: {e}")
+
+        # Part B
+        if summary["stats"]["total_part_b_submissions"] > 0:
+            try:
+                yield "\n--- PART B: Evaluation ---\n"
+                run_manager.update_meta(run_id, phase="part_b", current_step="Starting Part B...")
+                # Import and use the pipeline's run_part_b
+                from webapp.services.progress import get_progress
+                progress = get_progress(run_id)
+                if not progress:
+                    progress = create_progress(run_id)
+                from webapp.services.pipeline import run_part_b as _run_part_b
+                _run_part_b(run_id, progress, summary)
+                yield "Part B done\n"
+                run_manager.update_meta(run_id, phase="part_b_done", current_step="Part B complete")
+            except Exception as e:
+                yield f"Part B error: {e}\n"
+                run_manager.update_meta(run_id, current_step=f"Part B error: {e}")
+        else:
+            yield "\nNo Part B submissions, skipping\n"
+
+        # Part C
+        part_c_path = uploads_dir / "part_c.xlsx"
+        if part_c_path.exists():
+            try:
+                yield "\n--- PART C: Cross-Verification ---\n"
+                run_manager.update_meta(run_id, phase="part_c", current_step="Starting Part C...")
+                from agents.part_c_evaluator import run_part_c_evaluation
+                pc_results = run_part_c_evaluation(str(part_c_path), summary.get("valid_students", []), output_dir)
+                evaluated_c = sum(1 for r in pc_results if "error" not in r)
+                yield f"Part C done: {evaluated_c} evaluated\n"
+                run_manager.update_meta(run_id, phase="part_c_done", evaluated_part_c=evaluated_c,
+                                       current_step="Part C complete")
+            except Exception as e:
+                yield f"Part C error: {e}\n{traceback.format_exc()[-300:]}\n"
+                run_manager.update_meta(run_id, current_step=f"Part C error: {e}")
+        else:
+            yield "\nNo Part C file, skipping\n"
+
+        # Aggregation
+        try:
+            yield "\n--- AGGREGATION ---\n"
+            run_manager.update_meta(run_id, phase="aggregate", current_step="Aggregating...")
+            progress = get_progress(run_id) or create_progress(run_id)
+            from webapp.services.pipeline import run_aggregation
+            run_aggregation(run_id, progress)
+            yield "Aggregation done\n"
+        except Exception as e:
+            yield f"Aggregation error: {e}\n"
+
+        run_manager.update_meta(run_id, status="complete", phase="complete",
+                               current_step="Evaluation complete!",
+                               completed_at=__import__('datetime').datetime.now().isoformat())
+        yield "\n=== ALL DONE ===\n"
+
+    return Response(generate(), mimetype='text/plain',
                    headers={"X-Accel-Buffering": "no"})
 
 

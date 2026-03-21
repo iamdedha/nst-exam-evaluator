@@ -91,44 +91,35 @@ function startEvaluation(runId) {
     document.getElementById('progressLabel').textContent = 'Starting evaluation...';
     document.getElementById('startSection').style.display = 'none';
 
-    // Pipeline runs synchronously in the POST response (streaming)
-    // We start polling immediately for UI updates from meta.json
     fetch(`/eval/${runId}/start`, { method: 'POST' })
-        .then(response => {
-            if (!response.ok && response.headers.get('content-type')?.includes('json')) {
-                return response.json().then(d => { throw new Error(d.error || 'Start failed'); });
-            }
-            appendLog('[UI] Pipeline running on server...');
-            // Read streaming response in background
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            function pump() {
-                reader.read().then(({done, value}) => {
-                    if (done) {
-                        appendLog('[UI] Pipeline stream ended');
-                        // Final status check
-                        setTimeout(() => pollStatus(runId), 1000);
-                        return;
-                    }
-                    const text = decoder.decode(value, {stream: true});
-                    text.trim().split('\n').forEach(line => {
-                        if (!line) return;
-                        try {
-                            const d = JSON.parse(line);
-                            if (d.status === 'complete') { appendLog('[UI] Pipeline complete!'); showComplete(); }
-                            else if (d.status === 'error') { appendLog('[UI] Pipeline error: ' + d.error); showError(d.error); }
-                            else if (d.status === 'started') { appendLog('[UI] Pipeline accepted'); }
-                        } catch(e) { appendLog('[Server] ' + line); }
-                    });
-                    pump();
-                }).catch(err => { appendLog('[UI] Stream error: ' + err.message); });
-            }
-            pump();
-        })
-        .catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) { showError(data.error); return; }
+            appendLog('[UI] Evaluation accepted, launching pipeline...');
 
-    // Start polling for UI updates (meta.json based)
-    setTimeout(() => pollStatus(runId), 3000);
+            // Trigger the actual pipeline via /run-full (GET, sync streaming)
+            fetch(`/eval/${runId}/run-full`)
+                .then(response => {
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    function pump() {
+                        reader.read().then(({done, value}) => {
+                            if (done) {
+                                appendLog('[UI] Pipeline finished');
+                                setTimeout(() => pollStatus(runId), 1000);
+                                return;
+                            }
+                            const lines = decoder.decode(value, {stream: true}).split('\n');
+                            lines.forEach(line => { if (line.trim()) appendLog('[Server] ' + line.trim()); });
+                            pump();
+                        }).catch(() => { appendLog('[UI] Stream ended'); setTimeout(() => pollStatus(runId), 1000); });
+                    }
+                    pump();
+                }).catch(err => appendLog('[UI] Pipeline fetch error: ' + err.message));
+
+            // Start polling for UI card updates
+            setTimeout(() => pollStatus(runId), 3000);
+        }).catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
 }
 
 function connectSSE(runId) {

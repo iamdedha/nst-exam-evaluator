@@ -90,7 +90,7 @@ def index():
 @main_bp.route("/health")
 def health():
     """Debug endpoint to check environment and imports."""
-    checks = {"version": "v11-plain-response"}
+    checks = {"version": "v12-run-full-get"}
     # Check env vars
     checks["GEMINI_API_KEY"] = "set" if os.environ.get("GEMINI_API_KEY") else "NOT SET"
     checks["GITHUB_TOKEN"] = "set" if os.environ.get("GITHUB_TOKEN") else "NOT SET"

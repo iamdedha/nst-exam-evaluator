@@ -97,7 +97,7 @@ def run_full(run_id):
             penalties = summary.get("resubmission_penalties", {})
             all_a_results = []
 
-            import signal
+            import gc
 
             for i, student in enumerate(valid_students):
                 roll = student["roll_number"]
@@ -108,11 +108,23 @@ def run_full(run_id):
                                        current_index=i+1, evaluated_part_a=i)
                 try:
                     result = pa_eval.evaluate_student_part_a(student, penalty_pct)
-                    all_a_results.append(result)
+                    # Keep only essential fields to save memory
+                    slim_result = {
+                        "roll_number": result.get("roll_number"),
+                        "full_name": result.get("full_name"),
+                        "final_total": result.get("final_total", 0),
+                        "raw_total": result.get("raw_total", 0),
+                        "scaled_score": result.get("scaled_score", 0),
+                        "penalty": result.get("penalty", 0),
+                        "flags": result.get("flags", []),
+                    }
+                    all_a_results.append(slim_result)
                     yield f"  {roll} ({name}): {result.get('final_total', '?')}/50\n"
+                    del result
                 except Exception as e:
                     yield f"  {roll} ERROR: {e}\n"
                     all_a_results.append({"roll_number": roll, "error": str(e), "final_total": 0, "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_ERROR"]})
+                gc.collect()
                 time.sleep(0.5)
 
             with open(output_dir / "part_a_all_results.json", "w") as f:

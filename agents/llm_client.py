@@ -42,7 +42,7 @@ def _call_openrouter(prompt: str, system_prompt: str, model: str, max_tokens: in
                 OPENROUTER_BASE_URL,
                 headers=headers,
                 json=payload,
-                timeout=120,
+                timeout=60,
             )
 
             if response.status_code == 429:
@@ -103,7 +103,7 @@ def _call_gemini(prompt: str, system_prompt: str, model: str, max_tokens: int, t
         except Exception as e:
             error_str = str(e)
             if "429" in error_str or "RATE_LIMIT" in error_str.upper():
-                wait = 2 ** (attempt + 1) * 3  # Longer wait for Gemini free tier
+                wait = min(2 ** (attempt + 1) * 3, 30)  # Cap at 30s wait
                 print(f"  Gemini rate limited, waiting {wait}s (attempt {attempt+1}/{retries})...")
                 time.sleep(wait)
                 continue
@@ -120,7 +120,7 @@ def _call_gemini(prompt: str, system_prompt: str, model: str, max_tokens: int, t
     return ""
 
 
-def call_llm(prompt: str, system_prompt: str = "", model: str = None, max_tokens: int = None, temperature: float = None, retries: int = 3) -> str:
+def call_llm(prompt: str, system_prompt: str = "", model: str = None, max_tokens: int = None, temperature: float = None, retries: int = 2) -> str:
     """
     Call LLM API and return the response text.
     Routes to the configured provider with automatic fallback to the other.

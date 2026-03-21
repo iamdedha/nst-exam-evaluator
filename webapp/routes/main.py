@@ -90,9 +90,10 @@ def index():
 @main_bp.route("/health")
 def health():
     """Debug endpoint to check environment and imports."""
-    checks = {"version": "v12-run-full-get"}
+    checks = {"version": "v13-openrouter"}
     # Check env vars
     checks["GEMINI_API_KEY"] = "set" if os.environ.get("GEMINI_API_KEY") else "NOT SET"
+    checks["OPENROUTER_API_KEY"] = "set" if os.environ.get("OPENROUTER_API_KEY") else "NOT SET"
     checks["GITHUB_TOKEN"] = "set" if os.environ.get("GITHUB_TOKEN") else "NOT SET"
     checks["LLM_PROVIDER"] = os.environ.get("LLM_PROVIDER", "not set (default)")
 

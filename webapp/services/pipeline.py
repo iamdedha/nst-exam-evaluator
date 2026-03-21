@@ -508,55 +508,79 @@ def run_full_pipeline(run_id: str, progress: RunProgress):
         progress.update(phase="starting", started_at=datetime.now(),
                        current_step="Initializing pipeline...")
 
-        with _redirect_output(progress):
-            # Phase 0
-            _log_and_persist("=== PHASE 0: Data Cleanup ===",
-                           phase="phase0", current_step="Running Phase 0: Data Cleanup...")
-            progress.update(phase="phase0", current_step="Running Phase 0: Data Cleanup...")
+        # Phase 0
+        _log_and_persist("=== PHASE 0: Data Cleanup ===",
+                       phase="phase0", current_step="Running Phase 0: Data Cleanup...")
+        progress.update(phase="phase0", current_step="Running Phase 0: Data Cleanup...")
+        try:
             summary = run_phase0(run_id, progress)
-            valid_count = summary['stats']['total_valid_part_a']
-            _log_and_persist(f"Phase 0 done: {valid_count} valid students",
-                           phase="phase0_done", current_step=f"Phase 0 complete: {valid_count} students")
+        except Exception as e0:
+            import traceback
+            _log_and_persist(f"Phase 0 FAILED: {e0}\n{traceback.format_exc()[-300:]}",
+                           phase="error", status="error", error=f"Phase 0 failed: {e0}",
+                           traceback=traceback.format_exc()[-500:])
+            progress.update(phase="error", error=f"Phase 0 failed: {e0}",
+                           current_step=f"ERROR in Phase 0: {str(e0)[:100]}")
+            return
 
-            # Part A
-            _log_and_persist("=== PART A: Evaluation ===",
-                           phase="part_a", current_step="Starting Part A evaluation...")
-            progress.update(phase="part_a", current_step="Starting Part A evaluation...")
+        valid_count = summary['stats']['total_valid_part_a']
+        _log_and_persist(f"Phase 0 done: {valid_count} valid students",
+                       phase="phase0_done", current_step=f"Phase 0 complete: {valid_count} students")
+
+        # Part A
+        _log_and_persist("=== PART A: Evaluation ===",
+                       phase="part_a", current_step="Starting Part A evaluation...")
+        progress.update(phase="part_a", current_step="Starting Part A evaluation...")
+        try:
             run_part_a(run_id, progress, summary)
-            _log_and_persist("Part A evaluation complete",
-                           phase="part_a_done", current_step="Part A complete")
+        except Exception as ea:
+            import traceback
+            _log_and_persist(f"Part A error (continuing): {ea}")
+            progress.log(f"Part A traceback: {traceback.format_exc()[-300:]}")
+        _log_and_persist("Part A evaluation complete",
+                       phase="part_a_done", current_step="Part A complete")
 
-            # Part B
-            if summary["stats"]["total_part_b_submissions"] > 0:
-                _log_and_persist("=== PART B: Evaluation ===",
-                               phase="part_b", current_step="Starting Part B evaluation...")
-                progress.update(phase="part_b", current_step="Starting Part B evaluation...")
+        # Part B
+        if summary["stats"]["total_part_b_submissions"] > 0:
+            _log_and_persist("=== PART B: Evaluation ===",
+                           phase="part_b", current_step="Starting Part B evaluation...")
+            progress.update(phase="part_b", current_step="Starting Part B evaluation...")
+            try:
                 run_part_b(run_id, progress, summary)
-                _log_and_persist("Part B evaluation complete",
-                               phase="part_b_done", current_step="Part B complete")
-            else:
-                _log_and_persist("No Part B submissions to evaluate",
-                               phase="part_b_done", current_step="No Part B submissions")
+            except Exception as eb:
+                import traceback
+                _log_and_persist(f"Part B error (continuing): {eb}")
+                progress.log(f"Part B traceback: {traceback.format_exc()[-300:]}")
+            _log_and_persist("Part B evaluation complete",
+                           phase="part_b_done", current_step="Part B complete")
+        else:
+            _log_and_persist("No Part B submissions to evaluate",
+                           phase="part_b_done", current_step="No Part B submissions")
 
-            # Part C (cross-verification)
-            part_c_path = run_manager.get_run_dir(run_id) / "uploads" / "part_c.xlsx"
-            if part_c_path.exists():
-                _log_and_persist("=== PART C: Cross-Verification ===",
-                               phase="part_c", current_step="Starting Part C cross-verification...")
-                progress.update(phase="part_c", current_step="Starting Part C cross-verification...")
+        # Part C (cross-verification)
+        part_c_path = run_manager.get_run_dir(run_id) / "uploads" / "part_c.xlsx"
+        if part_c_path.exists():
+            _log_and_persist("=== PART C: Cross-Verification ===",
+                           phase="part_c", current_step="Starting Part C cross-verification...")
+            progress.update(phase="part_c", current_step="Starting Part C cross-verification...")
+            try:
                 run_part_c(run_id, progress, summary)
-                _log_and_persist("Part C evaluation complete",
-                               phase="part_c_done", current_step="Part C complete")
-            else:
-                _log_and_persist("No Part C file uploaded, skipping",
-                               phase="part_c_done", current_step="Part C skipped (no file)")
+            except Exception as ec:
+                import traceback
+                _log_and_persist(f"Part C error (continuing): {ec}")
+                progress.log(f"Part C traceback: {traceback.format_exc()[-300:]}")
+            _log_and_persist("Part C evaluation complete",
+                           phase="part_c_done", current_step="Part C complete")
+        else:
+            _log_and_persist("No Part C file uploaded, skipping",
+                           phase="part_c_done", current_step="Part C skipped (no file)")
 
-            # Aggregation
-            _log_and_persist("=== AGGREGATION ===",
-                           phase="aggregate", current_step="Aggregating scores...")
-            progress.update(phase="aggregate", current_step="Aggregating scores...")
-            run_aggregation(run_id, progress)
-            _log_and_persist("Aggregation complete")
+        # Aggregation
+        _log_and_persist("=== AGGREGATION ===",
+                       phase="aggregate", current_step="Aggregating scores...")
+        progress.update(phase="aggregate", current_step="Aggregating scores...")
+        run_aggregation(run_id, progress)
+        _log_and_persist("Aggregation complete")
 
         progress.update(phase="complete", completed_at=datetime.now(),
                        current_step="Evaluation complete!")

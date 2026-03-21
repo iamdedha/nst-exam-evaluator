@@ -20,7 +20,7 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST"])
 def start_eval(run_id):
-    """Start evaluation - runs synchronously in a streaming SSE response."""
+    """Start evaluation in a background thread."""
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
@@ -32,31 +32,24 @@ def start_eval(run_id):
     progress = create_progress(run_id)
     run_manager.update_meta(run_id, status="running")
 
-    def _run_pipeline_sse():
-        """Run pipeline synchronously inside a streaming response."""
-        import json as _json, traceback as tb_mod
-
-        yield f"data: {_json.dumps({'type': 'log', 'message': 'Pipeline starting...'})}\n\n"
-
+    def _run():
+        import traceback as tb_mod
         try:
             run_full_pipeline(run_id, progress)
-            yield f"data: {_json.dumps({'type': 'progress', 'phase': 'complete', 'current_step': 'Evaluation complete!'})}\n\n"
+        except SystemExit:
+            # Gunicorn sends SystemExit via SIGABRT - ignore and continue
+            print("[PIPELINE] Caught SystemExit from gunicorn, ignoring", flush=True)
         except BaseException as e:
             tb = tb_mod.format_exc()
             print(f"[PIPELINE ERROR] {e}\n{tb}", flush=True)
             run_manager.update_meta(run_id, status="error", phase="error",
                                    error=str(e), traceback=tb[-500:])
-            yield f"data: {_json.dumps({'type': 'progress', 'phase': 'error', 'error': str(e)})}\n\n"
 
-    return Response(
-        stream_with_context(_run_pipeline_sse()),
-        mimetype="text/event-stream",
-        headers={
-            "Cache-Control": "no-cache",
-            "X-Accel-Buffering": "no",
-            "Connection": "keep-alive",
-        }
-    )
+    import threading
+    t = threading.Thread(target=_run, daemon=True)
+    t.start()
+
+    return jsonify({"status": "started", "run_id": run_id})
 
 
 @eval_bp.route("/eval/<run_id>/progress")

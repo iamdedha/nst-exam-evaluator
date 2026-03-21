@@ -91,40 +91,13 @@ function startEvaluation(runId) {
     document.getElementById('progressLabel').textContent = 'Starting evaluation...';
     document.getElementById('startSection').style.display = 'none';
 
-    // POST /start now returns SSE stream (pipeline runs synchronously in the response)
-    // We use EventSource-like fetch to read it, plus polling as primary UI update
     fetch(`/eval/${runId}/start`, { method: 'POST' })
-        .then(response => {
-            if (!response.ok) {
-                return response.json().then(d => { throw new Error(d.error || 'Start failed'); });
-            }
-            appendLog('[UI] Pipeline running on server...');
-            // Read the SSE stream from the POST response
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-            function readChunk() {
-                reader.read().then(({done, value}) => {
-                    if (done) { appendLog('[UI] Server stream ended'); return; }
-                    const text = decoder.decode(value, {stream: true});
-                    text.split('\n').forEach(line => {
-                        if (line.startsWith('data: ')) {
-                            try {
-                                const d = JSON.parse(line.slice(6));
-                                if (d.type === 'log') appendLog(d.message);
-                                if (d.type === 'progress' && d.phase === 'complete') showComplete();
-                                if (d.type === 'progress' && d.phase === 'error') showError(d.error);
-                            } catch(e) {}
-                        }
-                    });
-                    readChunk();
-                }).catch(err => { appendLog('[UI] Stream read error: ' + err.message); });
-            }
-            readChunk();
-        })
-        .catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
-
-    // Start polling as the primary UI update mechanism
-    setTimeout(() => pollStatus(runId), 3000);
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) { showError(data.error); return; }
+            appendLog('[UI] Evaluation started, polling for progress...');
+            setTimeout(() => pollStatus(runId), 2000);
+        }).catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
 }
 
 function connectSSE(runId) {

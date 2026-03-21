@@ -20,52 +20,40 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST"])
 def start_eval(run_id):
+    """Start evaluation - runs synchronously via streaming response."""
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
 
-    if meta.get("status") == "running":
-        return jsonify({"error": "Evaluation already running"}), 409
+    if meta.get("status") in ("running", "complete"):
+        return jsonify({"error": f"Evaluation already {meta['status']}"}), 409
 
     # Create progress tracker
     progress = create_progress(run_id)
+    run_manager.update_meta(run_id, status="running")
 
-    def _safe_pipeline(rid, prog):
-        """Wrapper to catch ALL exceptions including SystemExit."""
+    def _run_and_stream():
+        """Run pipeline synchronously, yielding SSE events."""
         import traceback as tb_mod
         try:
-            print(f"[THREAD] Pipeline thread started for {rid}", flush=True)
-            run_full_pipeline(rid, prog)
-            print(f"[THREAD] Pipeline thread completed for {rid}", flush=True)
+            run_full_pipeline(run_id, progress)
         except BaseException as e:
             tb = tb_mod.format_exc()
-            print(f"[THREAD CRASH] {e}\n{tb}", flush=True)
+            print(f"[PIPELINE ERROR] {e}\n{tb}", flush=True)
             try:
-                prog.update(phase="error", error=str(e),
-                           current_step=f"THREAD CRASH: {str(e)[:100]}")
-                prog.log(f"THREAD CRASH: {tb}")
-                run_manager.update_meta(rid, status="error", phase="error",
+                progress.update(phase="error", error=str(e),
+                               current_step=f"ERROR: {str(e)[:100]}")
+                progress.log(f"ERROR: {tb}")
+                run_manager.update_meta(run_id, status="error", phase="error",
                                        error=str(e), traceback=tb[-500:])
             except:
                 pass
 
-    # Start evaluation in background thread
-    import concurrent.futures
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
-    future = executor.submit(_safe_pipeline, run_id, progress)
+    # Run in a real OS thread using threading (not daemon)
+    import threading
+    t = threading.Thread(target=_run_and_stream, daemon=False)
+    t.start()
 
-    # Add a callback to log completion
-    def _on_done(fut):
-        try:
-            fut.result()  # raises if thread threw
-        except Exception as e:
-            print(f"[FUTURE ERROR] {e}", flush=True)
-            import traceback
-            run_manager.update_meta(run_id, status="error", phase="error",
-                                   error=str(e), traceback=traceback.format_exc()[-500:])
-    future.add_done_callback(_on_done)
-
-    run_manager.update_meta(run_id, status="running")
     return jsonify({"status": "started", "run_id": run_id})
 
 

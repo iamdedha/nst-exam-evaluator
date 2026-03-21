@@ -95,29 +95,8 @@ function startEvaluation(runId) {
         .then(r => r.json())
         .then(data => {
             if (data.error) { showError(data.error); return; }
-            appendLog('[UI] Evaluation accepted, launching pipeline...');
-
-            // Trigger the actual pipeline via /run-full (GET, sync streaming)
-            fetch(`/eval/${runId}/run-full`)
-                .then(response => {
-                    const reader = response.body.getReader();
-                    const decoder = new TextDecoder();
-                    function pump() {
-                        reader.read().then(({done, value}) => {
-                            if (done) {
-                                appendLog('[UI] Pipeline finished');
-                                setTimeout(() => pollStatus(runId), 1000);
-                                return;
-                            }
-                            const lines = decoder.decode(value, {stream: true}).split('\n');
-                            lines.forEach(line => { if (line.trim()) appendLog('[Server] ' + line.trim()); });
-                            pump();
-                        }).catch(() => { appendLog('[UI] Stream ended'); setTimeout(() => pollStatus(runId), 1000); });
-                    }
-                    pump();
-                }).catch(err => appendLog('[UI] Pipeline fetch error: ' + err.message));
-
-            // Start polling for UI card updates
+            appendLog('[UI] Pipeline launched as background process');
+            appendLog('[UI] Polling for progress updates...');
             setTimeout(() => pollStatus(runId), 3000);
         }).catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
 }

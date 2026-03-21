@@ -20,7 +20,8 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST", "GET"])
 def start_eval(run_id):
-    """Start evaluation - returns JSON immediately, triggers run-sync in background via redirect."""
+    """Start evaluation via subprocess (survives Render's proxy timeout)."""
+    import subprocess
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
@@ -28,9 +29,127 @@ def start_eval(run_id):
     if meta.get("status") == "complete":
         return jsonify({"error": "Evaluation already complete"}), 409
 
-    # Just mark as running and return - frontend will call /run-full which does the actual work
     run_manager.update_meta(run_id, status="running")
     create_progress(run_id)
+
+    # Launch pipeline as a subprocess - this survives independently of the HTTP response
+    import sys
+    run_dir = str(run_manager.get_run_dir(run_id))
+    script = f"""
+import sys, os, json, traceback, time
+sys.path.insert(0, '{str(run_manager.Config.EVALUATOR_DIR)}')
+os.environ.setdefault('LLM_PROVIDER', '{os.environ.get("LLM_PROVIDER", "gemini")}')
+os.environ.setdefault('OPENROUTER_API_KEY', '{os.environ.get("OPENROUTER_API_KEY", "")}')
+os.environ.setdefault('GEMINI_API_KEY', '{os.environ.get("GEMINI_API_KEY", "")}')
+os.environ.setdefault('GITHUB_TOKEN', '{os.environ.get("GITHUB_TOKEN", "")}')
+os.environ.setdefault('SKIP_PAPER_FETCH', '{os.environ.get("SKIP_PAPER_FETCH", "")}')
+
+run_id = '{run_id}'
+run_dir = '{run_dir}'
+meta_path = os.path.join(run_dir, 'meta.json')
+
+def update_meta(**kwargs):
+    with open(meta_path) as f:
+        meta = json.load(f)
+    meta.update(kwargs)
+    with open(meta_path, 'w') as f:
+        json.dump(meta, f, indent=2)
+
+try:
+    from phase0_data_cleanup import run_phase0_web
+    from pathlib import Path
+    import agents.part_a_evaluator as pa_eval
+
+    output_dir = Path(run_dir) / 'output'
+    uploads_dir = Path(run_dir) / 'uploads'
+
+    # Phase 0
+    update_meta(phase='phase0', current_step='Running Phase 0...')
+    summary = run_phase0_web(str(uploads_dir / 'part_a.xlsx'), str(uploads_dir / 'part_b.csv'), output_dir)
+    valid_count = summary['stats']['total_valid_part_a']
+    update_meta(phase='phase0_done', total_students=valid_count, current_step=f'Phase 0: {{valid_count}} students')
+    print(f'Phase 0: {{valid_count}} valid students', flush=True)
+
+    # Part A
+    scores_dir = output_dir / 'part_a_scores'
+    scores_dir.mkdir(parents=True, exist_ok=True)
+    gt_dir = output_dir / 'ground_truths'
+    gt_dir.mkdir(parents=True, exist_ok=True)
+    pa_eval.OUTPUT_DIR = output_dir
+    pa_eval.SCORES_DIR = scores_dir
+    pa_eval.GROUND_TRUTH_DIR = gt_dir
+
+    valid_students = summary.get('valid_students', [])
+    penalties = summary.get('resubmission_penalties', {{}})
+    all_results = []
+
+    for i, student in enumerate(valid_students):
+        roll = student['roll_number']
+        name = student['full_name']
+        penalty_pct = penalties.get(roll, {{}}).get('penalty_percentage', 0)
+        update_meta(phase='part_a', current_step=f'Evaluating {{roll}} ({{name}}) [{{i+1}}/{{len(valid_students)}}]',
+                   current_index=i+1, evaluated_part_a=i)
+        try:
+            result = pa_eval.evaluate_student_part_a(student, penalty_pct)
+            all_results.append({{'roll_number': roll, 'final_total': result.get('final_total', 0),
+                               'raw_total': result.get('raw_total', 0), 'scaled_score': result.get('scaled_score', 0),
+                               'flags': result.get('flags', [])}})
+            print(f'  {{roll}} ({{name}}): {{result.get("final_total", "?")}}/50', flush=True)
+        except Exception as e:
+            print(f'  {{roll}} ERROR: {{e}}', flush=True)
+            all_results.append({{'roll_number': roll, 'error': str(e), 'final_total': 0, 'raw_total': 0, 'scaled_score': 0, 'flags': ['EVALUATION_ERROR']}})
+        import gc; gc.collect()
+        time.sleep(0.5)
+
+    with open(output_dir / 'part_a_all_results.json', 'w') as f:
+        json.dump(all_results, f, indent=2, default=str)
+
+    evaluated_a = sum(1 for r in all_results if 'error' not in r)
+    update_meta(phase='part_a_done', evaluated_part_a=evaluated_a, current_step=f'Part A: {{evaluated_a}}/{{len(valid_students)}}')
+
+    # Aggregation (simple)
+    update_meta(phase='aggregate', current_step='Aggregating...')
+    import csv as csv_mod
+    rows = []
+    for s in summary['valid_students']:
+        roll = s['roll_number']
+        pa = next((r for r in all_results if r['roll_number'] == roll), {{}})
+        rows.append({{
+            'Roll Number': roll, 'Name': s['full_name'], 'Paper Title': s['paper_title'],
+            'Status': 'valid', 'Part A Final (50)': pa.get('final_total', 0),
+            'Part A Scaled (5%)': pa.get('scaled_score', 0), 'Flags': '; '.join(pa.get('flags', []))
+        }})
+    with open(output_dir / 'master_scores.json', 'w') as f:
+        json.dump(rows, f, indent=2)
+    if rows:
+        with open(output_dir / 'master_scores.csv', 'w', newline='') as f:
+            w = csv_mod.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w.writeheader()
+            w.writerows(rows)
+
+    from datetime import datetime
+    update_meta(status='complete', phase='complete', current_step='Evaluation complete!',
+               completed_at=datetime.now().isoformat())
+    print('=== ALL DONE ===', flush=True)
+
+except Exception as e:
+    tb = traceback.format_exc()
+    print(f'FATAL: {{e}}\\n{{tb}}', flush=True)
+    update_meta(status='error', phase='error', error=str(e), traceback=tb[-500:])
+"""
+    # Write script to file and run as subprocess
+    import tempfile
+    script_path = os.path.join(run_dir, '_run_pipeline.py')
+    with open(script_path, 'w') as f:
+        f.write(script)
+
+    subprocess.Popen(
+        [sys.executable, script_path],
+        stdout=open(os.path.join(run_dir, 'pipeline.log'), 'w'),
+        stderr=subprocess.STDOUT,
+        start_new_session=True,  # Detach from parent process
+    )
+
     return jsonify({"status": "started", "run_id": run_id})
 
 
@@ -125,6 +244,7 @@ def run_full(run_id):
                     yield f"  {roll} ERROR: {e}\n"
                     all_a_results.append({"roll_number": roll, "error": str(e), "final_total": 0, "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_ERROR"]})
                 gc.collect()
+                yield f"  [memory cleaned, continuing...]\n"
                 time.sleep(0.5)
 
             with open(output_dir / "part_a_all_results.json", "w") as f:

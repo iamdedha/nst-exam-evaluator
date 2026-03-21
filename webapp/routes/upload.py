@@ -15,6 +15,7 @@ def upload_form():
 def handle_upload():
     part_a = request.files.get("part_a")
     part_b = request.files.get("part_b")
+    part_c = request.files.get("part_c")
 
     if not part_a or not part_a.filename:
         flash("Please upload the Part A Excel file (.xlsx)", "error")
@@ -33,13 +34,18 @@ def handle_upload():
         return redirect(url_for("upload.upload_form"))
 
     # Create a new run
-    run_id = run_manager.create_run(part_a.filename, part_b.filename)
+    part_c_filename = part_c.filename if (part_c and part_c.filename) else None
+    run_id = run_manager.create_run(part_a.filename, part_b.filename, part_c_filename)
     run_dir = run_manager.get_run_dir(run_id)
     uploads_dir = run_dir / "uploads"
 
     # Save uploaded files
     part_a.save(str(uploads_dir / "part_a.xlsx"))
     part_b.save(str(uploads_dir / "part_b.csv"))
+
+    # Save Part C if provided
+    if part_c and part_c.filename and part_c.filename.endswith(".xlsx"):
+        part_c.save(str(uploads_dir / "part_c.xlsx"))
 
     run_manager.update_meta(run_id, status="uploaded")
     flash(f"Files uploaded successfully! Run ID: {run_id}", "success")

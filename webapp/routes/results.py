@@ -111,16 +111,21 @@ def results_overview(run_id):
                 if isinstance(s.get("Part B Final (130)"), (int, float))
                 and s.get("Part B Raw (130)") not in ["NO SUBMISSION", "N/A", "N/A (disqualified)"]]
 
+    c_scores = [s.get("Part C Score (5)", 0) for s in valid_scores
+                if isinstance(s.get("Part C Score (5)"), (int, float))]
+
     stats = {
         "total": len(scores),
         "valid": len(valid_scores),
         "disqualified": sum(1 for s in scores if s.get("Status") != "valid"),
         "part_b_count": len(b_scores),
+        "part_c_count": len(c_scores),
         "flagged": sum(1 for s in scores if s.get("Needs Review") == "YES"),
         "a_avg": round(sum(a_scores) / max(len(a_scores), 1), 1),
         "a_max": max(a_scores) if a_scores else 0,
         "a_min": min(a_scores) if a_scores else 0,
         "b_avg": round(sum(b_scores) / max(len(b_scores), 1), 1) if b_scores else 0,
+        "c_avg": round(sum(c_scores) / max(len(c_scores), 1), 2) if c_scores else 0,
     }
 
     chart_data = _build_chart_data(scores)

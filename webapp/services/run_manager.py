@@ -13,13 +13,14 @@ def get_runs_dir() -> Path:
     return d
 
 
-def create_run(part_a_filename: str = "", part_b_filename: str = "") -> str:
+def create_run(part_a_filename: str = "", part_b_filename: str = "", part_c_filename: str = None) -> str:
     """Create a new run directory and return the run_id."""
     run_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     run_dir = get_runs_dir() / run_id
     (run_dir / "uploads").mkdir(parents=True, exist_ok=True)
     (run_dir / "output" / "part_a_scores").mkdir(parents=True, exist_ok=True)
     (run_dir / "output" / "part_b_scores").mkdir(parents=True, exist_ok=True)
+    (run_dir / "output" / "part_c_scores").mkdir(parents=True, exist_ok=True)
     (run_dir / "output" / "ground_truths").mkdir(parents=True, exist_ok=True)
 
     meta = {
@@ -28,9 +29,11 @@ def create_run(part_a_filename: str = "", part_b_filename: str = "") -> str:
         "status": "created",
         "part_a_file": part_a_filename,
         "part_b_file": part_b_filename,
+        "part_c_file": part_c_filename,
         "total_students": 0,
         "evaluated_part_a": 0,
         "evaluated_part_b": 0,
+        "evaluated_part_c": 0,
         "completed_at": None,
     }
     with open(run_dir / "meta.json", "w") as f:
@@ -112,6 +115,12 @@ def get_results_data(run_id: str) -> dict:
         with open(pb) as f:
             data["part_b_results"] = json.load(f)
 
+    # Part C results
+    pc = output_dir / "part_c_all_results.json"
+    if pc.exists():
+        with open(pc) as f:
+            data["part_c_results"] = json.load(f)
+
     return data
 
 
@@ -131,6 +140,12 @@ def get_student_detail(run_id: str, roll: str) -> dict:
     if pb_path.exists():
         with open(pb_path) as f:
             detail["part_b"] = json.load(f)
+
+    # Part C
+    pc_path = output_dir / "part_c_scores" / f"{roll}_part_c.json"
+    if pc_path.exists():
+        with open(pc_path) as f:
+            detail["part_c"] = json.load(f)
 
     # Student info from phase0
     p0 = output_dir / "phase0_summary.json"

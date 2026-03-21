@@ -294,6 +294,45 @@ def run_part_b(run_id: str, progress: RunProgress, summary: dict):
             pb_eval.GROUND_TRUTH_DIR = orig_gt
 
 
+def run_part_c(run_id: str, progress: RunProgress, summary: dict):
+    """Run Part C evaluation (cross-verification of Part B work)."""
+    _setup_sys_path()
+    from agents.part_c_evaluator import run_part_c_evaluation
+
+    run_dir = run_manager.get_run_dir(run_id)
+    output_dir = run_manager.get_run_output_dir(run_id)
+    uploads_dir = run_dir / "uploads"
+    xlsx_path = uploads_dir / "part_c.xlsx"
+
+    if not xlsx_path.exists():
+        progress.log("No Part C file uploaded, skipping Part C evaluation")
+        return []
+
+    scores_dir = output_dir / "part_c_scores"
+    scores_dir.mkdir(parents=True, exist_ok=True)
+
+    progress.update(
+        phase="part_c",
+        current_step="Starting Part C cross-verification..."
+    )
+
+    valid_students = summary.get("valid_students", [])
+
+    all_results = run_part_c_evaluation(
+        xlsx_path=str(xlsx_path),
+        valid_students=valid_students,
+        output_dir=output_dir,
+    )
+
+    evaluated = sum(1 for r in all_results if "error" not in r)
+    pr = progress.phase_results.copy()
+    pr["part_c"] = {"evaluated": evaluated, "total": len(all_results)}
+    progress.update(phase_results=pr, current_step="Part C complete")
+
+    run_manager.update_meta(run_id, evaluated_part_c=evaluated)
+    return all_results
+
+
 def run_aggregation(run_id: str, progress: RunProgress):
     """Aggregate all scores into master CSV/JSON."""
     _setup_sys_path()
@@ -338,6 +377,23 @@ def run_aggregation(run_id: str, progress: RunProgress):
                 roll = data["roll_number"]
                 if roll not in part_b_scores:
                     part_b_scores[roll] = data
+
+    # Load Part C scores
+    part_c_scores = {}
+    pc_path = output_dir / "part_c_all_results.json"
+    if pc_path.exists():
+        with open(pc_path) as f:
+            for r in json.load(f):
+                part_c_scores[r["roll_number"]] = r
+
+    pc_dir = output_dir / "part_c_scores"
+    if pc_dir.exists():
+        for fp in pc_dir.glob("*_part_c.json"):
+            with open(fp) as fh:
+                data = json.load(fh)
+                roll = data["roll_number"]
+                if roll not in part_c_scores:
+                    part_c_scores[roll] = data
 
     # Build master list
     all_students = {}
@@ -393,6 +449,14 @@ def run_aggregation(run_id: str, progress: RunProgress):
                 row["Part B Raw (130)"] = "NO SUBMISSION"
                 row["Part B Final (130)"] = 0
                 row["Part B Scaled (30%)"] = 0
+
+            # Part C scores
+            pc = part_c_scores.get(roll, {})
+            if pc:
+                row["Part C Score (5)"] = pc.get("total_score", 0)
+                row["Part C Questions Answered"] = pc.get("questions_answered", 0)
+            else:
+                row["Part C Score (5)"] = "NO DATA"
 
             flags = pa.get("flags", []) + pb.get("flags", [])
             row["Flags"] = "; ".join(flags[:5]) if flags else ""
@@ -473,6 +537,19 @@ def run_full_pipeline(run_id: str, progress: RunProgress):
             else:
                 _log_and_persist("No Part B submissions to evaluate",
                                phase="part_b_done", current_step="No Part B submissions")
+
+            # Part C (cross-verification)
+            part_c_path = run_manager.get_run_dir(run_id) / "uploads" / "part_c.xlsx"
+            if part_c_path.exists():
+                _log_and_persist("=== PART C: Cross-Verification ===",
+                               phase="part_c", current_step="Starting Part C cross-verification...")
+                progress.update(phase="part_c", current_step="Starting Part C cross-verification...")
+                run_part_c(run_id, progress, summary)
+                _log_and_persist("Part C evaluation complete",
+                               phase="part_c_done", current_step="Part C complete")
+            else:
+                _log_and_persist("No Part C file uploaded, skipping",
+                               phase="part_c_done", current_step="Part C skipped (no file)")
 
             # Aggregation
             _log_and_persist("=== AGGREGATION ===",

@@ -4,30 +4,40 @@
 {% block content %}
 <div class="mb-8">
     <h1 class="text-2xl font-bold text-gray-900">Upload Submission Files</h1>
-    <p class="text-gray-500 text-sm mt-1">Upload the Part A Excel and Part B CSV files to begin evaluation</p>
+    <p class="text-gray-500 text-sm mt-1">Upload the Part A Excel, Part B CSV, and optional Part C Excel files to begin evaluation</p>
 </div>
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
     <form method="POST" action="/upload" enctype="multipart/form-data" id="uploadForm">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Part A Submissions (.xlsx)</label>
                 <p class="text-xs text-gray-400 mb-3">Excel file from Google Forms</p>
-                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-nst-500 hover:bg-blue-50 transition-all" id="dropA">
-                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    <p class="text-sm text-gray-500">Drag & drop .xlsx file here or click to browse</p>
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-nst-500 hover:bg-blue-50 transition-all" id="dropA">
+                    <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    <p class="text-xs text-gray-500">Drag & drop .xlsx file</p>
                     <input type="file" name="part_a" id="part_a" accept=".xlsx" required class="hidden">
-                    <div class="mt-3 text-sm font-semibold text-nst-600" id="fileNameA"></div>
+                    <div class="mt-2 text-xs font-semibold text-nst-600" id="fileNameA"></div>
                 </div>
             </div>
             <div>
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Part B Submissions (.csv)</label>
                 <p class="text-xs text-gray-400 mb-3">CSV file from Google Forms</p>
-                <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer hover:border-nst-500 hover:bg-blue-50 transition-all" id="dropB">
-                    <svg class="w-10 h-10 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-                    <p class="text-sm text-gray-500">Drag & drop .csv file here or click to browse</p>
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-nst-500 hover:bg-blue-50 transition-all" id="dropB">
+                    <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    <p class="text-xs text-gray-500">Drag & drop .csv file</p>
                     <input type="file" name="part_b" id="part_b" accept=".csv" required class="hidden">
-                    <div class="mt-3 text-sm font-semibold text-nst-600" id="fileNameB"></div>
+                    <div class="mt-2 text-xs font-semibold text-nst-600" id="fileNameB"></div>
+                </div>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Part C Verification (.xlsx) <span class="text-gray-400 font-normal">— optional</span></label>
+                <p class="text-xs text-gray-400 mb-3">RU platform submissions Excel</p>
+                <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-green-500 hover:bg-green-50 transition-all" id="dropC">
+                    <svg class="w-8 h-8 mx-auto text-gray-300 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-xs text-gray-500">Drag & drop .xlsx file</p>
+                    <input type="file" name="part_c" id="part_c" accept=".xlsx" class="hidden">
+                    <div class="mt-2 text-xs font-semibold text-green-600" id="fileNameC"></div>
                 </div>
             </div>
         </div>
@@ -37,9 +47,10 @@
 
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mt-6">
     <h3 class="text-sm font-semibold text-gray-700 mb-3">Expected File Formats</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs text-gray-500">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-gray-500">
         <div><span class="font-semibold text-gray-700">Part A (.xlsx):</span> Timestamp, Full Name, Authors, Year, Paper Link, Method, Roll Number, Paper Title, Email, Venue, GitHub Repo</div>
         <div><span class="font-semibold text-gray-700">Part B (.csv):</span> Timestamp, Email, Full Name, Roll Number, Paper Title, GitHub Repository link</div>
+        <div><span class="font-semibold text-gray-700">Part C (.xlsx):</span> RU platform export with Coding sheet (student answers) and Manual Evaluation sheet (user_id → roll mapping). 5 verification questions, best 4 scored at 1.25 marks each = 5 marks total.</div>
     </div>
 </div>
 {% endblock %}
@@ -49,6 +60,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const partA = document.getElementById('part_a');
     const partB = document.getElementById('part_b');
+    const partC = document.getElementById('part_c');
     const submitBtn = document.getElementById('submitBtn');
 
     function checkFiles() { submitBtn.disabled = !(partA.files.length && partB.files.length); }
@@ -68,6 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     setupDropZone(document.getElementById('dropA'), partA, document.getElementById('fileNameA'));
     setupDropZone(document.getElementById('dropB'), partB, document.getElementById('fileNameB'));
+    setupDropZone(document.getElementById('dropC'), partC, document.getElementById('fileNameC'));
 });
 </script>
 {% endblock %}

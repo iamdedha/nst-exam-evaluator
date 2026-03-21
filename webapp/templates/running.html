@@ -8,8 +8,8 @@
 </div>
 
 <!-- Phase Cards -->
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6" id="phaseCards">
-    {% for phase_id, phase_name in [('phase0','Data Cleanup'),('part_a','Part A Eval'),('part_b','Part B Eval'),('aggregate','Aggregation')] %}
+<div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6" id="phaseCards">
+    {% for phase_id, phase_name in [('phase0','Data Cleanup'),('part_a','Part A Eval'),('part_b','Part B Eval'),('part_c','Part C Verify'),('aggregate','Aggregation')] %}
     <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4 border-l-4 border-l-gray-200 transition-all" id="card-{{ phase_id }}">
         <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{{ phase_name }}</div>
         <div class="text-sm font-bold text-gray-400 mt-2" id="status-{{ phase_id }}">Waiting</div>
@@ -150,10 +150,12 @@ function pollStatus(runId) {
             // Update phase cards from meta
             if (phase.startsWith('part_a')) setPhaseState('phase0', 'done');
             if (phase.startsWith('part_b')) { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); }
-            if (phase === 'aggregate') { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); setPhaseState('part_b', 'done'); }
+            if (phase.startsWith('part_c')) { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); setPhaseState('part_b', 'done'); }
+            if (phase === 'aggregate') { setPhaseState('phase0', 'done'); setPhaseState('part_a', 'done'); setPhaseState('part_b', 'done'); setPhaseState('part_c', 'done'); }
             if (phase === 'phase0' || phase === 'starting') setPhaseState('phase0', 'active');
             else if (phase === 'part_a') setPhaseState('part_a', 'active');
             else if (phase === 'part_b') setPhaseState('part_b', 'active');
+            else if (phase === 'part_c') setPhaseState('part_c', 'active');
             else if (phase === 'aggregate') setPhaseState('aggregate', 'active');
             setTimeout(() => pollStatus(runId), 2000);
         }
@@ -161,7 +163,7 @@ function pollStatus(runId) {
 }
 
 function updateProgress(data) {
-    const phases = ['phase0', 'part_a', 'part_b', 'aggregate'];
+    const phases = ['phase0', 'part_a', 'part_b', 'part_c', 'aggregate'];
     const idx = phases.indexOf(data.phase);
     phases.forEach((p, i) => { if (i < idx) setPhaseState(p, 'done'); else if (i === idx) setPhaseState(p, 'active'); });
     if (data.phase_results) {
@@ -169,6 +171,7 @@ function updateProgress(data) {
         if (pr.phase0) setPhaseState('phase0', 'done', `${pr.phase0.valid} valid, ${pr.phase0.disqualified} disq, ${pr.phase0.part_b} Part B`);
         if (pr.part_a) setPhaseState('part_a', 'done', `${pr.part_a.evaluated}/${pr.part_a.total}, avg ${pr.part_a.avg_score}/50`);
         if (pr.part_b) setPhaseState('part_b', 'done', `${pr.part_b.evaluated}/${pr.part_b.total} evaluated`);
+        if (pr.part_c) setPhaseState('part_c', 'done', `${pr.part_c.evaluated}/${pr.part_c.total} verified`);
     }
     if (data.total_students > 0 && data.current_index > 0) {
         const pct = Math.round((data.current_index / data.total_students) * 100);
@@ -186,7 +189,7 @@ function showComplete() {
     document.getElementById('startSection').style.display = 'none';
     document.getElementById('progressLabel').textContent = 'Complete';
     document.getElementById('progressBar').style.width = '100%';
-    ['phase0','part_a','part_b','aggregate'].forEach(p => setPhaseState(p, 'done'));
+    ['phase0','part_a','part_b','part_c','aggregate'].forEach(p => setPhaseState(p, 'done'));
 }
 
 function showError(msg) { document.getElementById('errorSection').classList.remove('hidden'); document.getElementById('errorMessage').textContent = msg; }

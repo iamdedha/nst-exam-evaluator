@@ -20,41 +20,43 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST"])
 def start_eval(run_id):
-    """Start evaluation - runs synchronously via streaming response."""
+    """Start evaluation - runs synchronously in a streaming SSE response."""
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
 
-    if meta.get("status") in ("running", "complete"):
-        return jsonify({"error": f"Evaluation already {meta['status']}"}), 409
+    if meta.get("status") == "complete":
+        return jsonify({"error": "Evaluation already complete"}), 409
 
     # Create progress tracker
     progress = create_progress(run_id)
     run_manager.update_meta(run_id, status="running")
 
-    def _run_and_stream():
-        """Run pipeline synchronously, yielding SSE events."""
-        import traceback as tb_mod
+    def _run_pipeline_sse():
+        """Run pipeline synchronously inside a streaming response."""
+        import json as _json, traceback as tb_mod
+
+        yield f"data: {_json.dumps({'type': 'log', 'message': 'Pipeline starting...'})}\n\n"
+
         try:
             run_full_pipeline(run_id, progress)
+            yield f"data: {_json.dumps({'type': 'progress', 'phase': 'complete', 'current_step': 'Evaluation complete!'})}\n\n"
         except BaseException as e:
             tb = tb_mod.format_exc()
             print(f"[PIPELINE ERROR] {e}\n{tb}", flush=True)
-            try:
-                progress.update(phase="error", error=str(e),
-                               current_step=f"ERROR: {str(e)[:100]}")
-                progress.log(f"ERROR: {tb}")
-                run_manager.update_meta(run_id, status="error", phase="error",
-                                       error=str(e), traceback=tb[-500:])
-            except:
-                pass
+            run_manager.update_meta(run_id, status="error", phase="error",
+                                   error=str(e), traceback=tb[-500:])
+            yield f"data: {_json.dumps({'type': 'progress', 'phase': 'error', 'error': str(e)})}\n\n"
 
-    # Run in a real OS thread using threading (not daemon)
-    import threading
-    t = threading.Thread(target=_run_and_stream, daemon=False)
-    t.start()
-
-    return jsonify({"status": "started", "run_id": run_id})
+    return Response(
+        stream_with_context(_run_pipeline_sse()),
+        mimetype="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
+        }
+    )
 
 
 @eval_bp.route("/eval/<run_id>/progress")

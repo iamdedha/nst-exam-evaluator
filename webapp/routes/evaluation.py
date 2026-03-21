@@ -20,137 +20,172 @@ def eval_page(run_id):
 
 @eval_bp.route("/eval/<run_id>/start", methods=["POST", "GET"])
 def start_eval(run_id):
-    """Start evaluation via subprocess (survives Render's proxy timeout)."""
-    import subprocess
+    """Mark run as started. Frontend then calls /run-step repeatedly."""
+    meta = run_manager.get_meta(run_id)
+    if not meta:
+        return jsonify({"error": "Run not found"}), 404
+    if meta.get("status") == "complete":
+        return jsonify({"error": "Evaluation already complete"}), 409
+    run_manager.update_meta(run_id, status="running", phase="started")
+    create_progress(run_id)
+    return jsonify({"status": "started", "run_id": run_id})
+
+
+@eval_bp.route("/eval/<run_id>/run-step")
+def run_step(run_id):
+    """Run one step of the pipeline. Frontend calls this repeatedly until complete.
+    Each call does one unit of work (Phase 0, or 1 student, or aggregation) and returns."""
+    import sys, traceback, gc
     meta = run_manager.get_meta(run_id)
     if not meta:
         return jsonify({"error": "Run not found"}), 404
 
-    if meta.get("status") == "complete":
-        return jsonify({"error": "Evaluation already complete"}), 409
+    eval_dir = str(run_manager.Config.EVALUATOR_DIR)
+    if eval_dir not in sys.path:
+        sys.path.insert(0, eval_dir)
 
-    run_manager.update_meta(run_id, status="running")
-    create_progress(run_id)
+    phase = meta.get("phase", "started")
+    run_dir = run_manager.get_run_dir(run_id)
+    output_dir = run_dir / "output"
+    uploads_dir = run_dir / "uploads"
 
-    # Launch pipeline as a subprocess - this survives independently of the HTTP response
-    import sys
-    run_dir = str(run_manager.get_run_dir(run_id))
-    script = f"""
-import sys, os, json, traceback, time
-sys.path.insert(0, '{str(run_manager.Config.EVALUATOR_DIR)}')
-os.environ.setdefault('LLM_PROVIDER', '{os.environ.get("LLM_PROVIDER", "gemini")}')
-os.environ.setdefault('OPENROUTER_API_KEY', '{os.environ.get("OPENROUTER_API_KEY", "")}')
-os.environ.setdefault('GEMINI_API_KEY', '{os.environ.get("GEMINI_API_KEY", "")}')
-os.environ.setdefault('GITHUB_TOKEN', '{os.environ.get("GITHUB_TOKEN", "")}')
-os.environ.setdefault('SKIP_PAPER_FETCH', '{os.environ.get("SKIP_PAPER_FETCH", "")}')
+    try:
+        if phase in ("started", "running"):
+            # Phase 0
+            run_manager.update_meta(run_id, phase="phase0", current_step="Running Phase 0...")
+            from phase0_data_cleanup import run_phase0_web
+            summary = run_phase0_web(str(uploads_dir / "part_a.xlsx"), str(uploads_dir / "part_b.csv"), output_dir)
+            valid_count = summary["stats"]["total_valid_part_a"]
+            run_manager.update_meta(run_id, phase="phase0_done", total_students=valid_count,
+                                   current_step=f"Phase 0 complete: {valid_count} students", evaluated_part_a=0)
+            return jsonify({"step": "phase0", "result": f"{valid_count} valid students", "next": "part_a"})
 
-run_id = '{run_id}'
-run_dir = '{run_dir}'
-meta_path = os.path.join(run_dir, 'meta.json')
+        elif phase in ("phase0_done", "part_a"):
+            # Evaluate next student
+            import agents.part_a_evaluator as pa_eval
+            import json as _json
 
-def update_meta(**kwargs):
-    with open(meta_path) as f:
-        meta = json.load(f)
-    meta.update(kwargs)
-    with open(meta_path, 'w') as f:
-        json.dump(meta, f, indent=2)
+            # Load summary
+            with open(output_dir / "phase0_summary.json") as f:
+                summary = _json.load(f)
 
-try:
-    from phase0_data_cleanup import run_phase0_web
-    from pathlib import Path
-    import agents.part_a_evaluator as pa_eval
+            scores_dir = output_dir / "part_a_scores"
+            scores_dir.mkdir(parents=True, exist_ok=True)
+            gt_dir = output_dir / "ground_truths"
+            gt_dir.mkdir(parents=True, exist_ok=True)
+            pa_eval.OUTPUT_DIR = output_dir
+            pa_eval.SCORES_DIR = scores_dir
+            pa_eval.GROUND_TRUTH_DIR = gt_dir
 
-    output_dir = Path(run_dir) / 'output'
-    uploads_dir = Path(run_dir) / 'uploads'
+            valid_students = summary.get("valid_students", [])
+            evaluated = meta.get("evaluated_part_a", 0)
 
-    # Phase 0
-    update_meta(phase='phase0', current_step='Running Phase 0...')
-    summary = run_phase0_web(str(uploads_dir / 'part_a.xlsx'), str(uploads_dir / 'part_b.csv'), output_dir)
-    valid_count = summary['stats']['total_valid_part_a']
-    update_meta(phase='phase0_done', total_students=valid_count, current_step=f'Phase 0: {{valid_count}} students')
-    print(f'Phase 0: {{valid_count}} valid students', flush=True)
+            if evaluated < len(valid_students):
+                student = valid_students[evaluated]
+                roll = student["roll_number"]
+                name = student["full_name"]
+                penalties = summary.get("resubmission_penalties", {})
+                penalty_pct = penalties.get(roll, {}).get("penalty_percentage", 0)
 
-    # Part A
-    scores_dir = output_dir / 'part_a_scores'
-    scores_dir.mkdir(parents=True, exist_ok=True)
-    gt_dir = output_dir / 'ground_truths'
-    gt_dir.mkdir(parents=True, exist_ok=True)
-    pa_eval.OUTPUT_DIR = output_dir
-    pa_eval.SCORES_DIR = scores_dir
-    pa_eval.GROUND_TRUTH_DIR = gt_dir
+                run_manager.update_meta(run_id, phase="part_a",
+                    current_step=f"Evaluating {roll} ({name}) [{evaluated+1}/{len(valid_students)}]",
+                    current_index=evaluated+1)
 
-    valid_students = summary.get('valid_students', [])
-    penalties = summary.get('resubmission_penalties', {{}})
-    all_results = []
+                try:
+                    result = pa_eval.evaluate_student_part_a(student, penalty_pct)
+                    score = result.get("final_total", 0)
+                    flags = result.get("flags", [])
 
-    for i, student in enumerate(valid_students):
-        roll = student['roll_number']
-        name = student['full_name']
-        penalty_pct = penalties.get(roll, {{}}).get('penalty_percentage', 0)
-        update_meta(phase='part_a', current_step=f'Evaluating {{roll}} ({{name}}) [{{i+1}}/{{len(valid_students)}}]',
-                   current_index=i+1, evaluated_part_a=i)
-        try:
-            result = pa_eval.evaluate_student_part_a(student, penalty_pct)
-            all_results.append({{'roll_number': roll, 'final_total': result.get('final_total', 0),
-                               'raw_total': result.get('raw_total', 0), 'scaled_score': result.get('scaled_score', 0),
-                               'flags': result.get('flags', [])}})
-            print(f'  {{roll}} ({{name}}): {{result.get("final_total", "?")}}/50', flush=True)
-        except Exception as e:
-            print(f'  {{roll}} ERROR: {{e}}', flush=True)
-            all_results.append({{'roll_number': roll, 'error': str(e), 'final_total': 0, 'raw_total': 0, 'scaled_score': 0, 'flags': ['EVALUATION_ERROR']}})
-        import gc; gc.collect()
-        time.sleep(0.5)
+                    # Save individual result
+                    slim = {"roll_number": roll, "full_name": name, "final_total": score,
+                            "raw_total": result.get("raw_total", 0), "scaled_score": result.get("scaled_score", 0),
+                            "flags": flags}
 
-    with open(output_dir / 'part_a_all_results.json', 'w') as f:
-        json.dump(all_results, f, indent=2, default=str)
+                    # Append to all results
+                    results_path = output_dir / "part_a_all_results.json"
+                    existing = []
+                    if results_path.exists():
+                        with open(results_path) as f:
+                            existing = _json.load(f)
+                    existing.append(slim)
+                    with open(results_path, "w") as f:
+                        _json.dump(existing, f, indent=2, default=str)
 
-    evaluated_a = sum(1 for r in all_results if 'error' not in r)
-    update_meta(phase='part_a_done', evaluated_part_a=evaluated_a, current_step=f'Part A: {{evaluated_a}}/{{len(valid_students)}}')
+                    run_manager.update_meta(run_id, evaluated_part_a=evaluated+1,
+                        current_step=f"{roll}: {score}/50")
+                    gc.collect()
+                    return jsonify({"step": "part_a", "student": roll, "score": score,
+                                   "progress": f"{evaluated+1}/{len(valid_students)}", "next": "part_a"})
+                except Exception as e:
+                    run_manager.update_meta(run_id, evaluated_part_a=evaluated+1,
+                        current_step=f"{roll}: ERROR - {str(e)[:50]}")
+                    # Save error result
+                    results_path = output_dir / "part_a_all_results.json"
+                    existing = []
+                    if results_path.exists():
+                        with open(results_path) as f:
+                            existing = _json.load(f)
+                    existing.append({"roll_number": roll, "error": str(e), "final_total": 0,
+                                    "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_ERROR"]})
+                    with open(results_path, "w") as f:
+                        _json.dump(existing, f, indent=2, default=str)
+                    gc.collect()
+                    return jsonify({"step": "part_a", "student": roll, "error": str(e),
+                                   "progress": f"{evaluated+1}/{len(valid_students)}", "next": "part_a"})
+            else:
+                # All students done
+                run_manager.update_meta(run_id, phase="part_a_done",
+                    current_step=f"Part A complete: {evaluated}/{len(valid_students)}")
+                return jsonify({"step": "part_a_done", "next": "aggregate"})
 
-    # Aggregation (simple)
-    update_meta(phase='aggregate', current_step='Aggregating...')
-    import csv as csv_mod
-    rows = []
-    for s in summary['valid_students']:
-        roll = s['roll_number']
-        pa = next((r for r in all_results if r['roll_number'] == roll), {{}})
-        rows.append({{
-            'Roll Number': roll, 'Name': s['full_name'], 'Paper Title': s['paper_title'],
-            'Status': 'valid', 'Part A Final (50)': pa.get('final_total', 0),
-            'Part A Scaled (5%)': pa.get('scaled_score', 0), 'Flags': '; '.join(pa.get('flags', []))
-        }})
-    with open(output_dir / 'master_scores.json', 'w') as f:
-        json.dump(rows, f, indent=2)
-    if rows:
-        with open(output_dir / 'master_scores.csv', 'w', newline='') as f:
-            w = csv_mod.DictWriter(f, fieldnames=list(rows[0].keys()))
-            w.writeheader()
-            w.writerows(rows)
+        elif phase in ("part_a_done", "part_b_done", "part_c_done", "aggregate"):
+            # Aggregation
+            import json as _json, csv as csv_mod
+            run_manager.update_meta(run_id, phase="aggregate", current_step="Aggregating scores...")
 
-    from datetime import datetime
-    update_meta(status='complete', phase='complete', current_step='Evaluation complete!',
-               completed_at=datetime.now().isoformat())
-    print('=== ALL DONE ===', flush=True)
+            with open(output_dir / "phase0_summary.json") as f:
+                summary = _json.load(f)
 
-except Exception as e:
-    tb = traceback.format_exc()
-    print(f'FATAL: {{e}}\\n{{tb}}', flush=True)
-    update_meta(status='error', phase='error', error=str(e), traceback=tb[-500:])
-"""
-    # Write script to file and run as subprocess
-    import tempfile
-    script_path = os.path.join(run_dir, '_run_pipeline.py')
-    with open(script_path, 'w') as f:
-        f.write(script)
+            results_path = output_dir / "part_a_all_results.json"
+            all_results = []
+            if results_path.exists():
+                with open(results_path) as f:
+                    all_results = _json.load(f)
 
-    subprocess.Popen(
-        [sys.executable, script_path],
-        stdout=open(os.path.join(run_dir, 'pipeline.log'), 'w'),
-        stderr=subprocess.STDOUT,
-        start_new_session=True,  # Detach from parent process
-    )
+            pa_by_roll = {r["roll_number"]: r for r in all_results}
+            rows = []
+            for s in summary.get("valid_students", []):
+                roll = s["roll_number"]
+                pa = pa_by_roll.get(roll, {})
+                rows.append({
+                    "Roll Number": roll, "Name": s["full_name"], "Paper Title": s["paper_title"],
+                    "Status": "valid", "Part A Final (50)": pa.get("final_total", 0),
+                    "Part A Raw (50)": pa.get("raw_total", 0),
+                    "Part A Scaled (5%)": pa.get("scaled_score", 0),
+                    "Flags": "; ".join(pa.get("flags", [])),
+                    "Needs Review": "YES" if pa.get("flags") else "NO",
+                })
 
-    return jsonify({"status": "started", "run_id": run_id})
+            with open(output_dir / "master_scores.json", "w") as f:
+                _json.dump(rows, f, indent=2)
+            if rows:
+                with open(output_dir / "master_scores.csv", "w", newline="") as f:
+                    w = csv_mod.DictWriter(f, fieldnames=list(rows[0].keys()))
+                    w.writeheader()
+                    w.writerows(rows)
+
+            from datetime import datetime
+            run_manager.update_meta(run_id, status="complete", phase="complete",
+                current_step="Evaluation complete!", completed_at=datetime.now().isoformat())
+            return jsonify({"step": "complete", "total_students": len(rows), "next": None})
+
+        else:
+            return jsonify({"step": phase, "next": None, "message": f"Unknown phase: {phase}"})
+
+    except Exception as e:
+        tb = traceback.format_exc()
+        run_manager.update_meta(run_id, status="error", phase="error", error=str(e), traceback=tb[-500:])
+        return jsonify({"step": "error", "error": str(e), "traceback": tb[-300:]}), 500
 
 
 @eval_bp.route("/eval/<run_id>/run-full")

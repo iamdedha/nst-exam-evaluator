@@ -95,10 +95,48 @@ function startEvaluation(runId) {
         .then(r => r.json())
         .then(data => {
             if (data.error) { showError(data.error); return; }
-            appendLog('[UI] Pipeline launched as background process');
-            appendLog('[UI] Polling for progress updates...');
-            setTimeout(() => pollStatus(runId), 3000);
+            appendLog('[UI] Pipeline started, running steps...');
+            runNextStep(runId);
         }).catch(err => { showError(err.message); appendLog('[UI] Error: ' + err.message); });
+}
+
+function runNextStep(runId) {
+    fetch(`/eval/${runId}/run-step`)
+        .then(r => r.json())
+        .then(data => {
+            if (data.error) {
+                appendLog('[ERROR] ' + data.error);
+                showError(data.error);
+                return;
+            }
+            // Log the step result
+            if (data.step === 'phase0') {
+                appendLog('[Phase 0] ' + data.result);
+                setPhaseState('phase0', 'done', data.result);
+            } else if (data.step === 'part_a') {
+                const msg = data.score !== undefined ? `${data.student}: ${data.score}/50` : `${data.student}: ERROR`;
+                appendLog('[Part A] ' + msg + ' (' + data.progress + ')');
+                setPhaseState('part_a', 'active', data.progress);
+            } else if (data.step === 'part_a_done') {
+                appendLog('[Part A] Complete');
+                setPhaseState('part_a', 'done');
+            } else if (data.step === 'complete') {
+                appendLog('[Done] Evaluation complete! ' + data.total_students + ' students');
+                showComplete();
+                return;
+            }
+            // Update progress bar from meta
+            fetch(`/eval/${runId}/status`).then(r => r.json()).then(meta => {
+                if (meta.current_step) document.getElementById('progressLabel').textContent = meta.current_step;
+                if (meta.current_index && meta.total_students) {
+                    const pct = Math.round((meta.current_index / meta.total_students) * 100);
+                    document.getElementById('progressBar').style.width = pct + '%';
+                    document.getElementById('progressCount').textContent = meta.current_index + '/' + meta.total_students;
+                }
+            }).catch(() => {});
+            // Run next step
+            if (data.next) setTimeout(() => runNextStep(runId), 500);
+        }).catch(err => { appendLog('[UI] Step error: ' + err.message); setTimeout(() => runNextStep(runId), 5000); });
 }
 
 function connectSSE(runId) {

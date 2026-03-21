@@ -136,8 +136,10 @@ def run_step(run_id):
                 # All Part A students done — check if Part B needed
                 with open(output_dir / "phase0_summary.json") as f2:
                     summ = _json.load(f2)
-                has_part_b = summ["stats"]["total_part_b_submissions"] > 0
-                has_part_c = (uploads_dir / "part_c.xlsx").exists()
+                import os
+                skip_heavy = os.environ.get("SKIP_HEAVY_EVAL", "").lower() in ("1", "true", "yes")
+                has_part_b = summ["stats"]["total_part_b_submissions"] > 0 and not skip_heavy
+                has_part_c = (uploads_dir / "part_c.xlsx").exists() and not skip_heavy
                 next_phase = "part_b" if has_part_b else ("part_c" if has_part_c else "aggregate")
                 run_manager.update_meta(run_id, phase="part_a_done",
                     current_step=f"Part A complete: {evaluated}/{len(valid_students)}", evaluated_part_b=0)

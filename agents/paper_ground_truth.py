@@ -123,14 +123,24 @@ def generate_ground_truth(
     Generate a ground truth document for a single paper.
     If paper_text is not provided, attempts to fetch it.
     """
-    # Fetch paper if needed
+    # Fetch paper if needed (with hard 30s timeout)
     if not paper_text:
         print(f"  Fetching paper: {title[:60]}...")
-        fetch_result = fetch_paper_text(url, title)
-        if fetch_result["status"] == "success":
-            paper_text = fetch_result["text"]
-        else:
-            print(f"  WARNING: Could not fetch paper. Error: {fetch_result.get('error', 'unknown')}")
+        import concurrent.futures
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                future = ex.submit(fetch_paper_text, url, title)
+                fetch_result = future.result(timeout=30)
+            if fetch_result["status"] == "success":
+                paper_text = fetch_result["text"]
+            else:
+                print(f"  WARNING: Could not fetch paper. Error: {fetch_result.get('error', 'unknown')}")
+                paper_text = None
+        except (concurrent.futures.TimeoutError, Exception) as e:
+            print(f"  WARNING: Paper fetch timed out or failed: {e}")
+            paper_text = None
+
+        if not paper_text:
             paper_text = f"[PAPER TEXT UNAVAILABLE - Evaluate based on title, venue, and method only]\nTitle: {title}\nVenue: {venue}\nYear: {year}\nMethod: {method}"
 
     # Truncate if too long (keep first ~15k chars to stay within context)

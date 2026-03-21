@@ -80,7 +80,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
                 pdf_url = f"https://arxiv.org/pdf/{arxiv_id}.pdf"
                 # Also get abstract
                 try:
-                    abs_resp = requests.get(f"https://arxiv.org/abs/{arxiv_id}", headers=HEADERS, timeout=15)
+                    abs_resp = requests.get(f"https://arxiv.org/abs/{arxiv_id}", headers=HEADERS, timeout=(5, 15))
                     if abs_resp.status_code == 200:
                         soup = BeautifulSoup(abs_resp.text, "html.parser")
                         abs_block = soup.find("blockquote", class_="abstract")
@@ -100,7 +100,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         elif "dl.acm.org" in domain:
             # Try to get the PDF link from the page
             try:
-                resp = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
+                resp = requests.get(url, headers=HEADERS, timeout=(5, 15), allow_redirects=True)
                 if resp.status_code == 200:
                     soup = BeautifulSoup(resp.text, "html.parser")
                     # Extract abstract
@@ -117,7 +117,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         # --- IEEE ---
         elif "ieee.org" in domain or "ieeexplore" in domain:
             try:
-                resp = requests.get(url, headers=HEADERS, timeout=15)
+                resp = requests.get(url, headers=HEADERS, timeout=(5, 15))
                 if resp.status_code == 200:
                     soup = BeautifulSoup(resp.text, "html.parser")
                     abs_div = soup.find("div", class_="abstract-text")
@@ -130,7 +130,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         elif "jmlr.org" in domain:
             if not url.endswith(".pdf"):
                 try:
-                    resp = requests.get(url, headers=HEADERS, timeout=15)
+                    resp = requests.get(url, headers=HEADERS, timeout=(5, 15))
                     if resp.status_code == 200:
                         soup = BeautifulSoup(resp.text, "html.parser")
                         pdf_link = soup.find("a", href=re.compile(r"\.pdf$"))
@@ -147,7 +147,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         elif "proceedings.neurips.cc" in domain or "papers.nips.cc" in domain:
             if not url.endswith(".pdf"):
                 try:
-                    resp = requests.get(url, headers=HEADERS, timeout=15)
+                    resp = requests.get(url, headers=HEADERS, timeout=(5, 15))
                     if resp.status_code == 200:
                         soup = BeautifulSoup(resp.text, "html.parser")
                         pdf_link = soup.find("a", href=re.compile(r"\.pdf"))
@@ -167,7 +167,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         # --- SpringerLink ---
         elif "springer" in domain or "link.springer" in domain:
             try:
-                resp = requests.get(url, headers=HEADERS, timeout=15)
+                resp = requests.get(url, headers=HEADERS, timeout=(5, 15))
                 if resp.status_code == 200:
                     soup = BeautifulSoup(resp.text, "html.parser")
                     abs_section = soup.find("section", {"data-title": "Abstract"})
@@ -186,7 +186,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         # --- Generic: try to find abstract on page ---
         else:
             try:
-                resp = requests.get(url, headers=HEADERS, timeout=15, allow_redirects=True)
+                resp = requests.get(url, headers=HEADERS, timeout=(5, 15), allow_redirects=True)
                 if resp.status_code == 200:
                     soup = BeautifulSoup(resp.text, "html.parser")
                     # Look for abstract
@@ -210,7 +210,7 @@ def fetch_paper_text(url: str, title: str = "") -> dict:
         if pdf_url and not pdf_path.exists():
             try:
                 print(f"    Downloading PDF from {pdf_url[:80]}...")
-                resp = requests.get(pdf_url, headers=HEADERS, timeout=30, allow_redirects=True)
+                resp = requests.get(pdf_url, headers=HEADERS, timeout=(5, 25), allow_redirects=True)
                 if resp.status_code == 200 and len(resp.content) > 1000:
                     pdf_path.write_bytes(resp.content)
                     print(f"    Saved PDF ({len(resp.content)} bytes)")

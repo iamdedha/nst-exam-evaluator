@@ -97,6 +97,9 @@ def run_full(run_id):
             penalties = summary.get("resubmission_penalties", {})
             all_a_results = []
 
+            import concurrent.futures
+            STUDENT_TIMEOUT = 120  # 2 min max per student
+
             for i, student in enumerate(valid_students):
                 roll = student["roll_number"]
                 name = student["full_name"]
@@ -105,9 +108,14 @@ def run_full(run_id):
                                        current_step=f"Evaluating {roll} ({name}) [{i+1}/{len(valid_students)}]",
                                        current_index=i+1, evaluated_part_a=i)
                 try:
-                    result = pa_eval.evaluate_student_part_a(student, penalty_pct)
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                        future = ex.submit(pa_eval.evaluate_student_part_a, student, penalty_pct)
+                        result = future.result(timeout=STUDENT_TIMEOUT)
                     all_a_results.append(result)
                     yield f"  {roll} ({name}): {result.get('final_total', '?')}/50\n"
+                except concurrent.futures.TimeoutError:
+                    yield f"  {roll} TIMEOUT (>{STUDENT_TIMEOUT}s)\n"
+                    all_a_results.append({"roll_number": roll, "error": f"Timeout ({STUDENT_TIMEOUT}s)", "final_total": 0, "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_TIMEOUT"]})
                 except Exception as e:
                     yield f"  {roll} ERROR: {e}\n"
                     all_a_results.append({"roll_number": roll, "error": str(e), "final_total": 0, "raw_total": 0, "scaled_score": 0, "flags": ["EVALUATION_ERROR"]})

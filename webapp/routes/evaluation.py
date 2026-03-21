@@ -158,11 +158,15 @@ def run_step(run_id):
             scores_dir.mkdir(parents=True, exist_ok=True)
             pb_eval.SCORES_DIR = scores_dir
 
+            def norm_roll(r):
+                try: return str(int(float(r)))
+                except: return str(r).strip()
+
             part_b_students = summary.get("part_b_students", [])
-            valid_a = {s["roll_number"]: s for s in summary.get("valid_students", [])}
+            valid_a = {norm_roll(s["roll_number"]): s for s in summary.get("valid_students", [])}
             by_roll = {}
             for s in part_b_students:
-                by_roll[s["roll_number"]] = s
+                by_roll[norm_roll(s["roll_number"])] = s
             b_list = list(by_roll.items())
 
             evaluated_b = meta.get("evaluated_part_b", 0)

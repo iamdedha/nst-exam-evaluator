@@ -133,44 +133,184 @@ def run_step(run_id):
                     return jsonify({"step": "part_a", "student": roll, "error": str(e),
                                    "progress": f"{evaluated+1}/{len(valid_students)}", "next": "part_a"})
             else:
-                # All students done
+                # All Part A students done — check if Part B needed
+                with open(output_dir / "phase0_summary.json") as f2:
+                    summ = _json.load(f2)
+                has_part_b = summ["stats"]["total_part_b_submissions"] > 0
+                has_part_c = (uploads_dir / "part_c.xlsx").exists()
+                next_phase = "part_b" if has_part_b else ("part_c" if has_part_c else "aggregate")
                 run_manager.update_meta(run_id, phase="part_a_done",
-                    current_step=f"Part A complete: {evaluated}/{len(valid_students)}")
-                return jsonify({"step": "part_a_done", "next": "aggregate"})
+                    current_step=f"Part A complete: {evaluated}/{len(valid_students)}", evaluated_part_b=0)
+                return jsonify({"step": "part_a_done", "next": next_phase})
 
-        elif phase in ("part_a_done", "part_b_done", "part_c_done", "aggregate"):
-            # Aggregation
+        elif phase in ("part_a_done", "part_b"):
+            # Part B: evaluate one student per call
+            import json as _json
+            from agents.github_checker import parse_github_url, check_repo_exists
+            from agents.paper_ground_truth import generate_ground_truth
+            import agents.part_b_evaluator as pb_eval
+
+            with open(output_dir / "phase0_summary.json") as f:
+                summary = _json.load(f)
+
+            pb_eval.OUTPUT_DIR = output_dir
+            scores_dir = output_dir / "part_b_scores"
+            scores_dir.mkdir(parents=True, exist_ok=True)
+            pb_eval.SCORES_DIR = scores_dir
+
+            part_b_students = summary.get("part_b_students", [])
+            valid_a = {s["roll_number"]: s for s in summary.get("valid_students", [])}
+            by_roll = {}
+            for s in part_b_students:
+                by_roll[s["roll_number"]] = s
+            b_list = list(by_roll.items())
+
+            evaluated_b = meta.get("evaluated_part_b", 0)
+            if evaluated_b < len(b_list):
+                roll, student_b = b_list[evaluated_b]
+                student_a = valid_a.get(roll, {})
+                run_manager.update_meta(run_id, phase="part_b",
+                    current_step=f"Part B: {roll} ({student_b['full_name']}) [{evaluated_b+1}/{len(b_list)}]")
+
+                if not student_a:
+                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
+                    return jsonify({"step": "part_b", "student": roll, "error": "No valid Part A", "next": "part_b"})
+
+                # Load/generate ground truth
+                gt_dir = output_dir / "ground_truths"
+                gt_dir.mkdir(parents=True, exist_ok=True)
+                safe_title = student_a["paper_title"][:60].replace("/", "_").replace(" ", "_")
+                gt_path = gt_dir / f"{safe_title}.json"
+                if gt_path.exists():
+                    with open(gt_path) as f:
+                        ground_truth = _json.load(f)
+                else:
+                    ground_truth = generate_ground_truth(
+                        title=student_a["paper_title"], venue=student_a["venue"],
+                        year=student_a.get("year_of_publication", 0),
+                        method=student_a["primary_method"],
+                        url=student_a.get("paper_link", ""))
+                    if ground_truth:
+                        with open(gt_path, "w") as f:
+                            _json.dump(ground_truth, f, indent=2)
+
+                try:
+                    result = pb_eval.evaluate_student_part_b(student_b, student_a, ground_truth or {})
+                    score = result.get("final_total", 0)
+                    # Save
+                    results_path = output_dir / "part_b_all_results.json"
+                    existing = []
+                    if results_path.exists():
+                        with open(results_path) as f:
+                            existing = _json.load(f)
+                    existing.append({"roll_number": roll, "final_total": score,
+                                    "raw_total": result.get("raw_total", 0),
+                                    "scaled_score": result.get("scaled_score", 0),
+                                    "flags": result.get("flags", [])})
+                    with open(results_path, "w") as f:
+                        _json.dump(existing, f, indent=2, default=str)
+                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
+                    gc.collect()
+                    return jsonify({"step": "part_b", "student": roll, "score": score,
+                                   "progress": f"{evaluated_b+1}/{len(b_list)}", "next": "part_b"})
+                except Exception as e:
+                    results_path = output_dir / "part_b_all_results.json"
+                    existing = []
+                    if results_path.exists():
+                        with open(results_path) as f:
+                            existing = _json.load(f)
+                    existing.append({"roll_number": roll, "error": str(e), "final_total": 0, "flags": ["EVALUATION_ERROR"]})
+                    with open(results_path, "w") as f:
+                        _json.dump(existing, f, indent=2, default=str)
+                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
+                    gc.collect()
+                    return jsonify({"step": "part_b", "student": roll, "error": str(e), "next": "part_b"})
+            else:
+                has_part_c = (uploads_dir / "part_c.xlsx").exists()
+                next_phase = "part_c" if has_part_c else "aggregate"
+                run_manager.update_meta(run_id, phase="part_b_done",
+                    current_step=f"Part B complete: {evaluated_b}/{len(b_list)}", evaluated_part_c=0)
+                return jsonify({"step": "part_b_done", "next": next_phase})
+
+        elif phase in ("part_b_done", "part_c"):
+            # Part C: evaluate all at once (cross-verification)
+            import json as _json
+            run_manager.update_meta(run_id, phase="part_c", current_step="Running Part C cross-verification...")
+            with open(output_dir / "phase0_summary.json") as f:
+                summary = _json.load(f)
+            try:
+                from agents.part_c_evaluator import run_part_c_evaluation
+                pc_results = run_part_c_evaluation(
+                    str(uploads_dir / "part_c.xlsx"),
+                    summary.get("valid_students", []),
+                    output_dir)
+                evaluated_c = sum(1 for r in pc_results if "error" not in r)
+                run_manager.update_meta(run_id, phase="part_c_done", evaluated_part_c=evaluated_c,
+                    current_step=f"Part C complete: {evaluated_c} verified")
+                return jsonify({"step": "part_c_done", "evaluated": evaluated_c, "next": "aggregate"})
+            except Exception as e:
+                run_manager.update_meta(run_id, phase="part_c_done", current_step=f"Part C error: {str(e)[:50]}")
+                return jsonify({"step": "part_c_error", "error": str(e), "next": "aggregate"})
+
+        elif phase in ("part_c_done", "aggregate"):
+            # Aggregation — combine Part A + B + C
             import json as _json, csv as csv_mod
             run_manager.update_meta(run_id, phase="aggregate", current_step="Aggregating scores...")
 
             with open(output_dir / "phase0_summary.json") as f:
                 summary = _json.load(f)
 
-            results_path = output_dir / "part_a_all_results.json"
-            all_results = []
-            if results_path.exists():
-                with open(results_path) as f:
-                    all_results = _json.load(f)
+            # Load all results
+            pa_by_roll, pb_by_roll, pc_by_roll = {}, {}, {}
+            for path, target in [
+                (output_dir / "part_a_all_results.json", pa_by_roll),
+                (output_dir / "part_b_all_results.json", pb_by_roll),
+                (output_dir / "part_c_all_results.json", pc_by_roll),
+            ]:
+                if path.exists():
+                    with open(path) as f:
+                        for r in _json.load(f):
+                            target[r["roll_number"]] = r
 
-            pa_by_roll = {r["roll_number"]: r for r in all_results}
             rows = []
             for s in summary.get("valid_students", []):
                 roll = s["roll_number"]
                 pa = pa_by_roll.get(roll, {})
-                rows.append({
+                pb = pb_by_roll.get(roll, {})
+                pc = pc_by_roll.get(roll, {})
+
+                row = {
                     "Roll Number": roll, "Name": s["full_name"], "Paper Title": s["paper_title"],
-                    "Status": "valid", "Part A Final (50)": pa.get("final_total", 0),
+                    "Status": "valid",
+                    "Part A Final (50)": pa.get("final_total", 0),
                     "Part A Raw (50)": pa.get("raw_total", 0),
                     "Part A Scaled (5%)": pa.get("scaled_score", 0),
-                    "Flags": "; ".join(pa.get("flags", [])),
-                    "Needs Review": "YES" if pa.get("flags") else "NO",
-                })
+                }
+                if pb:
+                    row["Part B Raw (130)"] = pb.get("raw_total", 0)
+                    row["Part B Final (130)"] = pb.get("final_total", 0)
+                    row["Part B Scaled (30%)"] = pb.get("scaled_score", 0)
+                else:
+                    row["Part B Raw (130)"] = "NO SUBMISSION"
+                    row["Part B Final (130)"] = 0
+                    row["Part B Scaled (30%)"] = 0
+                if pc:
+                    row["Part C Score (5)"] = pc.get("total_score", 0)
+                    row["Part C Questions Answered"] = pc.get("questions_answered", 0)
+                else:
+                    row["Part C Score (5)"] = "NO DATA"
+
+                all_flags = pa.get("flags", []) + pb.get("flags", [])
+                row["Flags"] = "; ".join(all_flags[:5]) if all_flags else ""
+                row["Needs Review"] = "YES" if all_flags else "NO"
+                rows.append(row)
 
             with open(output_dir / "master_scores.json", "w") as f:
                 _json.dump(rows, f, indent=2)
             if rows:
+                all_fields = list(dict.fromkeys(k for row in rows for k in row.keys()))
                 with open(output_dir / "master_scores.csv", "w", newline="") as f:
-                    w = csv_mod.DictWriter(f, fieldnames=list(rows[0].keys()))
+                    w = csv_mod.DictWriter(f, fieldnames=all_fields, extrasaction="ignore")
                     w.writeheader()
                     w.writerows(rows)
 

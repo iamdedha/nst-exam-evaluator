@@ -114,14 +114,28 @@ function runNextStep(runId) {
                 appendLog('[Phase 0] ' + data.result);
                 setPhaseState('phase0', 'done', data.result);
             } else if (data.step === 'part_a') {
-                const msg = data.score !== undefined ? `${data.student}: ${data.score}/50` : `${data.student}: ERROR`;
+                const msg = data.score !== undefined ? `${data.student}: ${data.score}/50` : `${data.student}: ERROR - ${data.error || ''}`;
                 appendLog('[Part A] ' + msg + ' (' + data.progress + ')');
                 setPhaseState('part_a', 'active', data.progress);
             } else if (data.step === 'part_a_done') {
                 appendLog('[Part A] Complete');
                 setPhaseState('part_a', 'done');
+            } else if (data.step === 'part_b') {
+                const msg = data.score !== undefined ? `${data.student}: ${data.score}/130` : `${data.student}: ${data.error || 'ERROR'}`;
+                appendLog('[Part B] ' + msg + (data.progress ? ' (' + data.progress + ')' : ''));
+                setPhaseState('part_b', 'active', data.progress || '');
+            } else if (data.step === 'part_b_done') {
+                appendLog('[Part B] Complete');
+                setPhaseState('part_b', 'done');
+            } else if (data.step === 'part_c_done') {
+                appendLog('[Part C] Cross-verification complete: ' + (data.evaluated || 0) + ' students');
+                setPhaseState('part_c', 'done', (data.evaluated || 0) + ' verified');
+            } else if (data.step === 'part_c_error') {
+                appendLog('[Part C] Error: ' + (data.error || 'unknown'));
+                setPhaseState('part_c', 'done', 'error');
             } else if (data.step === 'complete') {
                 appendLog('[Done] Evaluation complete! ' + data.total_students + ' students');
+                setPhaseState('aggregate', 'done');
                 showComplete();
                 return;
             }

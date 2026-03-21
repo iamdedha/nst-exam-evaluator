@@ -128,6 +128,66 @@ def test_pipeline():
     return jsonify(results)
 
 
+@eval_bp.route("/eval/<run_id>/run-sync")
+def run_sync(run_id):
+    """Run pipeline synchronously and stream output as text for debugging."""
+    import sys, traceback
+    meta = run_manager.get_meta(run_id)
+    if not meta:
+        return "Run not found", 404
+
+    def generate():
+        eval_dir = str(run_manager.Config.EVALUATOR_DIR)
+        if eval_dir not in sys.path:
+            sys.path.insert(0, eval_dir)
+
+        yield "=== SYNC PIPELINE START ===\n"
+
+        run_dir = run_manager.get_run_dir(run_id)
+        output_dir = run_dir / "output"
+        uploads_dir = run_dir / "uploads"
+
+        yield f"Run dir: {run_dir}\n"
+        yield f"Uploads: {list(uploads_dir.iterdir()) if uploads_dir.exists() else 'MISSING'}\n"
+
+        xlsx_path = uploads_dir / "part_a.xlsx"
+        csv_path = uploads_dir / "part_b.csv"
+        yield f"Part A exists: {xlsx_path.exists()}\n"
+        yield f"Part B exists: {csv_path.exists()}\n"
+
+        # Phase 0
+        try:
+            yield "\n=== PHASE 0 ===\n"
+            from phase0_data_cleanup import run_phase0_web
+            summary = run_phase0_web(str(xlsx_path), str(csv_path), output_dir)
+            valid = summary['stats']['total_valid_part_a']
+            yield f"Phase 0 OK: {valid} valid students\n"
+
+            for s in summary.get('valid_students', [])[:5]:
+                yield f"  Student: {s['roll_number']} - {s['full_name']}\n"
+
+        except Exception as e:
+            yield f"Phase 0 FAILED:\n{traceback.format_exc()}\n"
+            return
+
+        # Part A (just first student as test)
+        try:
+            yield "\n=== PART A (first student only) ===\n"
+            import agents.part_a_evaluator as pa_eval
+            student = summary['valid_students'][0]
+            yield f"Evaluating: {student['roll_number']} ({student['full_name']})\n"
+            result = pa_eval.evaluate_student_part_a(student, 0)
+            yield f"Score: {result.get('final_total', '?')}/50\n"
+            yield f"Flags: {result.get('flags', [])}\n"
+        except Exception as e:
+            yield f"Part A FAILED:\n{traceback.format_exc()}\n"
+
+        yield "\n=== DONE ===\n"
+
+    return Response(generate(), mimetype='text/plain',
+                   headers={"X-Accel-Buffering": "no"})
+
+
 @eval_bp.route("/eval/<run_id>/status")
 def eval_status(run_id):
     """JSON status endpoint."""

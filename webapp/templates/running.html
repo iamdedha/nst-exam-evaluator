@@ -101,8 +101,10 @@ function startEvaluation(runId) {
 }
 
 function runNextStep(runId) {
-    fetch(`/eval/${runId}/run-step`)
-        .then(r => r.json())
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 min timeout
+    fetch(`/eval/${runId}/run-step`, { signal: controller.signal })
+        .then(r => { clearTimeout(timeoutId); return r.json(); })
         .then(data => {
             if (data.error) {
                 appendLog('[ERROR] ' + data.error);
@@ -150,7 +152,16 @@ function runNextStep(runId) {
             }).catch(() => {});
             // Run next step
             if (data.next) setTimeout(() => runNextStep(runId), 500);
-        }).catch(err => { appendLog('[UI] Step error: ' + err.message); setTimeout(() => runNextStep(runId), 5000); });
+        }).catch(err => {
+            appendLog('[UI] Step timeout/error: ' + err.message + ' - checking status...');
+            // Check if progress was made despite timeout
+            fetch(`/eval/${runId}/status`).then(r => r.json()).then(meta => {
+                if (meta.status === 'complete') { showComplete(); return; }
+                if (meta.status === 'error') { showError(meta.error || 'Pipeline error'); return; }
+                appendLog('[UI] Status: ' + (meta.current_step || meta.phase) + ' - retrying step...');
+                setTimeout(() => runNextStep(runId), 2000);
+            }).catch(() => { setTimeout(() => runNextStep(runId), 5000); });
+        });
 }
 
 function connectSSE(runId) {

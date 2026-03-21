@@ -30,9 +30,26 @@ def start_eval(run_id):
     # Create progress tracker
     progress = create_progress(run_id)
 
+    def _safe_pipeline(run_id, progress):
+        """Wrapper to catch ALL exceptions including SystemExit."""
+        import traceback
+        try:
+            run_full_pipeline(run_id, progress)
+        except BaseException as e:
+            tb = traceback.format_exc()
+            print(f"[PIPELINE THREAD CRASH] {e}\n{tb}", flush=True)
+            try:
+                progress.update(phase="error", error=str(e),
+                               current_step=f"THREAD CRASH: {str(e)[:100]}")
+                progress.log(f"THREAD CRASH: {tb}")
+                run_manager.update_meta(run_id, status="error", phase="error",
+                                       error=str(e), traceback=tb[-500:])
+            except:
+                pass
+
     # Start evaluation in background thread
     thread = threading.Thread(
-        target=run_full_pipeline,
+        target=_safe_pipeline,
         args=(run_id, progress),
         daemon=True,
         name=f"eval-{run_id}",
@@ -66,6 +83,40 @@ def progress_stream(run_id):
             "Connection": "keep-alive",
         }
     )
+
+
+@eval_bp.route("/eval/test-pipeline")
+def test_pipeline():
+    """Test that the pipeline can import and run Phase 0."""
+    import sys, os, traceback
+    results = {}
+    eval_dir = str(run_manager.Config.EVALUATOR_DIR)
+    if eval_dir not in sys.path:
+        sys.path.insert(0, eval_dir)
+    results["eval_dir"] = eval_dir
+    results["eval_dir_exists"] = os.path.isdir(eval_dir)
+    results["sys_path_0"] = sys.path[0]
+
+    try:
+        from phase0_data_cleanup import run_phase0_web
+        results["import_phase0"] = "OK"
+    except Exception as e:
+        results["import_phase0"] = f"FAILED: {traceback.format_exc()[-300:]}"
+
+    try:
+        from webapp.services.pipeline import run_phase0, _setup_sys_path, _eval_lock
+        results["import_pipeline"] = "OK"
+        results["eval_lock_locked"] = _eval_lock.locked()
+    except Exception as e:
+        results["import_pipeline"] = f"FAILED: {traceback.format_exc()[-300:]}"
+
+    try:
+        import agents.part_a_evaluator
+        results["import_part_a_eval"] = "OK"
+    except Exception as e:
+        results["import_part_a_eval"] = f"FAILED: {traceback.format_exc()[-300:]}"
+
+    return jsonify(results)
 
 
 @eval_bp.route("/eval/<run_id>/status")

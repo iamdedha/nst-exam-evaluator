@@ -30,31 +30,40 @@ def start_eval(run_id):
     # Create progress tracker
     progress = create_progress(run_id)
 
-    def _safe_pipeline(run_id, progress):
+    def _safe_pipeline(rid, prog):
         """Wrapper to catch ALL exceptions including SystemExit."""
-        import traceback
+        import traceback as tb_mod
         try:
-            run_full_pipeline(run_id, progress)
+            print(f"[THREAD] Pipeline thread started for {rid}", flush=True)
+            run_full_pipeline(rid, prog)
+            print(f"[THREAD] Pipeline thread completed for {rid}", flush=True)
         except BaseException as e:
-            tb = traceback.format_exc()
-            print(f"[PIPELINE THREAD CRASH] {e}\n{tb}", flush=True)
+            tb = tb_mod.format_exc()
+            print(f"[THREAD CRASH] {e}\n{tb}", flush=True)
             try:
-                progress.update(phase="error", error=str(e),
-                               current_step=f"THREAD CRASH: {str(e)[:100]}")
-                progress.log(f"THREAD CRASH: {tb}")
-                run_manager.update_meta(run_id, status="error", phase="error",
+                prog.update(phase="error", error=str(e),
+                           current_step=f"THREAD CRASH: {str(e)[:100]}")
+                prog.log(f"THREAD CRASH: {tb}")
+                run_manager.update_meta(rid, status="error", phase="error",
                                        error=str(e), traceback=tb[-500:])
             except:
                 pass
 
     # Start evaluation in background thread
-    thread = threading.Thread(
-        target=_safe_pipeline,
-        args=(run_id, progress),
-        daemon=True,
-        name=f"eval-{run_id}",
-    )
-    thread.start()
+    import concurrent.futures
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    future = executor.submit(_safe_pipeline, run_id, progress)
+
+    # Add a callback to log completion
+    def _on_done(fut):
+        try:
+            fut.result()  # raises if thread threw
+        except Exception as e:
+            print(f"[FUTURE ERROR] {e}", flush=True)
+            import traceback
+            run_manager.update_meta(run_id, status="error", phase="error",
+                                   error=str(e), traceback=traceback.format_exc()[-500:])
+    future.add_done_callback(_on_done)
 
     run_manager.update_meta(run_id, status="running")
     return jsonify({"status": "started", "run_id": run_id})

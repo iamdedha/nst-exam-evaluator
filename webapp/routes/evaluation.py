@@ -136,20 +136,18 @@ def run_step(run_id):
                 # All Part A students done — check if Part B needed
                 with open(output_dir / "phase0_summary.json") as f2:
                     summ = _json.load(f2)
-                import os
-                skip_heavy = os.environ.get("SKIP_HEAVY_EVAL", "").lower() in ("1", "true", "yes")
-                has_part_b = summ["stats"]["total_part_b_submissions"] > 0 and not skip_heavy
-                has_part_c = (uploads_dir / "part_c.xlsx").exists() and not skip_heavy
+                has_part_b = summ["stats"]["total_part_b_submissions"] > 0
+                has_part_c = (uploads_dir / "part_c.xlsx").exists()
                 next_phase = "part_b" if has_part_b else ("part_c" if has_part_c else "aggregate")
                 run_manager.update_meta(run_id, phase="part_a_done",
                     current_step=f"Part A complete: {evaluated}/{len(valid_students)}", evaluated_part_b=0)
                 return jsonify({"step": "part_a_done", "next": next_phase})
 
-        elif phase in ("part_a_done", "part_b"):
-            # Part B: evaluate one student per call
+        elif phase in ("part_a_done", "part_b", "part_b_gt"):
+            # Part B: split into sub-steps per student
+            # Step 1 (part_b_gt): generate ground truth only (~10s)
+            # Step 2 (part_b): evaluate with ground truth (~15s)
             import json as _json
-            from agents.github_checker import parse_github_url, check_repo_exists
-            from agents.paper_ground_truth import generate_ground_truth
             import agents.part_b_evaluator as pb_eval
 
             with open(output_dir / "phase0_summary.json") as f:
@@ -175,35 +173,50 @@ def run_step(run_id):
             if evaluated_b < len(b_list):
                 roll, student_b = b_list[evaluated_b]
                 student_a = valid_a.get(roll, {})
-                run_manager.update_meta(run_id, phase="part_b",
-                    current_step=f"Part B: {roll} ({student_b['full_name']}) [{evaluated_b+1}/{len(b_list)}]")
 
                 if not student_a:
                     run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
                     return jsonify({"step": "part_b", "student": roll, "error": "No valid Part A", "next": "part_b"})
 
-                # Load/generate ground truth
                 gt_dir = output_dir / "ground_truths"
                 gt_dir.mkdir(parents=True, exist_ok=True)
                 safe_title = student_a["paper_title"][:60].replace("/", "_").replace(" ", "_")
                 gt_path = gt_dir / f"{safe_title}.json"
+
+                # Sub-step 1: Generate ground truth if needed
+                if phase in ("part_a_done", "part_b_gt") or not gt_path.exists():
+                    if not gt_path.exists():
+                        run_manager.update_meta(run_id, phase="part_b_gt",
+                            current_step=f"Part B: Ground truth for {roll} [{evaluated_b+1}/{len(b_list)}]")
+                        try:
+                            from agents.paper_ground_truth import generate_ground_truth
+                            ground_truth = generate_ground_truth(
+                                title=student_a["paper_title"], venue=student_a["venue"],
+                                year=student_a.get("year_of_publication", 0),
+                                method=student_a["primary_method"],
+                                url=student_a.get("paper_link", ""))
+                            if ground_truth:
+                                with open(gt_path, "w") as f:
+                                    _json.dump(ground_truth, f, indent=2)
+                        except Exception as e:
+                            pass  # Will use empty ground truth
+                    # Move to evaluation sub-step
+                    run_manager.update_meta(run_id, phase="part_b")
+                    return jsonify({"step": "part_b_gt", "student": roll, "next": "part_b",
+                                   "message": f"Ground truth ready for {roll}"})
+
+                # Sub-step 2: Evaluate student
+                run_manager.update_meta(run_id, phase="part_b",
+                    current_step=f"Part B: Evaluating {roll} ({student_b['full_name']}) [{evaluated_b+1}/{len(b_list)}]")
+
+                ground_truth = {}
                 if gt_path.exists():
                     with open(gt_path) as f:
                         ground_truth = _json.load(f)
-                else:
-                    ground_truth = generate_ground_truth(
-                        title=student_a["paper_title"], venue=student_a["venue"],
-                        year=student_a.get("year_of_publication", 0),
-                        method=student_a["primary_method"],
-                        url=student_a.get("paper_link", ""))
-                    if ground_truth:
-                        with open(gt_path, "w") as f:
-                            _json.dump(ground_truth, f, indent=2)
 
                 try:
-                    result = pb_eval.evaluate_student_part_b(student_b, student_a, ground_truth or {})
+                    result = pb_eval.evaluate_student_part_b(student_b, student_a, ground_truth)
                     score = result.get("final_total", 0)
-                    # Save
                     results_path = output_dir / "part_b_all_results.json"
                     existing = []
                     if results_path.exists():
@@ -215,7 +228,7 @@ def run_step(run_id):
                                     "flags": result.get("flags", [])})
                     with open(results_path, "w") as f:
                         _json.dump(existing, f, indent=2, default=str)
-                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
+                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1, phase="part_b_gt")
                     gc.collect()
                     return jsonify({"step": "part_b", "student": roll, "score": score,
                                    "progress": f"{evaluated_b+1}/{len(b_list)}", "next": "part_b"})
@@ -228,7 +241,7 @@ def run_step(run_id):
                     existing.append({"roll_number": roll, "error": str(e), "final_total": 0, "flags": ["EVALUATION_ERROR"]})
                     with open(results_path, "w") as f:
                         _json.dump(existing, f, indent=2, default=str)
-                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1)
+                    run_manager.update_meta(run_id, evaluated_part_b=evaluated_b+1, phase="part_b_gt")
                     gc.collect()
                     return jsonify({"step": "part_b", "student": roll, "error": str(e), "next": "part_b"})
             else:

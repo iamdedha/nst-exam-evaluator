@@ -146,6 +146,14 @@ def run_step(run_id):
                 return jsonify({"step": "part_a_done", "next": next_phase})
 
         elif phase in ("part_a_done", "part_b", "part_b_gt"):
+            # Check if Part B should be skipped on Render
+            import os
+            if os.environ.get("SKIP_HEAVY_EVAL", "").lower() in ("1", "true", "yes"):
+                has_part_c = (uploads_dir / "part_c.xlsx").exists() and False  # skip C too
+                run_manager.update_meta(run_id, phase="part_b_done",
+                    current_step="Part B skipped (server timeout constraints)")
+                return jsonify({"step": "part_b_done", "message": "Skipped on Render", "next": "aggregate"})
+
             # Part B: split into sub-steps per student
             # Step 1 (part_b_gt): generate ground truth only (~10s)
             # Step 2 (part_b): evaluate with ground truth (~15s)

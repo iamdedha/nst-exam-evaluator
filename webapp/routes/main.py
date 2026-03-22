@@ -90,7 +90,7 @@ def index():
 @main_bp.route("/health")
 def health():
     """Debug endpoint to check environment and imports."""
-    checks = {"version": "v26-skip-heavy-back"}
+    checks = {"version": "v27-skip-in-handler"}
     # Check env vars
     checks["GEMINI_API_KEY"] = "set" if os.environ.get("GEMINI_API_KEY") else "NOT SET"
     checks["OPENROUTER_API_KEY"] = "set" if os.environ.get("OPENROUTER_API_KEY") else "NOT SET"

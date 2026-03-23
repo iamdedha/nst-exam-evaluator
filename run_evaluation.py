@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
 """
 Master Evaluation Orchestrator
-Runs the complete evaluation pipeline: Phase 0 -> Phase 1 (on demand) -> Phase 2 -> Phase 3 -> Phase 4
+Runs the complete evaluation pipeline: Phase 0 -> Part A -> Part B -> Part C -> Aggregation
 
 Usage:
     python run_evaluation.py                    # Run everything
     python run_evaluation.py --phase0           # Only Phase 0
     python run_evaluation.py --part-a           # Only Part A evaluation
     python run_evaluation.py --part-b           # Only Part B evaluation
+    python run_evaluation.py --part-c           # Only Part C evaluation
     python run_evaluation.py --part-a-student 230049  # Single student Part A
     python run_evaluation.py --part-b-student 230091  # Single student Part B
     python run_evaluation.py --aggregate        # Only aggregation
+    python run_evaluation.py --all              # Run everything
+
+Environment Variables:
+    LLM_PROVIDER        - "openrouter" or "gemini" (default: openrouter)
+    OPENROUTER_API_KEY   - OpenRouter API key (for Claude Sonnet)
+    GEMINI_API_KEY       - Google Gemini API key (free alternative)
+    GITHUB_TOKEN         - GitHub personal access token (for repo access)
+    SKIP_PAPER_FETCH     - Set to "true" to skip downloading full paper PDFs
 """
 
 import argparse
@@ -110,6 +119,36 @@ def run_part_b_all():
     """Run Part B evaluation for all Part B students."""
     from agents.part_b_evaluator import run_all_part_b
     return run_all_part_b()
+
+
+def run_part_c_all():
+    """Run Part C evaluation for all students."""
+    summary_path = OUTPUT_DIR / "phase0_summary.json"
+    with open(summary_path) as f:
+        summary = json.load(f)
+
+    # Find Part C Excel file
+    part_c_xlsx = None
+    for candidate in [
+        EVALUATOR_DIR.parent / "Latest_part_a_b_c" / "Advance ML Midsem Submissions - RU.xlsx",
+        EVALUATOR_DIR.parent / "Advance ML Midsem Submissions - RU.xlsx",
+        OUTPUT_DIR.parent / "part_c.xlsx",
+    ]:
+        if candidate.exists():
+            part_c_xlsx = candidate
+            break
+
+    if not part_c_xlsx:
+        print("Part C Excel file not found. Looked for 'Advance ML Midsem Submissions - RU.xlsx'")
+        print("Place it in the project root or Latest_part_a_b_c/ directory.")
+        return []
+
+    from agents.part_c_evaluator import run_part_c_evaluation
+    return run_part_c_evaluation(
+        xlsx_path=str(part_c_xlsx),
+        valid_students=summary["valid_students"],
+        output_dir=OUTPUT_DIR,
+    )
 
 
 def aggregate_scores():
@@ -267,6 +306,7 @@ def main():
     parser.add_argument("--phase0", action="store_true", help="Run Phase 0 only")
     parser.add_argument("--part-a", action="store_true", help="Run Part A evaluation")
     parser.add_argument("--part-b", action="store_true", help="Run Part B evaluation")
+    parser.add_argument("--part-c", action="store_true", help="Run Part C cross-verification")
     parser.add_argument("--part-a-student", type=str, help="Evaluate single student Part A")
     parser.add_argument("--part-b-student", type=str, help="Evaluate single student Part B")
     parser.add_argument("--aggregate", action="store_true", help="Run score aggregation only")
@@ -276,7 +316,7 @@ def main():
 
     # Default to --all if no args
     run_all = args.all or not any([
-        args.phase0, args.part_a, args.part_b,
+        args.phase0, args.part_a, args.part_b, args.part_c,
         args.part_a_student, args.part_b_student, args.aggregate
     ])
 
@@ -296,6 +336,9 @@ def main():
         run_part_b_single(args.part_b_student)
     elif args.part_b or run_all:
         run_part_b_all()
+
+    if args.part_c or run_all:
+        run_part_c_all()
 
     if args.aggregate or run_all:
         aggregate_scores()

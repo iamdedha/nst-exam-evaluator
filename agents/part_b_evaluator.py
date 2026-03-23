@@ -34,18 +34,37 @@ GROUND_TRUTH_DIR = OUTPUT_DIR / "ground_truths"
 SCORES_DIR = OUTPUT_DIR / "part_b_scores"
 SCORES_DIR.mkdir(parents=True, exist_ok=True)
 
-def resolve_notebook_name(owner: str, repo: str, task_name: str, branch: str = "main") -> str:
+def resolve_partb_folder(owner: str, repo: str, branch: str = "main") -> str:
+    """
+    Find the actual Part B folder name. Students use various names:
+    partB, part-B, Part_B, Part-B, part_B, PartB, etc.
+    Returns the actual folder name or "partB" as default.
+    """
+    # Check root directory listing
+    root_files = list_directory(owner, repo, "", branch)
+    for f in root_files:
+        if f.get("type") == "dir" and f["name"].lower().replace("-", "").replace("_", "") in ("partb", "partb"):
+            return f["name"]
+    # Also check common variations directly
+    for candidate in ["partB", "part-B", "Part_B", "Part-B", "part_B", "PartB", "part_b", "PARTB"]:
+        files = list_directory(owner, repo, candidate, branch)
+        if files:
+            return candidate
+    return "partB"
+
+
+def resolve_notebook_name(owner: str, repo: str, task_name: str, branch: str = "main", partb_folder: str = "partB") -> str:
     """
     Resolve notebook path handling naming variations.
     Students may use: task_1_1.ipynb, task1_1.ipynb, Task_1_1.ipynb, etc.
     """
     # Try common naming patterns
     candidates = [
-        f"partB/{task_name}.ipynb",                          # task_1_1.ipynb (expected)
-        f"partB/{task_name.replace('task_', 'task')}.ipynb", # task1_1.ipynb
-        f"partB/{task_name.replace('_', '')}.ipynb",         # task11.ipynb
-        f"partB/{task_name.upper()}.ipynb",                  # TASK_1_1.ipynb
-        f"partB/{task_name.capitalize()}.ipynb",             # Task_1_1.ipynb
+        f"{partb_folder}/{task_name}.ipynb",                          # task_1_1.ipynb (expected)
+        f"{partb_folder}/{task_name.replace('task_', 'task')}.ipynb", # task1_1.ipynb
+        f"{partb_folder}/{task_name.replace('_', '')}.ipynb",         # task11.ipynb
+        f"{partb_folder}/{task_name.upper()}.ipynb",                  # TASK_1_1.ipynb
+        f"{partb_folder}/{task_name.capitalize()}.ipynb",             # Task_1_1.ipynb
     ]
 
     for path in candidates:
@@ -53,15 +72,15 @@ def resolve_notebook_name(owner: str, repo: str, task_name: str, branch: str = "
         if result.get("exists"):
             return path
 
-    # Last resort: list partB/ and fuzzy match
-    files = list_directory(owner, repo, "partB", branch)
+    # Last resort: list folder and fuzzy match
+    files = list_directory(owner, repo, partb_folder, branch)
     task_num = task_name.replace("task_", "")  # "1_1"
     for f in files:
         fname = f["name"].lower()
         if fname.endswith(".ipynb") and task_num.replace("_", "") in fname.replace("_", ""):
-            return f"partB/{f['name']}"
+            return f"{partb_folder}/{f['name']}"
 
-    return f"partB/{task_name}.ipynb"  # Return expected name (will fail gracefully)
+    return f"{partb_folder}/{task_name}.ipynb"  # Return expected name (will fail gracefully)
 
 
 EVALUATOR_SYSTEM = """You are an expert ML exam evaluator for a BTech 3rd year Advanced Machine Learning course.
@@ -122,7 +141,7 @@ def extract_notebook_text(nb_data: dict) -> str:
     return "\n".join(parts)
 
 
-def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: dict) -> dict:
+def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
     """
     Evaluate Q1: Paper Understanding (25 marks)
     Task 1.1: Core Contribution (8 marks)
@@ -134,7 +153,7 @@ def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: 
     # Fetch all Q1 notebooks (with flexible naming)
     notebooks = {}
     for task in ["task_1_1", "task_1_2", "task_1_3"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch)
+        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -241,7 +260,7 @@ Return JSON:
     return results
 
 
-def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: dict) -> dict:
+def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
     """
     Evaluate Q2: Reproduction on Toy Dataset (40 marks)
     Task 2.1: Dataset Selection (5 marks)
@@ -252,7 +271,7 @@ def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: d
 
     notebooks = {}
     for task in ["task_2_1", "task_2_2", "task_2_3"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch)
+        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -351,7 +370,7 @@ Return JSON:
     return results
 
 
-def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict) -> dict:
+def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
     """
     Evaluate Q3: Ablation Study (35 marks)
     Task 3.1: Two-Component Ablation (20 marks)
@@ -361,7 +380,7 @@ def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict)
 
     notebooks = {}
     for task in ["task_3_1", "task_3_2"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch)
+        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -401,7 +420,7 @@ def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict)
     # --- Task 3.2: Failure Mode (15 marks) ---
     if notebooks["task_3_2"]:
         # Also need Task 1.2 to check consistency
-        nb_1_2_path = resolve_notebook_name(owner, repo, "task_1_2", branch)
+        nb_1_2_path = resolve_notebook_name(owner, repo, "task_1_2", branch, partb_folder)
         nb_1_2 = fetch_notebook_content(owner, repo, nb_1_2_path, branch)
         task_1_2_text = extract_notebook_text(nb_1_2)
 
@@ -473,35 +492,35 @@ def _download_and_extract_pdf(owner: str, repo: str, pdf_path: str, branch: str)
     return ""
 
 
-def _find_report_pdf_path(owner: str, repo: str, branch: str) -> str:
+def _find_report_pdf_path(owner: str, repo: str, branch: str, partb_folder: str = "partB") -> str:
     """Find the actual filename of report.pdf (case-insensitive).
     Uses raw downloads as fallback when GitHub API is rate-limited."""
     # Try raw download first (no API rate limit)
     for name in ["report.pdf", "Report.pdf", "REPORT.pdf"]:
         try:
-            url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/partB/{name}"
+            url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{partb_folder}/{name}"
             resp = requests.head(url, timeout=10, headers={"User-Agent": "NST-Exam-Evaluator"})
             if resp.status_code == 200:
-                return f"partB/{name}"
+                return f"{partb_folder}/{name}"
         except Exception:
             pass
 
     # Fallback to GitHub API
     for name in ["report.pdf", "Report.pdf", "REPORT.pdf"]:
-        result = check_file_exists(owner, repo, f"partB/{name}", branch)
+        result = check_file_exists(owner, repo, f"{partb_folder}/{name}", branch)
         if result.get("exists"):
-            return f"partB/{name}"
+            return f"{partb_folder}/{name}"
 
     # List directory and search
-    partb_files = list_directory(owner, repo, "partB", branch)
+    partb_files = list_directory(owner, repo, partb_folder, branch)
     for f in partb_files:
         if f["name"].lower() == "report.pdf":
-            return f"partB/{f['name']}"
+            return f"{partb_folder}/{f['name']}"
 
     return ""
 
 
-def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict) -> dict:
+def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
     """
     Evaluate Q4: Report and LLM Usage (30 marks)
     Task 4.1: Report (15 marks) - Download PDF, extract text, evaluate with LLM
@@ -517,7 +536,7 @@ def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict) -
     # 4. Failure mode and explanation (3 marks)
     # 5. Honest reflection: what couldn't be implemented, surprises, revisit plans (3 marks)
 
-    report_pdf_path = _find_report_pdf_path(owner, repo, branch)
+    report_pdf_path = _find_report_pdf_path(owner, repo, branch, partb_folder)
 
     if report_pdf_path:
         print(f"    Found report at: {report_pdf_path}")
@@ -627,7 +646,7 @@ Return JSON:
     json_details = {}
 
     for jf in required_jsons:
-        content = fetch_file_content(owner, repo, f"partB/{jf}", branch)
+        content = fetch_file_content(owner, repo, f"{partb_folder}/{jf}", branch)
         if content:
             try:
                 data = json.loads(content)
@@ -706,24 +725,29 @@ def evaluate_student_part_b(student_b: dict, student_a: dict, ground_truth: dict
     result["structure"] = struct
     structure_penalty = struct.get("penalty", 0)
 
+    # Get the actual Part B folder name (partB, part-B, Part_B, etc.)
+    partb_folder = struct.get("partb_folder", "partB")
+    if partb_folder != "partB":
+        print(f"    Found Part B folder as: {partb_folder}/")
+
     # Step 2: Q1 - Paper Understanding (25 marks)
     print(f"  Evaluating Q1: Paper Understanding...")
-    q1 = evaluate_q1_understanding(owner, repo, branch, ground_truth)
+    q1 = evaluate_q1_understanding(owner, repo, branch, ground_truth, partb_folder=partb_folder)
     result["q1"] = q1
 
     # Step 3: Q2 - Reproduction (40 marks)
     print(f"  Evaluating Q2: Reproduction...")
-    q2 = evaluate_q2_reproduction(owner, repo, branch, ground_truth)
+    q2 = evaluate_q2_reproduction(owner, repo, branch, ground_truth, partb_folder=partb_folder)
     result["q2"] = q2
 
     # Step 4: Q3 - Ablation Study (35 marks)
     print(f"  Evaluating Q3: Ablation Study...")
-    q3 = evaluate_q3_ablation(owner, repo, branch, ground_truth)
+    q3 = evaluate_q3_ablation(owner, repo, branch, ground_truth, partb_folder=partb_folder)
     result["q3"] = q3
 
     # Step 5: Q4 - Report & LLM Usage (30 marks)
     print(f"  Evaluating Q4: Report & LLM Usage...")
-    q4 = evaluate_q4_report(owner, repo, branch, ground_truth)
+    q4 = evaluate_q4_report(owner, repo, branch, ground_truth, partb_folder=partb_folder)
     result["q4"] = q4
 
     # Aggregate

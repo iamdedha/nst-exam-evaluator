@@ -274,9 +274,17 @@ def validate_part_b_repo(github_url: str, roll_number: str) -> dict:
     else:
         branch = repo_info.get("default_branch", "main")
 
-    # Check partB/ directory
-    partb_contents = list_directory(owner, repo, "partB", branch)
+    # Check partB/ directory (try multiple folder name variants)
+    partb_folder = "partB"
+    partb_contents = []
+    for candidate in ["partB", "part-B", "Part_B", "Part-B", "part_B", "PartB", "part_b", "PARTB", "part-b"]:
+        partb_contents = list_directory(owner, repo, candidate, branch)
+        if partb_contents:
+            partb_folder = candidate
+            break
+
     result["checks"]["partb_folder_exists"] = len(partb_contents) > 0
+    result["partb_folder"] = partb_folder
 
     if not partb_contents:
         result["flags"].append("PARTB_FOLDER_MISSING")

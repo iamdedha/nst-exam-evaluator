@@ -492,10 +492,10 @@ def _download_and_extract_pdf(owner: str, repo: str, pdf_path: str, branch: str)
     return ""
 
 
-def _find_report_pdf_path(owner: str, repo: str, branch: str, partb_folder: str = "partB") -> str:
-    """Find the actual filename of report.pdf (case-insensitive).
-    Uses raw downloads as fallback when GitHub API is rate-limited."""
-    # Try raw download first (no API rate limit)
+def _find_report_path(owner: str, repo: str, branch: str, partb_folder: str = "partB") -> str:
+    """Find the report file (PDF or Markdown) in partB/ folder.
+    Students use various names: report.pdf, Research_Report.md, Report.pdf, etc."""
+    # Try raw download first (no API rate limit) for PDFs
     for name in ["report.pdf", "Report.pdf", "REPORT.pdf"]:
         try:
             url = f"https://raw.githubusercontent.com/{owner}/{repo}/{branch}/{partb_folder}/{name}"
@@ -505,17 +505,19 @@ def _find_report_pdf_path(owner: str, repo: str, branch: str, partb_folder: str 
         except Exception:
             pass
 
-    # Fallback to GitHub API
+    # List directory and search for any report-like file (PDF, MD, doc)
+    partb_files = list_directory(owner, repo, partb_folder, branch)
+    for f in partb_files:
+        fname = f["name"].lower()
+        # Match any file with "report" in name
+        if "report" in fname and (fname.endswith(".pdf") or fname.endswith(".md") or fname.endswith(".docx")):
+            return f"{partb_folder}/{f['name']}"
+
+    # Fallback to GitHub API for common names
     for name in ["report.pdf", "Report.pdf", "REPORT.pdf"]:
         result = check_file_exists(owner, repo, f"{partb_folder}/{name}", branch)
         if result.get("exists"):
             return f"{partb_folder}/{name}"
-
-    # List directory and search
-    partb_files = list_directory(owner, repo, partb_folder, branch)
-    for f in partb_files:
-        if f["name"].lower() == "report.pdf":
-            return f"{partb_folder}/{f['name']}"
 
     return ""
 
@@ -536,11 +538,15 @@ def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict, p
     # 4. Failure mode and explanation (3 marks)
     # 5. Honest reflection: what couldn't be implemented, surprises, revisit plans (3 marks)
 
-    report_pdf_path = _find_report_pdf_path(owner, repo, branch, partb_folder)
+    report_pdf_path = _find_report_path(owner, repo, branch, partb_folder)
 
     if report_pdf_path:
         print(f"    Found report at: {report_pdf_path}")
-        report_text = _download_and_extract_pdf(owner, repo, report_pdf_path, branch)
+        if report_pdf_path.lower().endswith(".md"):
+            # Markdown report — fetch directly
+            report_text = fetch_file_content(owner, repo, report_pdf_path, branch) or ""
+        else:
+            report_text = _download_and_extract_pdf(owner, repo, report_pdf_path, branch)
 
         if report_text and len(report_text.strip()) > 50:
             print(f"    Extracted {len(report_text)} chars from report PDF")
@@ -645,8 +651,28 @@ Return JSON:
     json_scores = 0
     json_details = {}
 
-    for jf in required_jsons:
-        content = fetch_file_content(owner, repo, f"{partb_folder}/{jf}", branch)
+    # First check if student has a single llm_usage_partB.json at root (alternative format)
+    single_llm_b = fetch_file_content(owner, repo, "llm_usage_partB.json", branch)
+    if not single_llm_b:
+        single_llm_b = fetch_file_content(owner, repo, f"{partb_folder}/llm_usage_partB.json", branch)
+    if not single_llm_b:
+        single_llm_b = fetch_file_content(owner, repo, "llm_usage_partb.json", branch)
+
+    if single_llm_b:
+        # Student provided a single consolidated LLM usage file — give full credit
+        try:
+            data = json.loads(single_llm_b)
+            if isinstance(data, dict) and len(data) > 0:
+                json_scores = 15.0
+                json_details["llm_usage_partB.json"] = "COMPLETE (consolidated file)"
+                print(f"    Found consolidated llm_usage_partB.json — full credit")
+        except json.JSONDecodeError:
+            json_details["llm_usage_partB.json"] = "INVALID JSON"
+
+    if json_scores == 0:
+        # Check per-task files
+        for jf in required_jsons:
+            content = fetch_file_content(owner, repo, f"{partb_folder}/{jf}", branch)
         if content:
             try:
                 data = json.loads(content)

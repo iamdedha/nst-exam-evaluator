@@ -332,15 +332,19 @@ def validate_part_b_repo(github_url: str, roll_number: str) -> dict:
     result["checks"]["notebooks_missing"] = missing_notebooks
 
     # report.pdf (case-insensitive)
-    report_found = any(f.lower() == "report.pdf" for f in partb_files)
+    # Report: check for PDF, MD, or any file with "report" in name
+    report_found = any("report" in f.lower() and (f.lower().endswith(".pdf") or f.lower().endswith(".md") or f.lower().endswith(".docx")) for f in partb_files)
     result["checks"]["report_exists"] = report_found
-    result["checks"]["report_filename"] = next((f for f in partb_files if f.lower() == "report.pdf"), None)
+    result["checks"]["report_filename"] = next((f for f in partb_files if "report" in f.lower()), None)
 
-    # requirements.txt
-    result["checks"]["requirements_exists"] = "requirements.txt" in partb_files
+    # requirements.txt (check partB/ and root)
+    req_in_partb = "requirements.txt" in partb_files
+    root_files = list_directory(owner, repo, "", branch)
+    req_at_root = any(f["name"] == "requirements.txt" for f in root_files)
+    result["checks"]["requirements_exists"] = req_in_partb or req_at_root
 
     # data/ folder
-    data_contents = list_directory(owner, repo, "partB/data", branch)
+    data_contents = list_directory(owner, repo, f"{partb_folder}/data", branch)
     result["checks"]["data_folder_exists"] = len(data_contents) > 0
     if data_contents:
         result["checks"]["data_has_readme"] = any(
@@ -348,11 +352,14 @@ def validate_part_b_repo(github_url: str, roll_number: str) -> dict:
         )
 
     # results/ folder
-    results_contents = list_directory(owner, repo, "partB/results", branch)
+    results_contents = list_directory(owner, repo, f"{partb_folder}/results", branch)
+    if not results_contents:
+        # Try "result" (singular) — some students use that
+        results_contents = list_directory(owner, repo, f"{partb_folder}/result", branch)
     result["checks"]["results_folder_exists"] = len(results_contents) > 0
     result["checks"]["results_files"] = [f["name"] for f in results_contents]
 
-    # LLM JSON files
+    # LLM JSON files — check per-task files OR consolidated file
     required_llm_jsons = [
         "llm_task_1_1.json", "llm_task_1_2.json", "llm_task_1_3.json",
         "llm_task_2_1.json", "llm_task_2_2.json", "llm_task_2_3.json",
@@ -360,17 +367,27 @@ def validate_part_b_repo(github_url: str, roll_number: str) -> dict:
         "llm_task_4_1.json", "llm_task_4_2.json",
     ]
 
+    # Check for consolidated llm_usage_partB.json at root or in partB/
+    has_consolidated_llm = any(f["name"].lower() in ("llm_usage_partb.json", "llm_usage_part_b.json") for f in root_files)
+    if not has_consolidated_llm:
+        has_consolidated_llm = any(f.lower() in ("llm_usage_partb.json", "llm_usage_part_b.json") for f in partb_files)
+
     found_jsons = []
     missing_jsons = []
-    for jf in required_llm_jsons:
-        if jf in partb_files:
-            found_jsons.append(jf)
-        else:
-            missing_jsons.append(jf)
+    if has_consolidated_llm:
+        found_jsons = required_llm_jsons  # Treat as all found
+        missing_jsons = []
+    else:
+        for jf in required_llm_jsons:
+            if jf in partb_files:
+                found_jsons.append(jf)
+            else:
+                missing_jsons.append(jf)
 
     result["checks"]["llm_jsons_found"] = found_jsons
     result["checks"]["llm_jsons_missing"] = missing_jsons
-    result["checks"]["llm_jsons_score"] = len(found_jsons) * 1.5  # 1.5 marks each
+    result["checks"]["llm_jsons_score"] = len(found_jsons) * 1.5
+    result["checks"]["has_consolidated_llm"] = has_consolidated_llm
 
     # Check for structural violations
     if missing_notebooks:
@@ -379,12 +396,12 @@ def validate_part_b_repo(github_url: str, roll_number: str) -> dict:
         result["flags"].append("REPORT_MISSING")
     if not result["checks"]["requirements_exists"]:
         result["flags"].append("REQUIREMENTS_MISSING")
-    if missing_jsons:
+    if missing_jsons and not has_consolidated_llm:
         result["flags"].append(f"MISSING_LLM_JSONS: {missing_jsons}")
 
     # Notebook output check - fetch each notebook and check outputs
     for nb_name in found_notebooks:
-        nb_content = fetch_file_content(owner, repo, f"partB/{nb_name}", branch)
+        nb_content = fetch_file_content(owner, repo, f"{partb_folder}/{nb_name}", branch)
         if nb_content:
             try:
                 nb_data = json.loads(nb_content)

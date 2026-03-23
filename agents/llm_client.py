@@ -1,5 +1,5 @@
 """
-LLM Client - Supports OpenRouter and Google Gemini APIs.
+LLM Client - Supports OpenAI, OpenRouter, and Google Gemini APIs.
 """
 
 import json
@@ -11,8 +11,62 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from config.llm_config import (
     LLM_PROVIDER, OPENROUTER_API_KEY, OPENROUTER_BASE_URL, OPENROUTER_MODEL,
-    GEMINI_API_KEY, GEMINI_MODEL, MODEL, MAX_TOKENS, TEMPERATURE
+    GEMINI_API_KEY, GEMINI_MODEL, MODEL, MAX_TOKENS, TEMPERATURE,
+    OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
 )
+
+
+def _call_openai(prompt: str, system_prompt: str, model: str, max_tokens: int, temperature: float, retries: int) -> str:
+    """Call OpenAI API."""
+    messages = []
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+    messages.append({"role": "user", "content": prompt})
+
+    headers = {
+        "Authorization": f"Bearer {OPENAI_API_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "model": model or OPENAI_MODEL,
+        "messages": messages,
+        "max_tokens": max_tokens,
+        "temperature": temperature,
+    }
+
+    for attempt in range(retries):
+        try:
+            response = requests.post(
+                OPENAI_BASE_URL,
+                headers=headers,
+                json=payload,
+                timeout=90,
+            )
+
+            if response.status_code == 429:
+                wait = 2 ** (attempt + 1)
+                print(f"  OpenAI rate limited, waiting {wait}s...")
+                time.sleep(wait)
+                continue
+
+            response.raise_for_status()
+            data = response.json()
+
+            if "choices" in data and len(data["choices"]) > 0:
+                return data["choices"][0]["message"]["content"]
+            else:
+                print(f"  Unexpected OpenAI response: {data}")
+                return ""
+
+        except requests.exceptions.Timeout:
+            print(f"  OpenAI timeout on attempt {attempt + 1}/{retries}")
+            time.sleep(2)
+        except requests.exceptions.RequestException as e:
+            print(f"  OpenAI error on attempt {attempt + 1}/{retries}: {e}")
+            time.sleep(2)
+
+    return ""
 
 
 def _call_openrouter(prompt: str, system_prompt: str, model: str, max_tokens: int, temperature: float, retries: int) -> str:
@@ -129,11 +183,22 @@ def call_llm(prompt: str, system_prompt: str = "", model: str = None, max_tokens
     max_tokens = max_tokens or MAX_TOKENS
     temperature = temperature if temperature is not None else TEMPERATURE
 
-    if LLM_PROVIDER == "openrouter" and OPENROUTER_API_KEY:
+    if LLM_PROVIDER == "openai" and OPENAI_API_KEY:
+        result = _call_openai(prompt, system_prompt, model, max_tokens, temperature, retries)
+        if result:
+            return result
+        # Fallback chain
+        if OPENROUTER_API_KEY:
+            print("  OpenAI failed, falling back to OpenRouter...")
+            return _call_openrouter(prompt, system_prompt, OPENROUTER_MODEL, max_tokens, temperature, retries)
+        if GEMINI_API_KEY:
+            print("  OpenAI failed, falling back to Gemini...")
+            return _call_gemini(prompt, system_prompt, GEMINI_MODEL, max_tokens, temperature, retries)
+        return ""
+    elif LLM_PROVIDER == "openrouter" and OPENROUTER_API_KEY:
         result = _call_openrouter(prompt, system_prompt, model, max_tokens, temperature, retries)
         if result:
             return result
-        # Fallback to Gemini
         if GEMINI_API_KEY:
             print("  OpenRouter failed, falling back to Gemini...")
             return _call_gemini(prompt, system_prompt, GEMINI_MODEL, max_tokens, temperature, retries)

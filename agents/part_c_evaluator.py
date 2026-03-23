@@ -126,33 +126,39 @@ def parse_part_c_from_excel(xlsx_path: str) -> tuple[dict, dict]:
     return answers, uid_to_roll, uid_to_name
 
 
-def fetch_part_b_content_for_task(owner: str, repo: str, task_name: str, branch: str = "main") -> str:
+def fetch_part_b_content_for_task(owner: str, repo: str, task_name: str, branch: str = "main", file_map: dict = None) -> str:
     """
     Fetch the relevant Part B notebook content for a given task.
+    Uses file_map for direct path lookup when available.
     Returns a string summary of the notebook cells.
     """
-    try:
-        nb_path = resolve_notebook_name(owner, repo, task_name, branch)
-    except Exception:
-        nb_path = None
+    # Use file_map if available (no guessing needed)
+    if file_map and task_name in file_map.get("notebooks", {}):
+        nb_path = file_map["notebooks"][task_name]
+        nb_data = fetch_notebook_content(owner, repo, nb_path, branch)
+    else:
+        # Fallback: try resolve + alternates
+        try:
+            nb_path = resolve_notebook_name(owner, repo, task_name, branch)
+        except Exception:
+            nb_path = None
 
-    if not nb_path:
-        # Try direct path
-        nb_path = f"partB/{task_name}.ipynb"
+        if not nb_path:
+            nb_path = f"partB/{task_name}.ipynb"
 
-    nb_data = fetch_notebook_content(owner, repo, nb_path, branch)
-    if nb_data.get("status") == "not_found":
-        # Try alternate paths
-        alternates = [
-            f"Part_B/{task_name}.ipynb",
-            f"PartB/{task_name}.ipynb",
-            f"{task_name}.ipynb",
-            f"partb/{task_name}.ipynb",
-        ]
-        for alt in alternates:
-            nb_data = fetch_notebook_content(owner, repo, alt, branch)
-            if nb_data.get("status") != "not_found":
-                break
+        nb_data = fetch_notebook_content(owner, repo, nb_path, branch)
+        if nb_data.get("status") == "not_found":
+            alternates = [
+                f"Part_B/{task_name}.ipynb",
+                f"part-B/{task_name}.ipynb",
+                f"PartB/{task_name}.ipynb",
+                f"{task_name}.ipynb",
+                f"partb/{task_name}.ipynb",
+            ]
+            for alt in alternates:
+                nb_data = fetch_notebook_content(owner, repo, alt, branch)
+                if nb_data.get("status") != "not_found":
+                    break
 
     if nb_data.get("status") == "not_found":
         return ""
@@ -288,15 +294,19 @@ def evaluate_student_part_c(
     """
     print(f"\n  Part C evaluation for {roll_number}")
 
-    # Parse GitHub URL
+    # Parse GitHub URL and build file_map
     owner, repo = "", ""
     branch = "main"
+    fm = None
     if github_url:
         owner, repo = parse_github_url(github_url)
         if owner and repo:
             repo_info = check_repo_exists(owner, repo)
             if repo_info.get("exists"):
                 branch = repo_info.get("default_branch", "main")
+                # Build file_map once for all questions
+                from agents.github_checker import get_file_map
+                fm = get_file_map(owner, repo, branch)
             else:
                 print(f"    Repo not found: {github_url}")
                 owner, repo = "", ""
@@ -314,12 +324,12 @@ def evaluate_student_part_c(
         part_b_content = ""
         if owner and repo:
             print(f"    Fetching Part B {task_name} for cross-verification...")
-            part_b_content = fetch_part_b_content_for_task(owner, repo, task_name, branch)
+            part_b_content = fetch_part_b_content_for_task(owner, repo, task_name, branch, file_map=fm)
 
             # For Q3, also fetch task_1_2 if available
             if qid == 24109 and "related_task" in q_info:
                 related_content = fetch_part_b_content_for_task(
-                    owner, repo, q_info["related_task"], branch
+                    owner, repo, q_info["related_task"], branch, file_map=fm
                 )
                 if related_content:
                     part_b_content += f"\n\n--- Related Task ({q_info['related_task']}) ---\n{related_content[:3000]}"

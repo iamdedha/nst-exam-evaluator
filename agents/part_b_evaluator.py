@@ -141,7 +141,7 @@ def extract_notebook_text(nb_data: dict) -> str:
     return "\n".join(parts)
 
 
-def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
+def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB", file_map: dict = None) -> dict:
     """
     Evaluate Q1: Paper Understanding (25 marks)
     Task 1.1: Core Contribution (8 marks)
@@ -150,10 +150,13 @@ def evaluate_q1_understanding(owner: str, repo: str, branch: str, ground_truth: 
     """
     results = {"total": 0, "tasks": {}, "flags": []}
 
-    # Fetch all Q1 notebooks (with flexible naming)
+    # Fetch all Q1 notebooks
     notebooks = {}
     for task in ["task_1_1", "task_1_2", "task_1_3"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
+        if file_map and task in file_map.get("notebooks", {}):
+            nb_path = file_map["notebooks"][task]
+        else:
+            nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -260,7 +263,7 @@ Return JSON:
     return results
 
 
-def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
+def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB", file_map: dict = None) -> dict:
     """
     Evaluate Q2: Reproduction on Toy Dataset (40 marks)
     Task 2.1: Dataset Selection (5 marks)
@@ -271,7 +274,10 @@ def evaluate_q2_reproduction(owner: str, repo: str, branch: str, ground_truth: d
 
     notebooks = {}
     for task in ["task_2_1", "task_2_2", "task_2_3"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
+        if file_map and task in file_map.get("notebooks", {}):
+            nb_path = file_map["notebooks"][task]
+        else:
+            nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -370,7 +376,7 @@ Return JSON:
     return results
 
 
-def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
+def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB", file_map: dict = None) -> dict:
     """
     Evaluate Q3: Ablation Study (35 marks)
     Task 3.1: Two-Component Ablation (20 marks)
@@ -380,7 +386,10 @@ def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict,
 
     notebooks = {}
     for task in ["task_3_1", "task_3_2"]:
-        nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
+        if file_map and task in file_map.get("notebooks", {}):
+            nb_path = file_map["notebooks"][task]
+        else:
+            nb_path = resolve_notebook_name(owner, repo, task, branch, partb_folder)
         nb = fetch_notebook_content(owner, repo, nb_path, branch)
         notebooks[task] = extract_notebook_text(nb)
         if not notebooks[task]:
@@ -420,7 +429,10 @@ def evaluate_q3_ablation(owner: str, repo: str, branch: str, ground_truth: dict,
     # --- Task 3.2: Failure Mode (15 marks) ---
     if notebooks["task_3_2"]:
         # Also need Task 1.2 to check consistency
-        nb_1_2_path = resolve_notebook_name(owner, repo, "task_1_2", branch, partb_folder)
+        if file_map and "task_1_2" in file_map.get("notebooks", {}):
+            nb_1_2_path = file_map["notebooks"]["task_1_2"]
+        else:
+            nb_1_2_path = resolve_notebook_name(owner, repo, "task_1_2", branch, partb_folder)
         nb_1_2 = fetch_notebook_content(owner, repo, nb_1_2_path, branch)
         task_1_2_text = extract_notebook_text(nb_1_2)
 
@@ -522,7 +534,7 @@ def _find_report_path(owner: str, repo: str, branch: str, partb_folder: str = "p
     return ""
 
 
-def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB") -> dict:
+def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict, partb_folder: str = "partB", file_map: dict = None) -> dict:
     """
     Evaluate Q4: Report and LLM Usage (30 marks)
     Task 4.1: Report (15 marks) - Download PDF, extract text, evaluate with LLM
@@ -538,7 +550,10 @@ def evaluate_q4_report(owner: str, repo: str, branch: str, ground_truth: dict, p
     # 4. Failure mode and explanation (3 marks)
     # 5. Honest reflection: what couldn't be implemented, surprises, revisit plans (3 marks)
 
-    report_pdf_path = _find_report_path(owner, repo, branch, partb_folder)
+    if file_map and file_map.get("report"):
+        report_pdf_path = file_map["report"]
+    else:
+        report_pdf_path = _find_report_path(owner, repo, branch, partb_folder)
 
     if report_pdf_path:
         print(f"    Found report at: {report_pdf_path}")
@@ -651,12 +666,16 @@ Return JSON:
     json_scores = 0
     json_details = {}
 
-    # First check if student has a single llm_usage_partB.json at root (alternative format)
-    single_llm_b = fetch_file_content(owner, repo, "llm_usage_partB.json", branch)
-    if not single_llm_b:
-        single_llm_b = fetch_file_content(owner, repo, f"{partb_folder}/llm_usage_partB.json", branch)
-    if not single_llm_b:
-        single_llm_b = fetch_file_content(owner, repo, "llm_usage_partb.json", branch)
+    # Check for consolidated LLM usage file (use file_map if available)
+    single_llm_b = None
+    if file_map and file_map.get("has_consolidated_llm_b") and file_map["llm_jsons_partb"]:
+        single_llm_b = fetch_file_content(owner, repo, file_map["llm_jsons_partb"][0], branch)
+    else:
+        # Fallback: try common paths
+        for candidate in ["llm_usage_partB.json", f"{partb_folder}/llm_usage_partB.json", "llm_usage_partb.json"]:
+            single_llm_b = fetch_file_content(owner, repo, candidate, branch)
+            if single_llm_b:
+                break
 
     if single_llm_b:
         # Student provided a single consolidated LLM usage file — give full credit
@@ -751,29 +770,30 @@ def evaluate_student_part_b(student_b: dict, student_a: dict, ground_truth: dict
     result["structure"] = struct
     structure_penalty = struct.get("penalty", 0)
 
-    # Get the actual Part B folder name (partB, part-B, Part_B, etc.)
+    # Get file_map and Part B folder from structural validation
+    fm = struct.get("file_map")
     partb_folder = struct.get("partb_folder", "partB")
     if partb_folder != "partB":
         print(f"    Found Part B folder as: {partb_folder}/")
 
     # Step 2: Q1 - Paper Understanding (25 marks)
     print(f"  Evaluating Q1: Paper Understanding...")
-    q1 = evaluate_q1_understanding(owner, repo, branch, ground_truth, partb_folder=partb_folder)
+    q1 = evaluate_q1_understanding(owner, repo, branch, ground_truth, partb_folder=partb_folder, file_map=fm)
     result["q1"] = q1
 
     # Step 3: Q2 - Reproduction (40 marks)
     print(f"  Evaluating Q2: Reproduction...")
-    q2 = evaluate_q2_reproduction(owner, repo, branch, ground_truth, partb_folder=partb_folder)
+    q2 = evaluate_q2_reproduction(owner, repo, branch, ground_truth, partb_folder=partb_folder, file_map=fm)
     result["q2"] = q2
 
     # Step 4: Q3 - Ablation Study (35 marks)
     print(f"  Evaluating Q3: Ablation Study...")
-    q3 = evaluate_q3_ablation(owner, repo, branch, ground_truth, partb_folder=partb_folder)
+    q3 = evaluate_q3_ablation(owner, repo, branch, ground_truth, partb_folder=partb_folder, file_map=fm)
     result["q3"] = q3
 
     # Step 5: Q4 - Report & LLM Usage (30 marks)
     print(f"  Evaluating Q4: Report & LLM Usage...")
-    q4 = evaluate_q4_report(owner, repo, branch, ground_truth, partb_folder=partb_folder)
+    q4 = evaluate_q4_report(owner, repo, branch, ground_truth, partb_folder=partb_folder, file_map=fm)
     result["q4"] = q4
 
     # Aggregate
